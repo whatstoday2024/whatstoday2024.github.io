@@ -1,5 +1,5 @@
 <template>
-  <div> Login page </div>
+  <div> Register page </div>
 </template>
 
 <script>

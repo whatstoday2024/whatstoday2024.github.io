@@ -2,3 +2,36 @@
 @import './variables';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/bootstrap';
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.75rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.25rem;
+}
+
+.section {
+  max-width: 100rem;
+  margin: 6rem 4rem;
+}
+
+.section-title {
+  margin-bottom: 2rem;
+}
+
+img {
+  width: 100%;
+}
