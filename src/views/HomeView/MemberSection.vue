@@ -1,9 +1,9 @@
 <template>
   <section class="member-section table-img">
     <h1 class="section-title fw-bold">成為會員，您可以...</h1>
-    <div class="d-flex justify-content-around ">
-      <div class="table-img"></div>
-      <div class="d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
+    <!-- <div class="d-flex justify-content-around "> -->
+    <div class="row">
+      <div class="col d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
         <div class="option-item relative" :style="isShow === option.id ? obj : ''" @click="showDetail(option.id)">
           <div class="d-flex flex-column gap-1 align-items-center">
             <img :src="option.icon" alt="icon" class="icon">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="text-center">
+    <div class="col text-center">
       <router-link to="/register" class="btn btn btn-brand-blue text-white">
         <span>成為會員 &#62;</span>
       </router-link>
@@ -51,10 +51,10 @@ export default {
 .member-section {
   width: 100vw;
   display: flex;
-  gap: 100px;
+  gap: 6.25rem;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 100px;
+  margin-bottom: 6.25rem;
 }
 
 .section-title {
@@ -70,13 +70,13 @@ export default {
 }
 
 .icon {
-  width: 50px;
+  width: 3.125rem;
 }
 
 .option {
   &-item {
-    width: 350px;
-    height: 350px;
+    width: 22rem;
+    height: 22rem;
     display: grid;
     place-items: center;
     background-image: url('@/assets/img/plate.png');
@@ -94,19 +94,19 @@ export default {
 }
 
 .option-content {
-  width: 290px;
-  height: 290px;
+  width: 18.125rem;
+  height: 18.125rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  transform: translateY(50px);
+  transform: translateY(3.125rem);
   border-radius: 50%;
   background-color: $primary-mid;
   position: absolute;
   z-index: 1;
 
   h6 {
-    transform: translateY(45px);
+    transform: translateY(3.125rem);
   }
 }
 </style>

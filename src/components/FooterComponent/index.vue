@@ -1,8 +1,9 @@
 <template>
   <footer class="shadow bg-dark">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mx-auto py-4" style="width: 90%">
-      <div class="d-flex flex-column gap-3">
-        <router-link to="/"> <img alt="logo" :src="logo" />
+    <div class="row mx-auto py-4" style="width: 90%">
+      <div
+        class="order-2 order-md-1 col-12 col-md-6 align-items-center align-items-md-start d-flex flex-column justify-content-center gap-3">
+        <router-link class="logo d-none d-md-block" to="/"><img alt="logo" :src="logo" />
         </router-link>
         <div>
           <a class="text-white" href="mailto:whatstoday2024@gmail.com">
@@ -11,7 +12,8 @@
           <h6 class="text-white">&copy;whatstoday2024 2024. All rights reserved.</h6>
         </div>
       </div>
-      <div class="d-flex flex-column gap-4 align-items-center">
+      <div
+        class="order-1 order-md-2 col-12 col-md-6 align-items-center d-flex flex-column justify-content-center gap-4 align-items-md-end">
         <div>
           <img :src="icon" alt="footer icon">
         </div>
@@ -46,6 +48,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  width: 15rem;
+}
+
 .link {
   color: white;
 

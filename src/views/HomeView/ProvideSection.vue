@@ -2,7 +2,7 @@
   <section class="section">
     <h1 class="section-title fw-bold"> 為了解決上述困擾，我們提供了... </h1>
     <div class="row">
-      <div class="col-7">
+      <div class="col-12 col-lg-7">
         <div class="card-left bg-primary-light">
           <div class="d-flex gap-3" v-for="(item, index) in provideOptions" :key="item.id">
             <div class='icon icon-1'>
@@ -15,9 +15,9 @@
           </div>
         </div>
       </div>
-      <div class="col-5 ">
+      <div class="d-none d-lg-block col-12 col-lg-5">
         <div class="card-right">
-          <img class="img" :src="eatingImg" alt="eating">
+          <img class="img object-fit-cover" :src="eatingImg" alt="eating">
         </div>
       </div>
     </div>
@@ -43,12 +43,11 @@ export default {
 
 <style lang="scss" scoped>
 .card-left {
-
   display: flex;
   flex-direction: column;
   justify-content: space-around;
 
-  border-radius: 20px;
+  border-radius: 1.25rem;
   height: 90%;
   padding: 4rem;
 
@@ -59,21 +58,15 @@ export default {
 }
 
 .icon {
-  // padding: 5px;
-  // background-color: white;
-  // border-radius: 8px;
-  // display: grid;
-  // place-items: center;
+
   width: 60px;
   height: 60px;
 
-  // &-1 {
-  //   border: 3px solid $primary;
-  // }
+
 }
 
 .card-right {
-  border-radius: 20px;
+  border-radius: 1.25rem;
   overflow: hidden;
   height: 90%;
 }

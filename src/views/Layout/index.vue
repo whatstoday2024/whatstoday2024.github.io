@@ -6,11 +6,11 @@
 
 <script>
 import HeaderComponent from '@/components/HeaderComponent'
-import HomeView from '@/views/HomeView'
+
 import FooterComponent from '@/components/FooterComponent'
 
 export default {
-  components: { HeaderComponent, HomeView, FooterComponent },
+  components: { HeaderComponent, FooterComponent },
   data() {
     return {
     };

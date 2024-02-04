@@ -1,7 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
 @import 'bootstrap/scss/functions'; // 必要的方法
+@import './mixins';
 @import './variables';
 @import 'bootstrap/scss/mixins';
 @import 'bootstrap/scss/bootstrap';
+
+html {
+  font-size: 100%; //1rem = 16px
+
+  @include respond(lg) {
+    font-size: 87.5%; //1rem = 14px, 56.25%
+  }
+
+  @include respond(md) {
+    font-size: 75%; //1rem = 12px, 50%
+  }
+}
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+img {
+  width: 100%;
+  display: block;
+}
 
 a {
   text-decoration: none;
@@ -22,16 +47,15 @@ h4 {
 h5 {
   font-size: 1.25rem;
 }
+h6 {
+  font-size: 1rem;
+}
 
 .section {
   max-width: 100rem;
-  margin: 6rem 4rem;
+  margin: 6rem 2rem;
 }
 
 .section-title {
   margin-bottom: 2rem;
-}
-
-img {
-  width: 100%;
 }
