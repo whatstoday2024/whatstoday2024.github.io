@@ -1,7 +1,9 @@
 <template>
-  <HeaderComponent></HeaderComponent>
-  <RouterView></RouterView>
-  <FooterComponent></FooterComponent>
+  <div style="min-height: 100vh;" class="d-flex flex-column">
+    <HeaderComponent></HeaderComponent>
+    <RouterView></RouterView>
+    <FooterComponent></FooterComponent>
+  </div>
 </template>
 
 <script>
