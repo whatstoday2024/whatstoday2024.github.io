@@ -45,12 +45,12 @@
                 <label for="oldPassword">請輸入舊密碼</label>
               </div>
               <div class="form-floating mb-4">
-                <VField type="password" id="newPassword" placeholder="請輸入新密碼" name="新密碼" class="form-control" :class="{ 'is-invalid': errors['新密碼'] }" :rules="validatePassword" v-model="password.new" />
+                <VField type="password" id="newPassword" placeholder="請輸入新密碼" name="新密碼" class="form-control" :class="{ 'is-invalid': errors['新密碼'] }" rules="required|is_not:@舊密碼" v-model="password.new" />
                 <ErrorMessage name="新密碼" class="invalid-feedback"/>
                 <label for="newPassword">請輸入新密碼</label>
               </div>
               <div class="form-floating mb-4">
-                <VField type="password" id="newPasswordDoubleCheck" placeholder="再次確認新密碼" name="確認新密碼" class="form-control" :class="{ 'is-invalid': errors['確認新密碼'] }" :rules="doubleCheckPassword" v-model="password.doubleCheck" />
+                <VField type="password" id="newPasswordDoubleCheck" placeholder="再次確認新密碼" name="確認新密碼" class="form-control" :class="{ 'is-invalid': errors['確認新密碼'] }" rules="required|confirmed:@新密碼" v-model="password.doubleCheck" />
                 <ErrorMessage name="確認新密碼" class="invalid-feedback"/>
                 <label for="newPasswordDoubleCheck">再次確認新密碼</label>
               </div>
@@ -101,15 +101,6 @@ export default {
     },
     changePassword() {
       // API 修改密碼
-    },
-    validatePassword(value) {
-      if (!value) return '新密碼 為必填'
-      else return value !== this.password.old ? true : '新密碼不得與舊密碼相同'
-    },
-    doubleCheckPassword(value) {
-      if (!value) return '確認新密碼 為必填'
-      else if (value !== this.password.new) return '兩次輸入的密碼不一致'
-      else return value !== this.password.old ? true : '新密碼不得與舊密碼相同'
     }
   },
   created() {

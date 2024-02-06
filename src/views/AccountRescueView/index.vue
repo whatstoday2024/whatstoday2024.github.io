@@ -40,7 +40,7 @@
                 <label for="newPassword">請輸入新密碼</label>
               </div>
               <div class="form-floating mb-4">
-                <VField type="password" id="newPasswordDoubleCheck" placeholder="再次確認新密碼" name="確認新密碼" class="form-control" :class="{ 'is-invalid': errors['確認新密碼'] }" :rules="doubleCheckPassword" v-model="password.doubleCheck" />
+                <VField type="password" id="newPasswordDoubleCheck" placeholder="再次確認新密碼" name="確認新密碼" class="form-control" :class="{ 'is-invalid': errors['確認新密碼'] }" rules="required|confirmed:@新密碼" v-model="password.doubleCheck" />
                 <ErrorMessage name="確認新密碼" class="invalid-feedback"/>
                 <label for="newPasswordDoubleCheck">再次確認新密碼</label>
               </div>
@@ -76,10 +76,6 @@ export default {
     },
     changePassword() {
       // API 修改密碼
-    },
-    doubleCheckPassword(value) {
-      if (!value) return '確認新密碼 為必填'
-      else return value === this.password.new ? true : '兩次輸入的密碼不一致'
     }
   }
 }

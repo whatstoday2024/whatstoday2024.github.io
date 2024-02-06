@@ -34,7 +34,7 @@
               <label for="password">請輸入密碼</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="password" id="passwordDoubleCheck" placeholder="再次確認密碼" name="再次確認密碼" class="form-control" :class="{ 'is-invalid': errors['再次確認密碼'] }" :rules="checkPassword" v-model="passwordDoubleCheck" />
+              <VField type="password" id="passwordDoubleCheck" placeholder="再次確認密碼" name="再次確認密碼" class="form-control" :class="{ 'is-invalid': errors['再次確認密碼'] }" rules="required|confirmed:@密碼" v-model="passwordDoubleCheck" />
               <ErrorMessage name="再次確認密碼" class="invalid-feedback"/>
               <label for="passwordDoubleCheck">再次確認密碼</label>
             </div>
@@ -61,10 +61,6 @@ export default {
   methods: {
     register(){
       // API 註冊會員
-    },
-    checkPassword(value) {
-      if (!value) return '確認密碼 為必填'
-      else return value === this.user.password ? true : '兩次輸入的密碼不一致'
     }
   }
 }

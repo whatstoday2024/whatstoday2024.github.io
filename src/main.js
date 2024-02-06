@@ -9,7 +9,7 @@ import '@/scss/all.scss'
 import * as VeeValidate from 'vee-validate'
 import * as VeeValidateRules from '@vee-validate/rules'
 import * as VeeValidateI18n from '@vee-validate/i18n'
-import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
+import zhTW from '@/assets/VeeValidateI18n/zh_TW.json'
 
 Object.keys(VeeValidateRules).forEach(rule => {
   VeeValidate.defineRule(rule, VeeValidateRules[rule]);
