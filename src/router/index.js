@@ -17,7 +17,9 @@ const router = createRouter({
           name: 'adminLayout',
           component: () => import('@/views/AdminLayout'),
           children: []
-        }
+        },
+        { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
+
       ]
     }
   ]
