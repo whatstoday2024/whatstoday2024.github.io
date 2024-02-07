@@ -11,7 +11,9 @@ const router = createRouter({
       children: [
         { path: '', name: 'HomeView', component: () => import('@/views/HomeView') },
         { path: 'register', name: 'Register', component: () => import('@/views/RegisterView') },
-        { path: 'login', name: 'Login', component: () => import('@/views/loginView') },
+        { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
+        { path: 'profile', name: 'Profile', component: () => import('@/views/ProfileView') },
+        { path: 'accountRescue', name: 'AccountRescue', component: () => import('@/views/AccountRescueView') },
         {
           path: 'admin',
           name: 'adminLayout',
