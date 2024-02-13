@@ -3,7 +3,7 @@
     <h1 class="section-title fw-bold">成為會員，您可以...</h1>
     <!-- <div class="d-flex justify-content-around "> -->
     <div class="row">
-      <div class="col d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
+      <div class="col-12 col-lg-3 col-md-6 col-sm-6 d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
         <div class="option-item relative" :style="isShow === option.id ? obj : ''" @click="showDetail(option.id)">
           <div class="d-flex flex-column gap-1 align-items-center">
             <img :src="option.icon" alt="icon" class="icon">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="col text-center">
-      <router-link to="/register" class="btn btn btn-brand-blue text-white">
+      <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
         <span>成為會員 &#62;</span>
       </router-link>
     </div>
@@ -35,7 +35,7 @@ export default {
       memberOptions,
       tableImg,
       isShow: memberOptions[0].id,
-      obj: { transform: 'translateY(-150px)' }
+      obj: { transform: 'translateY(-120px)' }
     }
   },
   methods: {
@@ -58,8 +58,15 @@ export default {
 }
 
 .section-title {
-  margin-left: 4rem;
+  margin-left: 6rem;
 
+  @include respond(xl) {
+    margin-left: 2rem;
+  }
+
+  @include respond(sm) {
+    margin-left: 1rem;
+  }
 }
 
 .table-img {
@@ -75,8 +82,8 @@ export default {
 
 .option {
   &-item {
-    width: 22rem;
-    height: 22rem;
+    width: 20rem;
+    height: 20rem;
     display: grid;
     place-items: center;
     background-image: url('@/assets/img/plate.png');
@@ -94,8 +101,8 @@ export default {
 }
 
 .option-content {
-  width: 18.125rem;
-  height: 18.125rem;
+  width: 16.125rem;
+  height: 16.125rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

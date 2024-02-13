@@ -79,7 +79,7 @@ export const memberOptions = [
     title: '設定放縱日',
     content1: '在營養均衡的同時',
     content2: '選個日子解開所有束縛',
-    content3: '偶爾來點小確信吧'
+    content3: '偶爾來點小確幸吧'
   }
 ]
 
