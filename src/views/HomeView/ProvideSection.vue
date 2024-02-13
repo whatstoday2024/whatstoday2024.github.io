@@ -27,6 +27,7 @@
 <script>
 import eatingImg from '@/assets/img/sloution_person.png'
 import { provideOptions } from '@/utils/variables'
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -36,8 +37,11 @@ export default {
   },
   computed: {
     classObject: () => {}
+  },
+  async mounted(){
+   const res =await axios.get('http://localhost:3000/items')
+   console.log(res)
   }
-
 }
 </script>
 

@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
+
 import '@/scss/all.scss'
 
 import * as VeeValidate from 'vee-validate'
