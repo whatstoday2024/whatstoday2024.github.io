@@ -14,7 +14,7 @@
       </div>
       <div
         class="order-1 order-md-2 col-12 col-md-6 align-items-center d-flex flex-column justify-content-center gap-4 align-items-md-end">
-        <div class="d-none d-sm-block">
+        <div class="d-none d-sm-block icon">
           <img :src="icon" alt="footer icon">
         </div>
         <div class="d-flex gap-3">
@@ -49,7 +49,14 @@ export default {
 
 <style lang="scss" scoped>
 .logo {
-  width: 15rem;
+  width: 11rem;
+}
+.icon{
+  width: 7rem;
+}
+
+h6{
+  font-size: 0.7rem;
 }
 
 .link {
