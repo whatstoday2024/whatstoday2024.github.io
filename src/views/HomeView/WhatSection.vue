@@ -35,10 +35,10 @@
 
 <template>
   <section id="what" class="section">
-    <div class="row mb-5">
+    <div class="mb-5">
       <h2 class="h1 col-12 fw-bold ps-0">想吃頓飯卻傷透腦筋？</h2>
     </div>
-    <div class="row rounded-4 px-4 bg-primary-light ">
+    <div class="row rounded-4 px-4 bg-primary-light">
       <div class="col-md-4 col-sm-6 what_margin">
         <div class="card mb-4 border-0 shadow-sm ">
           <img src="@/assets/img/point_01.png" class="card-img-top" alt="想不出來要吃什麼" />
