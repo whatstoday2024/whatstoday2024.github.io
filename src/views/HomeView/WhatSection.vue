@@ -16,10 +16,15 @@
     .card {
       margin-top: 30px;
       padding-top: 30px;
+      transform: translate(0, 0);
+      transition: transform 1.2s ease; // Increase transition duration to 0.5s
       &:hover {
         transform: translate(0, -1.5rem);
       }
     }
+    
+
+
     @media screen and (max-width: 767px) {
       /* 小於等於 767px 寬度時的樣式 */
       h2{

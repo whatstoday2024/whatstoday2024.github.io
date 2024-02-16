@@ -6,6 +6,7 @@ import router from './router'
 
 
 import '@/scss/all.scss'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import * as VeeValidate from 'vee-validate'
 import * as VeeValidateRules from '@vee-validate/rules'
