@@ -58,11 +58,7 @@ export default {
 }
 
 .section-title {
-  margin-left: 6rem;
-
-  @include respond(xl) {
-    margin-left: 2rem;
-  }
+  margin-left: 2rem;
 
   @include respond(sm) {
     margin-left: 1rem;
