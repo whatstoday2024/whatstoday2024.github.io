@@ -6,6 +6,7 @@ import router from './router'
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // 引入 Bootstrap 的 JavaScript 文件
 import '@/scss/all.scss'
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import * as VeeValidate from 'vee-validate'
 import * as VeeValidateRules from '@vee-validate/rules'

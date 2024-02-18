@@ -68,3 +68,33 @@ h6 {
 .w-80 {
   width: 80% !important;
 }
+
+.h-25 {
+  height: 25% !important;
+}
+
+.h-33 {
+  height: 33% !important;
+}
+
+.h-50 {
+  height: 50% !important;
+}
+
+.h-75 {
+  height: 75% !important;
+}
+
+.h-80 {
+  height: 80% !important;
+}
+
+.btn-primary {
+  color: white;
+}
+
+.btn-outline-primary:hover {
+  background-color: $primary;
+  border-color: $primary;
+  color: white;
+}
