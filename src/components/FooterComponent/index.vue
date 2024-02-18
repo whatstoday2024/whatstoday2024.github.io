@@ -5,7 +5,7 @@
         class="order-2 order-md-1 col-12 col-md-6 align-items-center align-items-md-start d-flex flex-column justify-content-center gap-3">
         <router-link class="logo d-none d-md-block" to="/"><img alt="logo" :src="logo" />
         </router-link>
-        <div>
+        <div class="text-center text-md-start">
           <a class="text-white" href="mailto:whatstoday2024@gmail.com">
             <h6>whatstoday2024@gmail.com</h6>
           </a>
@@ -14,7 +14,7 @@
       </div>
       <div
         class="order-1 order-md-2 col-12 col-md-6 align-items-center d-flex flex-column justify-content-center gap-4 align-items-md-end">
-        <div>
+        <div class="d-none d-sm-block icon">
           <img :src="icon" alt="footer icon">
         </div>
         <div class="d-flex gap-3">
@@ -49,7 +49,14 @@ export default {
 
 <style lang="scss" scoped>
 .logo {
-  width: 15rem;
+  width: 11rem;
+}
+.icon{
+  width: 7rem;
+}
+
+h6{
+  font-size: 0.7rem;
 }
 
 .link {

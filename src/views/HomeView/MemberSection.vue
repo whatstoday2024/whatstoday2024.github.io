@@ -2,8 +2,8 @@
   <section class="member-section table-img">
     <h1 class="section-title fw-bold">成為會員，您可以...</h1>
     <!-- <div class="d-flex justify-content-around "> -->
-    <div class="row">
-      <div class="col d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
+    <div class="row section">
+      <div class="col-6 col-lg-3 g-5 d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
         <div class="option-item relative" :style="isShow === option.id ? obj : ''" @click="showDetail(option.id)">
           <div class="d-flex flex-column gap-1 align-items-center">
             <img :src="option.icon" alt="icon" class="icon">
@@ -17,8 +17,8 @@
         </div>
       </div>
     </div>
-    <div class="col text-center">
-      <router-link to="/register" class="btn btn btn-brand-blue text-white">
+    <div class="text-center">
+      <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
         <span>成為會員 &#62;</span>
       </router-link>
     </div>
@@ -34,8 +34,8 @@ export default {
     return {
       memberOptions,
       tableImg,
-      isShow: memberOptions[0].id,
-      obj: { transform: 'translateY(-150px)' }
+      isShow: memberOptions[1].id,
+      obj: { transform: 'translateY(-120px)' }
     }
   },
   methods: {
@@ -58,15 +58,22 @@ export default {
 }
 
 .section-title {
-  margin-left: 4rem;
+  margin-left: 2rem;
 
+  @include respond(sm) {
+    margin-left: 1rem;
+  }
 }
 
 .table-img {
   background-image: url('@/assets/img/table.png');
   background-repeat: no-repeat;
-  background-position: 0% 48%;
+  background-position: 0% 30%;
   background-size: 80%;
+
+  @include respond(md) {
+    background-position: 0% 20%;
+  }
 }
 
 .icon {
@@ -75,8 +82,8 @@ export default {
 
 .option {
   &-item {
-    width: 22rem;
-    height: 22rem;
+    width: 18rem;
+    height: 18rem;
     display: grid;
     place-items: center;
     background-image: url('@/assets/img/plate.png');
@@ -94,8 +101,8 @@ export default {
 }
 
 .option-content {
-  width: 18.125rem;
-  height: 18.125rem;
+  width: 14.5rem;
+  height: 14.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -106,7 +113,12 @@ export default {
   z-index: 1;
 
   h6 {
+    font-size: 0.8rem;
     transform: translateY(3.125rem);
+
+    @include respond(lg) {
+      transform: translateY(1.5rem);
+  }
   }
 }
 </style>

@@ -57,8 +57,14 @@ h6 {
 }
 
 .section {
-  max-width: 100rem;
-  margin: 6rem 2rem;
+  max-width: 95rem;
+  // margin: 6rem 2rem;
+  margin: 6rem auto;
+  padding: 0 2rem;
+
+  @include respond(sm) {
+    padding: 0 1rem;
+  }
 }
 
 .section-title {

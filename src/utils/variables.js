@@ -2,9 +2,9 @@ import icon1 from '@/assets/icon/vip_01.png'
 import icon2 from '@/assets/icon/vip_02.png'
 import icon3 from '@/assets/icon/vip_03.png'
 import icon4 from '@/assets/icon/vip_04.png'
-import icon5 from '@/assets/icon/bar.png'
-import icon6 from '@/assets/icon/heart.png'
-import icon7 from '@/assets/icon/banto.png'
+import icon5 from '@/assets/icon/point_1.png'
+import icon6 from '@/assets/icon/point_2.png'
+import icon7 from '@/assets/icon/point_3.png'
 
 import { v4 as uuidv4 } from 'uuid'
 
@@ -79,7 +79,7 @@ export const memberOptions = [
     title: '設定放縱日',
     content1: '在營養均衡的同時',
     content2: '選個日子解開所有束縛',
-    content3: '偶爾來點小確信吧'
+    content3: '偶爾來點小確幸吧'
   }
 ]
 
