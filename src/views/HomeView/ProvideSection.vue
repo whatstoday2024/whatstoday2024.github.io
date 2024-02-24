@@ -10,12 +10,17 @@
             <div class="col-10">
               <h3 class="fw-bold">{{ item.title }}</h3>
               <h6>{{ item.content }}</h6></div>
-            </div>
+          </div>
+          <div class="text-start mt-4">
+            <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
+              <div class="d-flex align-items-center">立即開始 <ArrowRightBold style="width: 20px; height: 20px ;color:white;;"/></div>
+            </router-link>
+          </div>
         </div>
       </div>
       <div class="d-none d-lg-block col-12 col-lg-5">
         <div class="card-right">
-          <img class="img object-fit-cover" :src="eatingImg" alt="eating">
+          <img class="img" :src="eatingImg" alt="eating">
         </div>
       </div>
     </div>
@@ -26,6 +31,8 @@
 import eatingImg from '@/assets/img/sloution_person.png'
 import { provideOptions } from '@/utils/variables'
 import axios from 'axios'
+import { CaretLeft, CaretRight, ArrowRightBold } from "@element-plus/icons-vue";
+
 export default {
   data() {
     return {
@@ -33,21 +40,14 @@ export default {
       provideOptions,
     }
   },
+  components: {
+    CaretRight,
+    CaretLeft,
+    ArrowRightBold
+},
   computed: {
     classObject: () => {}
   },
-  async mounted() {
-    const res = await axios.patch('http://localhost:3000/items/59ee', {
-      "title": "蔥爆牛肉555",
-      "eng": "Stir-fried Beef with Scallions2",
-      "healthLevel": 4.5,
-      "starchLevel": 0,
-      "proteinLevel": 0.25,
-      "vegLevel": 0.5,
-      "img": "https://res.cloudinary.com/dfvtounam/image/upload/v1707714590/%E8%9E%A2%E5%B9%95%E6%93%B7%E5%8F%96%E7%95%AB%E9%9D%A2_2024-02-12_130924_mbdgp0.png"
-    })
-    console.log(res)
-  }
 }
 </script>
 
@@ -69,6 +69,11 @@ export default {
 
 .icon {
   width: 60px;
+}
+
+.img{
+  object-fit: fill;
+  height: 100vh;
 }
 
 .card-right {
