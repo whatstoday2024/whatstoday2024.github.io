@@ -51,36 +51,21 @@
         <h5>營養比例(份)</h5>
         <div class="form-floating mb-4">
           <VField as="select" id="starchPortion" placeholder="請選擇澱粉比例" name="starchPortion" class="form-select" :class="{ 'is-invalid': errors['starchPortion'] }" rules="required" v-model="item.starchPortion">
-            <option value="0">0</option>
-            <option value="0.25">0.25</option>
-            <option value="0.33">0.33</option>
-            <option value="0.66">0.66</option>
-            <option value="0.75">0.75</option>
-            <option value="1">1</option>     
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>  
           </VField>
             <ErrorMessage name="starchPortion" class="invalid-feedback"/>
             <label for="starchPortion">澱粉比例*</label>
         </div>
         <div class="form-floating mb-4">
           <VField as="select" id="proteinPortion" placeholder="請選擇蛋白質比例" name="proteinPortion" class="form-select" :class="{ 'is-invalid': errors['proteinPortion'] }" rules="required" v-model="item.proteinPortion">
-            <option value="0">0</option>
-            <option value="0.25">0.25</option>
-            <option value="0.33">0.33</option>
-            <option value="0.66">0.66</option>
-            <option value="0.75">0.75</option>
-            <option value="1">1</option>   
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>  
           </VField>
             <ErrorMessage name="proteinPortion" class="invalid-feedback"/>
             <label for="proteinPortion">蛋白質比例*</label>
         </div>
         <div class="form-floating mb-4">
           <VField as="select" id="vegetablePortion" placeholder="請選擇蔬菜比例" name="vegetablePortion" class="form-select" :class="{ 'is-invalid': errors['vegetablePortion'] }" rules="required" v-model="item.vegetablePortion">
-            <option value="0">0</option>
-            <option value="0.25">0.25</option>
-            <option value="0.33">0.33</option>
-            <option value="0.66">0.66</option>
-            <option value="0.75">0.75</option>
-            <option value="1">1</option>    
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option> 
           </VField>
             <ErrorMessage name="vegetablePortion" class="invalid-feedback"/>
             <label for="vegetablePortion">蔬菜比例*</label>
@@ -146,6 +131,7 @@ import { items } from '@/utils/variables'
 export default {
   data() {
     return {
+      portionOptions:[0,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3,3.25,3.5,3.75,4,4.25,4.5,4.75,5],
       items,
       item: {
         title: '',
