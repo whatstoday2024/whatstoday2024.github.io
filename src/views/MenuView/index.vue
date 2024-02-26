@@ -1,22 +1,22 @@
 <template>
   <div class="container">
     <div class="title">
-      <h2 class="text-center mb-3">帶您探索菜色的無限可能</h2>
+      <h2 class="text-center my-3">帶您探索菜色的無限可能</h2>
       <div class="site-induction-btn btn p-0 d-flex">
         <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹"></i>
         <!-- <i class="bi bi-info-circle"></i> -->
         <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
       </div>
     </div>
-    <div class="mode-btns text-center">
-      <div class="btn-group mb-2" role="group" aria-label="Basic outlined example">
-        <button type="button" class="btn btn-outline-primary px-4 py-2" :class="{ active: mode === 'default' }"
-                @click="mode = 'default'">預設模式</button>
-        <button type="button" class="btn btn-outline-primary px-4 py-2" :class="{ active: mode === 'customization' }"
-                @click="mode = 'customization'">自選模式</button>
+    <div class="mode-btns text-center mb-3">
+      <div class="btn-group" role="group" aria-label="Basic outlined example">
+        <button type="button" class="default-mode btn btn-outline-primary px-4 py-2"
+                :class="{ active: mode === 'default' }" @click="mode = 'default'">預設模式</button>
+        <button type="button" class="customization-mode btn btn-outline-primary px-4 py-2"
+                :class="{ active: mode === 'customization' }" @click="mode = 'customization'">自選模式</button>
       </div>
     </div>
-    <div class="filter-sort-search-container mb-3 d-flex justify-content-between">
+    <div class="filter-sort-search-container mb-2 d-flex justify-content-between">
       <div class="category-filter" style="width: 8rem;">
         <select class="form-select outline-primary" aria-label="Default select example" v-model="filter">
           <option selected disabled>篩選</option>
@@ -56,7 +56,7 @@
           <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
             <div v-for=" i in 5 " :key="i" class="col">
               <div class="card h-100">
-                <img :src="white_rice" class="card-img-top" alt="white_rice">
+                <img :src="white_rice" class="card-img-top object-fit-cover" alt="white_rice">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -89,7 +89,7 @@
           <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
             <div v-for=" i in 17 " :key="i" class="col">
               <div class="card h-100" @click="temp.name = 999" data-bs-toggle="modal" data-bs-target="#dishModal">
-                <img :src="stir_fried_loofah" class="card-img-top" alt="stir_fried_loofah">
+                <img :src="stir_fried_loofah" class="card-img-top object-fit-cover" alt="stir_fried_loofah">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -122,7 +122,7 @@
           <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
             <div class="col">
               <div class="card h-100">
-                <img :src="braised_lion_s_head" class="card-img-top" alt="Braised Lion's Head">
+                <img :src="braised_lion_s_head" class="card-img-top object-fit-cover" alt="Braised Lion's Head">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -151,7 +151,7 @@
 
             <div v-for=" i in 9 " :key="i" class="col">
               <div class="card h-100">
-                <img :src="braised_lion_s_head" class="card-img-top" alt="Braised Lion's Head">
+                <img :src="braised_lion_s_head" class="card-img-top object-fit-cover" alt="Braised Lion's Head">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -185,10 +185,6 @@
     <div id="bentoGenerator" class="bento-generator text-center">
       <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3" data-bs-toggle="modal"
               data-bs-target="#bentoModal">生成便當</button>
-    </div>
-    <div id="bentoGenerator" class="bento-generator text-center">
-      <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3" data-bs-toggle="modal"
-              data-bs-target="#dishModal">22222</button>
     </div>
     <aside class="aside">
       <div class="aside-head">
@@ -284,7 +280,7 @@
               </div>
             </div>
             <div class="col col-lg-5 col-8 p-3 order-first order-lg-2 mx-auto align-self-center">
-              <img class="img-fluid" :src="white_rice" alt="">
+              <img class="object-fit-cover" :src="white_rice" alt="">
             </div>
           </div>
         </div>
@@ -475,6 +471,15 @@ export default {
   opacity: 1;
   transition-duration: .3s;
 }
+
+.default-mode {
+  border-right-color: white;
+}
+
+.customization-mode {
+  border-left-color: white;
+}
+
 
 /* card ----------------------------- */
 .dish-info {
