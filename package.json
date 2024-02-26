@@ -15,7 +15,6 @@
     "@popperjs/core": "^2.11.8",
     "@vee-validate/i18n": "^4.12.5",
     "@vee-validate/rules": "^4.12.5",
-    "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.3",
     "gh-pages": "^6.1.1",
@@ -23,6 +22,7 @@
     "uuid": "^9.0.1",
     "vee-validate": "^4.12.5",
     "vue": "^3.4.15",
+    "vue-axios": "^3.5.2",
     "vue-loading-overlay": "6.0",
     "vue-router": "^4.2.5"
   },
