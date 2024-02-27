@@ -12,6 +12,10 @@
     "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.11",
+    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
+    "@fullcalendar/vue3": "^6.1.11",
     "@popperjs/core": "^2.11.8",
     "@vee-validate/i18n": "^4.12.5",
     "@vee-validate/rules": "^4.12.5",
