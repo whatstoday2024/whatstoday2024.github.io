@@ -12,6 +12,7 @@ const router = createRouter({
         { path: '', name: 'HomeView', component: () => import('@/views/HomeView') },
         { path: 'register', name: 'Register', component: () => import('@/views/RegisterView') },
         { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
+<<<<<<< Updated upstream
         {
           path: 'member',
           name: 'memberLayout',
@@ -20,6 +21,11 @@ const router = createRouter({
             { path: 'profile', name: 'Profile', component: () => import('@/views/Member/ProfileView') },
           ]
         },
+=======
+        { path: 'profile', name: 'Profile', component: () => import('@/views/ProfileView') },
+        { path: 'accountRescue', name: 'AccountRescue', component: () => import('@/views/AccountRescueView') },
+        { path: 'issue', name: 'IssueForm', component: () => import('@/views/IssueFormView') },
+>>>>>>> Stashed changes
         {
           path: 'admin',
           name: 'adminLayout',

@@ -18,7 +18,7 @@
           <img :src="icon" alt="footer icon">
         </div>
         <div class="d-flex gap-3">
-          <router-link to="/" class="link">
+          <router-link to="/issue" class="link">
             <h6>問題回報</h6>
           </router-link>
           <router-link to="/admin" class="link">
