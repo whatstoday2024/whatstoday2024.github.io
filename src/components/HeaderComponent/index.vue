@@ -18,7 +18,7 @@
                 <RouterLink to="/" class="m-2">立即開始</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/admin" class="mx-2">便當日記</RouterLink>
+                <RouterLink to="/menu" class="mx-2">便當日記</RouterLink>
               </li>
               <li class="nav-item mx-2 d-none d-md-block">
                 <div class="dropdown">
@@ -30,10 +30,10 @@
                   </a>
                   <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink" style="">
                     <li>
-                      <a class="dropdown-item" href="#">
+                      <RouterLink to="/member" class="dropdown-item">
                         <span class="material-symbols-outlined">face</span>
                          會員中心
-                      </a>
+                      </RouterLink>
                     </li>
                     <li>
                       <a class="dropdown-item" href="#">
