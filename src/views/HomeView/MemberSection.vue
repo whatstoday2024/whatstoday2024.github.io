@@ -19,7 +19,7 @@
     </div>
     <div class="text-center">
       <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
-        <div class="d-flex align-items-center">成為會員 <ArrowRightBold style="width: 20px; height: 20px ;color:white;;"/></div>
+        <div class="d-flex align-items-center">成為會員 <ArrowRightBold style="width: 20px; height: 20px ;color:white;"/></div>
       </router-link>
     </div>
   </section>

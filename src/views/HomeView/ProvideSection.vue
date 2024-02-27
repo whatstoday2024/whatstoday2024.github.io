@@ -72,8 +72,10 @@ export default {
 }
 
 .img{
-  object-fit: fill;
-  height: 100vh;
+  // object-fit: fill;
+  object-fit: cover;
+  object-position: center;
+  height: 100%;
 }
 
 .card-right {

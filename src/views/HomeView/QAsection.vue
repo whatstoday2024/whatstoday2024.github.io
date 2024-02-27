@@ -53,6 +53,11 @@ export default {
 
 .accordion{
   width: 77%;
+
+  @include respond(lg) {
+    width: 100%;
+  }
+
 }
 .accordion-item{
   width: 100%;
