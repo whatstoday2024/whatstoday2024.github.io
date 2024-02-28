@@ -2,7 +2,7 @@
   <section class="member-section table-img">
     <h1 class="section-title fw-bold">成為會員，您可以...</h1>
     <!-- <div class="d-flex justify-content-around "> -->
-    <div class="row section">
+    <div class="row">
       <div class="col-6 col-lg-3 g-5 d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
         <div class="option-item relative" :style="isShow === option.id ? obj : ''" @click="showDetail(option.id)">
           <div class="d-flex flex-column gap-1 align-items-center">
@@ -19,7 +19,7 @@
     </div>
     <div class="text-center">
       <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
-        <span>成為會員 &#62;</span>
+        <div class="d-flex align-items-center">成為會員 <ArrowRightBold style="width: 20px; height: 20px ;color:white;"/></div>
       </router-link>
     </div>
   </section>
@@ -28,6 +28,7 @@
 <script>
 import { memberOptions } from '@/utils/variables'
 import tableImg from '@/assets/img/table.png'
+import { ArrowRightBold } from "@element-plus/icons-vue";
 
 export default {
   data() {
@@ -38,6 +39,10 @@ export default {
       obj: { transform: 'translateY(-120px)' }
     }
   },
+  components: {
+
+    ArrowRightBold
+},
   methods: {
     showDetail(id) {
       this.isShow = id
@@ -51,14 +56,18 @@ export default {
 .member-section {
   width: 100vw;
   display: flex;
-  gap: 6.25rem;
+  gap: 5rem;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 6.25rem;
+  // margin-bottom: 6.25rem;
 }
 
 .section-title {
   margin-left: 2rem;
+
+  @include respond(xl) {
+    margin-left: 2rem;
+  }
 
   @include respond(sm) {
     margin-left: 1rem;
@@ -69,7 +78,11 @@ export default {
   background-image: url('@/assets/img/table.png');
   background-repeat: no-repeat;
   background-position: 0% 30%;
-  background-size: 80%;
+
+
+  @include respond(lg) {
+
+  }
 
   @include respond(md) {
     background-position: 0% 20%;

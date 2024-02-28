@@ -3,13 +3,13 @@
     <div class="row mx-auto py-4" style="width: 90%">
       <div
         class="order-2 order-md-1 col-12 col-md-6 align-items-center align-items-md-start d-flex flex-column justify-content-center gap-3">
-        <router-link class="logo d-none d-md-block" to="/"><img alt="logo" :src="logo" />
-        </router-link>
+        <RouterLink to="/" class="logo d-none d-md-block"><img alt="logo" :src="logo" />
+        </RouterLink>
         <div class="text-center text-md-start">
           <a class="text-white" href="mailto:whatstoday2024@gmail.com">
             <h6>whatstoday2024@gmail.com</h6>
           </a>
-          <h6 class="text-white">&copy;whatstoday2024 2024. All rights reserved.</h6>
+          <h6 class="text-white">&copy;whatstoday2024. All rights reserved.</h6>
         </div>
       </div>
       <div
@@ -18,7 +18,7 @@
           <img :src="icon" alt="footer icon">
         </div>
         <div class="d-flex gap-3">
-          <router-link to="/" class="link">
+          <router-link to="/issue" class="link">
             <h6>問題回報</h6>
           </router-link>
           <router-link to="/admin" class="link">
