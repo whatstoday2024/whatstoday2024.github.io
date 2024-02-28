@@ -127,6 +127,10 @@ import axios from 'axios'
 import { toast } from 'vue3-toastify';
 import { DeleteFilled } from "@element-plus/icons-vue";
 import { Select as ElSelect } from "@element-plus/icons-vue";
+
+import memberStore from '@/stores/memberData'
+import { mapActions } from 'pinia'
+
 export default {
   data() {
     return {
@@ -181,7 +185,7 @@ export default {
         return
       }
       try{
-        const res = await axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/dishes`,this.item)
+        const res = await axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`,this.item)
         toast.success(`成功新增 ${res.data.message.title}`)
         this.$router.push(`/admin/admin-items`);
       }catch(err){
@@ -214,7 +218,8 @@ export default {
     },
     deleteImg(index){
       this.item.images.splice(index,1)
-    }
+    },
+    ...mapActions(memberStore, ['checkIsAdmin'])
   },
   watch:{
     'item.imgUrl':function(){
@@ -222,8 +227,11 @@ export default {
     },
   },
   mounted() {
-
-    }
+   if(!this.checkIsAdmin()) {
+      toast.error('非管理者無法執行')
+      this.$router.push(`/`);
+   }
+  },
 }
 </script>
 

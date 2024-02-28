@@ -1,5 +1,5 @@
 <template>
-  <div style="min-height: 100vh;" class="d-flex flex-column">
+  <div style="min-height: 100vh;" class="d-flex flex-column relative over">
     <HeaderComponent></HeaderComponent>
     <RouterView></RouterView>
     <FooterComponent></FooterComponent>
@@ -7,12 +7,15 @@
 </template>
 
 <script>
+import memberStore from '@/stores/memberData'
+import { mapActions } from 'pinia'
 import HeaderComponent from '@/components/HeaderComponent'
-
 import FooterComponent from '@/components/FooterComponent'
 
+
+
 export default {
-  components: { HeaderComponent, FooterComponent },
+  components: { HeaderComponent, FooterComponent},
   data() {
     return {
     };
@@ -20,8 +23,17 @@ export default {
   computed: {
   },
   methods: {
+    ...mapActions(memberStore, ['getUser'])
   },
+  mounted(){
+    console.log(123)
+    this.getUser()
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.over{
+  overflow-x: hidden;
+}
+</style>

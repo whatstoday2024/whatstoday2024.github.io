@@ -58,6 +58,8 @@ import 'vue3-toastify/dist/index.css';
 import StarRating from 'vue-star-rating'
 import DeleteItemModal from '@/views/AdminLayout/DeleteItemModal'
 import axios from 'axios'
+import memberStore from '@/stores/memberData'
+import { mapActions } from 'pinia'
 
 import Pagination from '@/components/Pagination'
 
@@ -86,7 +88,7 @@ export default {
     },
     async deleteItem(id){
       try{
-        await axios.delete(`${import.meta.env.VITE_API_JSON_SERVER}/dishes/${id}`)
+        await axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
         toast.success(`成功刪除`)
         await this.getItems()
       }catch(err){
@@ -97,13 +99,18 @@ export default {
     },
     async getItems(toPage = 1){
       this.currentPage = toPage
-      const resTotal = await axios.get(`${import.meta.env.VITE_API_JSON_SERVER}/dishes`)
-      const res = await axios.get(`${import.meta.env.VITE_API_JSON_SERVER}/dishes?_page=${toPage}`)
+      const resTotal = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
+      const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`)
       this.totalPages = Math.ceil(resTotal.data.message.length / 10) 
       this.items = res.data.message
-    }
+    },
+    ...mapActions(memberStore, ['checkIsAdmin'])
   },
   async mounted() {
+    if(!this.checkIsAdmin()) {
+      toast.error('非管理者無法執行')
+      this.$router.push(`/`);
+    }
     await this.getItems()
   },
 }
