@@ -52,8 +52,7 @@
 </style>
 
 <template>
-  <section class="section my-0">
-    <div class="row">
+    <section class="section row my-0">
       <div class="col-md-4 p-0 order-md-1 order-2">
         <div class="rounded-4 hero-section position-relative hero_topl">
           <div style="position: absolute; left: 10px; bottom: 10px;">
@@ -61,7 +60,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 p-0 px-2 order-md-2 order-3">
+      <div class="col-md-4 p-0 px-0 px-md-2 order-md-2 order-3">
         <div class="rounded-4 hero-section position-relative hero_topr">
           <div style="position: absolute; left: 10px; bottom: 10px;">
             # 快速便利
@@ -80,7 +79,7 @@
           <div class="en_title d-flex flex-wrap h3 lh-base">
             <div class="mb-0 me-2">What are we eating</div>
             <div class="flex-fill mb-0 me-2 position-relative darkLine"></div>
-            <div class="mb-0">today ！</div>
+            <div class="mb-0">today !</div>
           </div>
           <div class="tw_title">
             <h1>今天吃什麼 😉</h1>
@@ -92,7 +91,6 @@
           </div>
         </div>
       </div>
-    </div>
   </section>
 </template>
 

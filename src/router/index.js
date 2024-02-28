@@ -12,6 +12,7 @@ const router = createRouter({
         { path: '', name: 'HomeView', component: () => import('@/views/HomeView') },
         { path: 'register', name: 'Register', component: () => import('@/views/RegisterView') },
         { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
+        { path: 'issue', name: 'IssueForm', component: () => import('@/views/IssueFormView') },
         {
           path: 'member',
           name: 'memberLayout',
