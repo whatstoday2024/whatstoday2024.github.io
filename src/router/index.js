@@ -14,6 +14,7 @@ const router = createRouter({
         { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
         { path: 'issue', name: 'IssueForm', component: () => import('@/views/IssueFormView') },
         { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
+        { path: 'freeDays', name: 'FreeDays', component: () => import('@/views/FreeDaysView') },
         {
           path: 'member',
           name: 'memberLayout',

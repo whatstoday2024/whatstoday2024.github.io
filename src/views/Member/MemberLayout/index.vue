@@ -23,7 +23,7 @@ export default {
       }
       this.isLoading = true
       this.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
+      this.axios.get(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${id}`)
         .then((res) => {
           this.setMemberData(res.data.message)
           this.isLoading = false

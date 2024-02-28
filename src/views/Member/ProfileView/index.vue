@@ -101,7 +101,7 @@ export default {
         return
       }
       this.isLoading = true
-      this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, {
+      this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${this.memberData.id}`, {
           'nickname': this.user.nickname
         }).then(() => {
           alert('會員名稱修改成功')
@@ -117,7 +117,7 @@ export default {
       this.isLoading = true
       const isValid = await this.checkPassword()
       if (isValid) {
-        this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, {
+        this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${this.memberData.id}`, {
           password: this.password.new
         }).then(() => {
           alert('密碼修改成功')
@@ -137,7 +137,7 @@ export default {
         password: this.password.old
       }
       return new Promise((resolve) => {
-        this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, user)
+        this.axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/login`, user)
           .then(() => {
             resolve(true)
           }).catch(() => {
