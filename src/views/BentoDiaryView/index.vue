@@ -10,7 +10,7 @@
 <script>
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '`@fullcalendar/interaction`'
+import interactionPlugin from '@fullcalendar/interaction'
 
 let calendarWrap = null;
 
