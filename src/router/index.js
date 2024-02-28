@@ -34,7 +34,6 @@ const router = createRouter({
         },
         { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
         { path: 'bento-dairy', name: 'BentoDiaryView', component: () => import('@/views/BentoDiaryView') },
-
       ]
     }
   ]
