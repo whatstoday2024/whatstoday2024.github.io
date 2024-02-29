@@ -19,7 +19,7 @@
     </div>
     <div class="text-center">
       <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
-        <div class="d-flex align-items-center">成為會員 <ArrowRightBold style="width: 20px; height: 20px ;color:white;"/></div>
+        <div class="d-flex align-items-center py-2 px-3">成為會員 <ArrowRightBold style="width: 20px; height: 20px ;color:white;"/></div>
       </router-link>
     </div>
   </section>
@@ -91,6 +91,7 @@ export default {
 
 .icon {
   width: 3.125rem;
+
 }
 
 .option {
@@ -105,6 +106,11 @@ export default {
     background-size: cover;
     z-index: 999;
     transition: all 0.8s;
+
+    @include respond(sm) {
+      width: 15.5rem;
+    height: 15.5rem;
+  }
 
     &:hover {
       cursor: pointer;
@@ -125,6 +131,11 @@ export default {
   position: absolute;
   z-index: 1;
 
+
+  @include respond(sm) {
+      width: 12.5rem;
+    height: 12.5rem;
+  }
   h6 {
     font-size: 0.8rem;
     transform: translateY(3.125rem);

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import * as $cookie from '@/utils/cookie'
 import axios from 'axios'
+import * as $cookie from '@/utils/cookie'
 
 export default defineStore('memberData', {
   state: () => ({
@@ -8,28 +8,34 @@ export default defineStore('memberData', {
     hasCheckLogin: false
   }),
   actions: {
-    checkAuth(){
+    setMemberData(data){
+      this.memberData = data
+    },
+    getUser(){
       this.hasCheckLogin = false
       const token = $cookie.getMemberToken();
       const id = $cookie.getMemberId();
       if(!token || !id) {
-        this.memberData = {}
+        this.setMemberData({})
         this.hasCheckLogin = true
         return
-      }
-      return axios.get(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${id}`, {
-        headers: {
-          'Authorization': token
-        }
-      }).then((res) => {
-        this.memberData = res.data.message
-        this.hasCheckLogin = true
-      }).catch(() => {
-        this.hasCheckLogin = true
-      });
+      } 
+      axios.defaults.headers.common.Authorization = token;
+      axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
+        .then((res) => {
+          this.setMemberData(res.data.message)
+          this.hasCheckLogin = true
+        }).catch(() => {
+          this.setMemberData({})
+          this.hasCheckLogin = true
+        });
     },
-    setMemberData(data){
-      this.memberData = data
+    checkIsAdmin(){
+      if(!this.memberData.isAdmin){
+        return false
+      }else{
+        return true
+      }
     },
   },
 })
