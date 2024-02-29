@@ -1,22 +1,23 @@
 <template>
   <div class="container">
     <div class="title">
-      <h2 class="text-center mb-3">帶您探索菜色的無限可能</h2>
+      <h2 class="text-center my-3">帶您探索菜色的無限可能</h2>
       <div class="site-induction-btn btn p-0 d-flex">
-        <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹"></i>
+        <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹" data-bs-toggle="modal"
+           data-bs-target="#siteIntroModal"></i>
         <!-- <i class="bi bi-info-circle"></i> -->
         <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
       </div>
     </div>
-    <div class="mode-btns text-center">
-      <div class="btn-group mb-2" role="group" aria-label="Basic outlined example">
-        <button type="button" class="btn btn-outline-primary px-4 py-2" :class="{ active: mode === 'default' }"
-                @click="mode = 'default'">預設模式</button>
-        <button type="button" class="btn btn-outline-primary px-4 py-2" :class="{ active: mode === 'customization' }"
-                @click="mode = 'customization'">自選模式</button>
+    <div class="mode-btns text-center mb-3">
+      <div class="btn-group" role="group" aria-label="Basic outlined example">
+        <button type="button" class="default-mode btn btn-outline-primary px-4 py-2"
+                :class="{ active: mode === 'default' }" @click="mode = 'default'">預設模式</button>
+        <button type="button" class="customization-mode btn btn-outline-primary px-4 py-2"
+                :class="{ active: mode === 'customization' }" @click="mode = 'customization'">自選模式</button>
       </div>
     </div>
-    <div class="filter-sort-search-container mb-3 d-flex justify-content-between">
+    <div class="filter-sort-search-container mb-2 d-flex justify-content-between">
       <div class="category-filter" style="width: 8rem;">
         <select class="form-select outline-primary" aria-label="Default select example" v-model="filter">
           <option selected disabled>篩選</option>
@@ -48,15 +49,15 @@
         </div>
       </div>
     </div>
-    <div class="menu border border-primary rounded mb-3">
+    <div class="menu border border-primary rounded mb-3 position-relative" :class="{ mask: mode === 'default' }">
       <div class="wrap w-80 mx-auto pt-5 pb-4">
         <div class="staple mb-4" v-if="filter === 'all' || filter === 'staple'">
           <h3 class="d-inline mx-2">主食類</h3> <small class="text-danger">*請至少選擇一樣</small>
           <hr>
           <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            <div v-for=" i in 5 " :key="i" class="col">
+            <div v-for=" i in   5   " :key="i" class="col">
               <div class="card h-100">
-                <img :src="white_rice" class="card-img-top" alt="white_rice">
+                <img :src="white_rice" class="card-img-top object-fit-cover" alt="white_rice">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -65,7 +66,7 @@
                   <h5 class="card-title text-center">白飯</h5>
                   <small class="card-eng-title mb-3 d-block text-center">White Rice</small>
                   <div class="input-group mx-auto">
-                    <div class="input-group-text">
+                    <div class="input-group-text" :class="{ 'bg-grey9F': mode === 'default' }">
                       <input class="form-check-input mt-0" type="checkbox" v-model="isChecked"
                              aria-label="Checkbox for following text input" :disabled="mode === 'default'">
                     </div>
@@ -87,9 +88,9 @@
           <h3 class="d-inline mx-2">配菜類</h3> <small class="text-danger">*請至少選擇三樣</small>
           <hr>
           <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            <div v-for=" i in 17 " :key="i" class="col">
+            <div v-for="   i   in   17   " :key="i" class="col">
               <div class="card h-100" @click="temp.name = 999" data-bs-toggle="modal" data-bs-target="#dishModal">
-                <img :src="stir_fried_loofah" class="card-img-top" alt="stir_fried_loofah">
+                <img :src="stir_fried_loofah" class="card-img-top object-fit-cover" alt="stir_fried_loofah">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -122,7 +123,7 @@
           <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
             <div class="col">
               <div class="card h-100">
-                <img :src="braised_lion_s_head" class="card-img-top" alt="Braised Lion's Head">
+                <img :src="braised_lion_s_head" class="card-img-top object-fit-cover" alt="Braised Lion's Head">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -149,9 +150,9 @@
               </div>
             </div>
 
-            <div v-for=" i in 9 " :key="i" class="col">
+            <div v-for="   i   in   9   " :key="i" class="col">
               <div class="card h-100">
-                <img :src="braised_lion_s_head" class="card-img-top" alt="Braised Lion's Head">
+                <img :src="braised_lion_s_head" class="card-img-top object-fit-cover" alt="Braised Lion's Head">
                 <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
                   <div class="dish-info-btn btn p-0 d-flex">
                     <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
@@ -186,10 +187,6 @@
       <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3" data-bs-toggle="modal"
               data-bs-target="#bentoModal">生成便當</button>
     </div>
-    <div id="bentoGenerator" class="bento-generator text-center">
-      <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3" data-bs-toggle="modal"
-              data-bs-target="#dishModal">22222</button>
-    </div>
     <aside class="aside">
       <div class="aside-head">
         <a href="javascript:;" class="aside-link aside-link-generator" @click="moveToGeneratorBtn">
@@ -199,7 +196,48 @@
       </div>
     </aside>
   </div>
+
+
   <!-- Modal -->
+  <!-- 網站介紹 Modal -->
+  <div class="modal fade " id="siteIntroModal" tabindex="-1" aria-labelledby="siteIntroModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content vh-75">
+        <div class="modal-header">
+          <h4 class="modal-title" id="siteIntroModalLabel">網站介紹</h4> <small> {{ introIndex }} / 7 </small>
+          <button type="button" class="btn text-primary" data-bs-dismiss="modal" aria-label="Close">略過</button>
+        </div>
+        <div class="modal-body d-flex justify-content-between align-items-center p-3">
+          <button v-if="introIndex !== 1" type="button" class="btn prev-btn"><i class="bi bi-chevron-left"></i></button>
+
+          <div class="row row-cols-1 row-cols-lg-2 align-items-center h-100 w-100">
+            <div class="col col-lg-5 col-8 p-3 mx-auto align-self-center">
+              <!-- <img class="object-fit-cover" :src="white_rice" alt=""> -->
+              <div>
+                <p class="text-center">我是gif</p>
+              </div>
+            </div>
+            <div class="col gap-3 p-3 mx-auto mt-0">
+              <p>★ 你可以 篩選出 主食、配菜與主菜</p>
+              <p>★ 你可以 依 喜好程度 或 健康推薦指數，將菜色卡片進行排序</p>
+              <p>★ 你可以 以 關鍵字 搜尋特定菜色卡片</p>
+            </div>
+          </div>
+
+          <button v-if="introIndex !== 7" type="button" class="btn next-btn"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="modal-footer">
+          <div class="no-show-again d-flex gap-2 mx-auto">
+            <input type="checkbox" id="no-show-again" name="no-show-again"
+                   class="form-check-input no-show-again-checkout">
+            <label for="no-show-again">不再顯示</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 菜色介紹 Modal -->
   <div class="modal fade" id="dishModal" tabindex="-1" aria-labelledby="dishModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content dish">
@@ -284,7 +322,7 @@
               </div>
             </div>
             <div class="col col-lg-5 col-8 p-3 order-first order-lg-2 mx-auto align-self-center">
-              <img class="img-fluid" :src="white_rice" alt="">
+              <img class="object-fit-cover" :src="white_rice" alt="">
             </div>
           </div>
         </div>
@@ -292,6 +330,7 @@
     </div>
   </div>
 
+  <!-- 便當生成 Modal -->
   <div class="modal fade" id="bentoModal" tabindex="-1" aria-labelledby="bentoModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content bento">
@@ -401,7 +440,8 @@ export default {
         },
         preferenceLevel: 5,
         healthPoint: 3
-      }
+      },
+      introIndex: 1
 
     };
   },
@@ -419,6 +459,10 @@ export default {
 
 <style scoped>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
+
+.vh-75 {
+  height: 75vh;
+}
 
 .active {
   color: white;
@@ -476,6 +520,27 @@ export default {
   transition-duration: .3s;
 }
 
+.default-mode {
+  border-right-color: white;
+}
+
+.customization-mode {
+  border-left-color: white;
+}
+
+/* mask ----------------------------- */
+.mask::before {
+  position: absolute;
+  z-index: 5;
+  /* overflow: hidden; */
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 /* card ----------------------------- */
 .dish-info {
   position: relative;
@@ -489,6 +554,11 @@ export default {
 
 .dish-info-btn:active {
   border-color: transparent;
+}
+
+.form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 /* aside ----------------------------- */
