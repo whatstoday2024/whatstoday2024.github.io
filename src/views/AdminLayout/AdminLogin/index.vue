@@ -2,11 +2,11 @@
   <div class="container flex-fill py-4 py-lg-5 d-flex align-items-center">
     <div class="w-100">
       <div class="row g-3 g-lg-4 justify-content-evenly">
-        <div class="col-lg-5 align-self-lg-center">
-        </div>
         <div class="col-lg-6">
           <VForm class="card rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="login">
-            <h1 class="h2 mb-3 text-center">管理者登入</h1>
+            <h1 class="h2 mb-3 text-center">後台登入(僅供管理者)</h1>
+            {{ memberStore }}
+            <h4 v-if="errorMsg" class="text-center text-danger">{{ errorMsg }}</h4>
             <div class="form-floating mb-4">
               <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
               <ErrorMessage name="信箱" class="invalid-feedback"/>
@@ -27,6 +27,11 @@
 
 <script>
 import axios from 'axios'
+
+import memberStore from '@/stores/memberData'
+import { mapActions } from 'pinia'
+import { mapState } from 'pinia'
+
 export default {
   data(){
     return { 
@@ -34,7 +39,19 @@ export default {
         email: '',
         password: '',
       },
+      errorMsg:''
     }
+  },
+  watch:{
+    'user.email': function(){
+      this.errorMsg = ''
+    },
+    'user.password': function(){
+      this.errorMsg = ''
+    },
+  },
+  computed:{
+    ...mapState(memberStore, ['memberData'])
   },
   methods:{
     login(){
@@ -44,14 +61,24 @@ export default {
           const exp = res.data.expired
           document.cookie = `token=${token}`
           document.cookie = `expDate=${exp}`
-          this.$router.push(`/admin/admin-items`);
+
+        axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
+          .then((res) => {
+            const { accessToken, user } = res.data
+            document.cookie = `whatstoday=${accessToken}`
+            document.cookie = `whatstodayMember=${user.id}`
+            this.setMemberData(user)
+            this.$router.push(`/admin/admin-items`);
+          }).catch(() => {
+            this.errorMsg = '登入失敗'
+        })
       }).catch((error) => {
-      console.log(error)
+        this.errorMsg = error.response.data.message
     })
-    }
+    },
+    ...mapActions(memberStore, ['setMemberData'])
   },
   async mounted() {
-  
   }
 
 }

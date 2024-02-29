@@ -12,8 +12,8 @@
               <h6>{{ item.content }}</h6></div>
           </div>
           <div class="text-start mt-4">
-            <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
-              <div class="d-flex align-items-center">立即開始 <ArrowRightBold style="width: 20px; height: 20px ;color:white;;"/></div>
+            <router-link to="/menu" class="btn btn-lg btn-brand-blue text-white rounded-pill">
+              <div class="d-flex align-items-center py-2 px-3">立即開始 <ArrowRightBold style="width: 20px; height: 20px ;color:white;;"/></div>
             </router-link>
           </div>
         </div>

@@ -125,8 +125,11 @@
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import axios from 'axios'
+import memberStore from '@/stores/memberData'
+import { mapActions } from 'pinia'
 import { DeleteFilled } from "@element-plus/icons-vue";
 import { Select as ElSelect } from "@element-plus/icons-vue";
+
 import { items } from '@/utils/variables'
 export default {
   data() {
@@ -184,7 +187,7 @@ export default {
         return
       }
       try{
-        await axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/dishes/${this.item.id}`,this.item)
+        await axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${this.item.id}`,this.item)
         toast.success("成功編輯菜色");
         // toast.success(res.data.message);
       }catch(err){
@@ -205,7 +208,8 @@ export default {
     },
     deleteImg(index){
       this.item.images.splice(index,1)
-    }
+    },
+    ...mapActions(memberStore, ['checkIsAdmin'])
   },
   watch:{
     'item.imgUrl':function(){
@@ -213,8 +217,13 @@ export default {
     },
   },
   async mounted() {
+    if(!this.checkIsAdmin()) {
+      toast.error('非管理者無法執行')
+      this.$router.push(`/`);
+    }
+
     const id = this.$route.params.id
-    const res = await axios.get(`${import.meta.env.VITE_API_JSON_SERVER}/dishes/${id}`)
+    const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
     this.item = res.data.message
   },
 }

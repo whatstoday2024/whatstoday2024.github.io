@@ -13,6 +13,8 @@ const router = createRouter({
         { path: 'register', name: 'Register', component: () => import('@/views/RegisterView') },
         { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
         { path: 'issue', name: 'IssueForm', component: () => import('@/views/IssueFormView') },
+        { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
+        { path: 'bento-dairy', name: 'BentoDiaryView', component: () => import('@/views/BentoDiaryView') },
         {
           path: 'member',
           name: 'memberLayout',
@@ -29,12 +31,16 @@ const router = createRouter({
             { path: '', name: 'AdminLogin', component: () => import('@/views/AdminLayout/AdminLogin') },
             { path: 'admin-items', name: 'AdminItems', component: () => import('@/views/AdminLayout/AdminItems') },
             { path: 'add-item', name: 'AddItem', component: () => import('@/views/AdminLayout/AddItem') },
-            { path: 'edit-item/:id', name: 'Login', component: () => import('@/views/AdminLayout/EditItem') },
+            { path: 'edit-item/:id', name: 'EditItem', component: () => import('@/views/AdminLayout/EditItem') },
           ]
         },
-        { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
-        { path: 'bento-dairy', name: 'BentoDiaryView', component: () => import('@/views/BentoDiaryView') },
+        
       ]
+    },
+    {
+      path:'/:catchAll(.*)',
+      name:'404',
+      component:()=>import("@/views/ErrorView")
     }
   ]
 })
