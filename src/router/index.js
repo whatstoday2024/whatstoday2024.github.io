@@ -14,13 +14,16 @@ const router = createRouter({
         { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
         { path: 'issue', name: 'IssueForm', component: () => import('@/views/IssueFormView') },
         { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
-        { path: 'freeDays', name: 'FreeDays', component: () => import('@/views/FreeDaysView') },
         {
           path: 'member',
           name: 'memberLayout',
           component: () => import('@/views/Member/MemberLayout'),
+          redirect: {
+            name: 'Profile'
+          },
           children: [
             { path: 'profile', name: 'Profile', component: () => import('@/views/Member/ProfileView') },
+            { path: 'freeDays', name: 'FreeDays', component: () => import('@/views/Member/FreeDaysView') },
           ]
         },
         {
@@ -31,7 +34,7 @@ const router = createRouter({
               { path: '', name: 'AdminLogin', component: () => import('@/views/AdminLayout/AdminLogin') },
               { path: 'admin-items', name: 'AdminItems', component: () => import('@/views/AdminLayout/AdminItems') },
               { path: 'add-item', name: 'AddItem', component: () => import('@/views/AdminLayout/AddItem') },
-              { path: 'edit-item/:id', name: 'Login', component: () => import('@/views/AdminLayout/EditItem') },
+              { path: 'edit-item/:id', name: 'EditItem', component: () => import('@/views/AdminLayout/EditItem') },
           ]
         }
       ]

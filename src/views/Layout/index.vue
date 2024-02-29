@@ -8,8 +8,9 @@
 
 <script>
 import HeaderComponent from '@/components/HeaderComponent'
-
 import FooterComponent from '@/components/FooterComponent'
+import memberStore from '@/stores/memberData'
+import { mapActions } from 'pinia'
 
 export default {
   components: { HeaderComponent, FooterComponent },
@@ -20,7 +21,11 @@ export default {
   computed: {
   },
   methods: {
+    ...mapActions(memberStore, ['checkAuth'])
   },
+  created(){
+    this.checkAuth()
+  }
 };
 </script>
 

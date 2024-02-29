@@ -63,6 +63,9 @@
 <script>
 import memberStore from '@/stores/memberData'
 import { mapState } from 'pinia'
+
+document.title = "會員中心";
+
 export default {
   data() {
     return {
@@ -103,13 +106,21 @@ export default {
       this.isLoading = true
       this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${this.memberData.id}`, {
           'nickname': this.user.nickname
+        }, {
+          headers: {
+            'authorization': this.$cookie.getMemberToken()
+          }
         }).then(() => {
-          alert('會員名稱修改成功')
-          this.$emit('updateProfile')
+          this.$emit('updateProfile', {
+            status: 'success',
+            message: '會員名稱修改成功'
+          })
           this.isLoading = false
         }).catch(() => {
-          alert('會員名稱修改失敗')
-          this.$emit('updateProfile')
+          this.$emit('updateProfile', {
+            status: 'error',
+            message: '會員名稱修改失敗'
+          })
           this.isLoading = false
         })
     },
@@ -119,15 +130,27 @@ export default {
       if (isValid) {
         this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${this.memberData.id}`, {
           password: this.password.new
+        }, {
+          headers: {
+            'authorization': this.$cookie.getMemberToken()
+          }
         }).then(() => {
-          alert('密碼修改成功')
-          this.$emit('updateProfile')
+          this.$emit('updateProfile', {
+            status: 'success',
+            message: '密碼修改成功'
+          })
         }).catch(() => {
-          alert('密碼修改失敗')
+          this.$emit('updateProfile', {
+            status: 'error',
+            message: '密碼修改失敗'
+          })
           this.isLoading = false
         })
       } else {
-        alert('舊密碼輸入不正確')
+        this.$emit('updateProfile', {
+          status: 'error',
+          message: '舊密碼輸入不正確'
+        })
         this.isLoading = false
       }
     },
@@ -148,10 +171,6 @@ export default {
   },
   mounted() {
     this.getProfile()
-    const token = this.$cookie.getMemberToken();
-    if(token) {
-      this.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-    }
   }
 }
 </script>

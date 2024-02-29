@@ -41,6 +41,10 @@
 <script>
 import memberStore from '@/stores/memberData'
 import { mapActions } from 'pinia'
+import { toast } from 'vue3-toastify';
+
+document.title = "馬上登入";
+
 export default {
   data() {
     return {
@@ -58,12 +62,26 @@ export default {
       this.axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/login`, this.user)
         .then((res) => {
           const { accessToken, user } = res.data
-          document.cookie = `whatstoday=${accessToken}`
-          document.cookie = `whatstodayMember=${user.id}`
+          this.$cookie.setMemberToken(accessToken)
+          this.$cookie.setMemberId(user.id)
           this.setMemberData(user)
           this.isLoading = false
-          alert('登入成功！前往個人頁')
-          this.$router.push({ name: 'Profile' })
+          const delay = 1000
+          if(user.isAdmin){
+            toast.success('登入成功！前往後台', {
+              autoClose: delay,
+            })
+            setTimeout(() => {
+              this.$router.push({name: 'AdminItems'})
+            }, delay)
+          }else{
+            toast.success('登入成功！前往菜單', {
+              autoClose: delay,
+            })
+            setTimeout(() => {
+              this.$router.push({name: 'MenuView'})
+            }, delay)
+          }
         }).catch(() => {
           this.loginError = true
           this.isLoading = false

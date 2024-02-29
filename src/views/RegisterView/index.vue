@@ -51,14 +51,17 @@
 </template>
 
 <script>
+import { toast } from 'vue3-toastify';
+
+document.title = "開始探索";
+
 export default {
   data() {
     return {
       user: {
         nickname: '',
         email: '',
-        password: '',
-        role: 'user'
+        password: ''
       },
       passwordDoubleCheck: '',
       registerError: '',
@@ -72,8 +75,13 @@ export default {
       this.axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/register`, this.user)
         .then(() => {
           this.isLoading = false
-          alert('註冊成功！前往登入')
-          this.$router.push({name: 'Login'})
+          const delay = 1000
+          toast.success('註冊成功！前往登入', {
+            autoClose: delay,
+          })
+          setTimeout(() => {
+            this.$router.push({name: 'Login'})
+          }, delay)
         }).catch(e => {
           if(e.response?.data === 'Email already exists'){
             this.registerError = `${this.user.email} 用戶已存在`
