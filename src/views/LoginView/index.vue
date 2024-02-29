@@ -59,7 +59,7 @@ export default {
   methods: {
     login(){
       this.isLoading = true
-      this.axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/login`, this.user)
+      this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
         .then((res) => {
           const { accessToken, user } = res.data
           this.$cookie.setMemberToken(accessToken)

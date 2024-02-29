@@ -47,10 +47,10 @@ export default {
     async updateProfile({ status, message }){
       this.isRouterAlive = false
       toast[status](message)
-      await this.checkAuth()
+      await this.getUser()
       this.isRouterAlive = true
     },
-    ...mapActions(memberStore, ['checkAuth'])
+    ...mapActions(memberStore, ['getUser'])
   },
   mounted(){
     this.checkStatus()

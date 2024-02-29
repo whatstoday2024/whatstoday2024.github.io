@@ -172,7 +172,7 @@ export default {
       this.isLoading = true
       const data = {}
       data[key] = this.freeDays[key]
-      this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/freeDays/${this.freeDays.id}`, data, {
+      this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/freeDays/${this.freeDays.id}`, data, {
         headers: {
           'authorization': this.$cookie.getMemberToken()
         }
@@ -282,7 +282,6 @@ export default {
   },
   mounted(){
     this.getFreeDaysData()
-    console.log(import.meta.env.VITE_API_JSON_SERVER)
   }
 }
 </script>

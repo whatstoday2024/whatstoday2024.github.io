@@ -72,7 +72,7 @@ export default {
     register(){
       this.isLoading = true
       this.registerError = ''
-      this.axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/register`, this.user)
+      this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/register`, this.user)
         .then(() => {
           this.isLoading = false
           const delay = 1000

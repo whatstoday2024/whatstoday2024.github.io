@@ -104,7 +104,7 @@ export default {
         return
       }
       this.isLoading = true
-      this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${this.memberData.id}`, {
+      this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, {
           'nickname': this.user.nickname
         }, {
           headers: {
@@ -128,7 +128,7 @@ export default {
       this.isLoading = true
       const isValid = await this.checkPassword()
       if (isValid) {
-        this.axios.patch(`${import.meta.env.VITE_API_JSON_SERVER}/600/users/${this.memberData.id}`, {
+        this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, {
           password: this.password.new
         }, {
           headers: {
@@ -160,7 +160,7 @@ export default {
         password: this.password.old
       }
       return new Promise((resolve) => {
-        this.axios.post(`${import.meta.env.VITE_API_JSON_SERVER}/login`, user)
+        this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, user)
           .then(() => {
             resolve(true)
           }).catch(() => {
