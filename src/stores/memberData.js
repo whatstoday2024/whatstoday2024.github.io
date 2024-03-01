@@ -8,20 +8,20 @@ export default defineStore('memberData', {
     hasCheckLogin: false
   }),
   actions: {
-    setMemberData(data){
+    setMemberData(data) {
       this.memberData = data
     },
-    getUser(){
+    async getUser() {
       this.hasCheckLogin = false
       const token = $cookie.getMemberToken();
       const id = $cookie.getMemberId();
-      if(!token || !id) {
+      if (!token || !id) {
         this.setMemberData({})
         this.hasCheckLogin = true
         return
-      } 
+      }
       axios.defaults.headers.common.Authorization = token;
-      axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
+      await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
         .then((res) => {
           this.setMemberData(res.data.message)
           this.hasCheckLogin = true
@@ -30,10 +30,10 @@ export default defineStore('memberData', {
           this.hasCheckLogin = true
         });
     },
-    checkIsAdmin(){
-      if(!this.memberData.isAdmin){
+    checkIsAdmin() {
+      if (!this.memberData.isAdmin) {
         return false
-      }else{
+      } else {
         return true
       }
     },

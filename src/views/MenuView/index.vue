@@ -5,16 +5,14 @@
       <div class="site-induction-btn btn p-0 d-flex">
         <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹" data-bs-toggle="modal"
            data-bs-target="#siteIntroModal"></i>
-        <!-- <i class="bi bi-info-circle"></i> -->
-        <!-- <i class="fa-solid fa-circle-exclamation"></i> -->
       </div>
     </div>
     <div class="mode-btns text-center mb-3">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
         <button type="button" class="default-mode btn btn-outline-primary px-4 py-2"
-                :class="{ active: mode === 'default' }" @click="mode = 'default'">預設模式</button>
+                :class="{ active: mode === 'default' }" @click="setMode('default')">預設模式</button>
         <button type="button" class="customization-mode btn btn-outline-primary px-4 py-2"
-                :class="{ active: mode === 'customization' }" @click="mode = 'customization'">自選模式</button>
+                :class="{ active: mode === 'customization' }" @click="setMode('customization')">自選模式</button>
       </div>
     </div>
     <div class="filter-sort-search-container mb-2 d-flex justify-content-between">
@@ -29,183 +27,79 @@
       </div>
       <div class="sort-search-container d-flex justify-content-between gap-2">
         <div class="sort-dropdown dropdown">
-          <button class="btn btn-outline-primary" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                  aria-expanded="false">
+          <button class="btn btn-outline-primary" type="button" id="SortByWhatFactorDropdownMenuButton"
+                  data-bs-toggle="dropdown" aria-expanded="false">
             <strong>三</strong>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="javascript:;">依 預設 排序</a></li>
-            <li><a class="dropdown-item" href="javascript:;">依 喜好程度 排序</a></li>
-            <li><a class="dropdown-item" href="javascript:;">依 健康分數 排序</a></li>
+          <ul class="dropdown-menu" aria-labelledby="SortByWhatFactorDropdownMenuButton">
+            <li><a class="dropdown-item" href="javascript:;" @click="sortBy = 'default'">依 預設
+                排序</a></li>
+            <li><a class="dropdown-item" href="javascript:;" @click="sortBy = 'preferenceLevel'">依
+                喜好程度 排序</a></li>
+            <li><a class="dropdown-item" href="javascript:;" @click="sortBy = 'healthLevel'">依 健康分數
+                排序</a></li>
           </ul>
         </div>
-        <div class="search-input input-group">
-          <input type="text" class="form-control" placeholder="搜尋菜色" aria-label="Search" aria-describedby="basic-addon1"
-                 size="10">
-          <button class="btn btn-outline-primary" type="button" id="button-addon2">
+        <form class="search-input input-group" @submit.prevent="getSearchedDishes">
+          <input type="text" class="form-control" placeholder="搜尋菜色" aria-label="Search"
+                 aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput">
+          <button class="btn btn-outline-primary" type="button" id="button-addon2" @click="getSearchedDishes">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <!-- <i class="bi bi-search"></i> -->
           </button>
-        </div>
+        </form>
       </div>
     </div>
     <div class="menu border border-primary rounded mb-3 position-relative" :class="{ mask: mode === 'default' }">
       <div class="wrap w-80 mx-auto pt-5 pb-4">
-        <div class="staple mb-4" v-if="filter === 'all' || filter === 'staple'">
-          <h3 class="d-inline mx-2">主食類</h3> <small class="text-danger">*請至少選擇一樣</small>
+        <div class="staple mb-4" v-if="(filter === 'all' || filter === 'staple') && search === ''">
+          <h3 class="d-inline mx-2">主食類</h3>
+          <small class="text-danger">*請至少選擇一樣</small>
           <hr>
-          <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            <div v-for=" i in   5   " :key="i" class="col">
-              <div class="card h-100">
-                <img :src="white_rice" class="card-img-top object-fit-cover" alt="white_rice">
-                <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
-                  <div class="dish-info-btn btn p-0 d-flex">
-                    <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
-                       data-bs-target="#dishModal"></i>
-                  </div>
-                  <h5 class="card-title text-center">白飯</h5>
-                  <small class="card-eng-title mb-3 d-block text-center">White Rice</small>
-                  <div class="input-group mx-auto">
-                    <div class="input-group-text" :class="{ 'bg-grey9F': mode === 'default' }">
-                      <input class="form-check-input mt-0" type="checkbox" v-model="isChecked"
-                             aria-label="Checkbox for following text input" :disabled="mode === 'default'">
-                    </div>
-                    <select class="form-select" aria-label="Default select example"
-                            :disabled="!isChecked || mode === 'default'">
-                      <option value="1" selected>1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <DishesComponent :dishes-list="stapleList" :mode="mode" modal-name="stapleModal"></DishesComponent>
         </div>
-        <div class="dishes mb-4" v-if="filter === 'all' || filter === 'dishes'">
-          <h3 class="d-inline mx-2">配菜類</h3> <small class="text-danger">*請至少選擇三樣</small>
+        <div class="dishes mb-4" v-if="(filter === 'all' || filter === 'dishes') && search === ''">
+          <h3 class="d-inline mx-2">配菜類</h3>
+          <small class="text-danger">*請至少選擇三樣</small>
           <hr>
-          <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            <div v-for="   i   in   17   " :key="i" class="col">
-              <div class="card h-100" @click="temp.name = 999" data-bs-toggle="modal" data-bs-target="#dishModal">
-                <img :src="stir_fried_loofah" class="card-img-top object-fit-cover" alt="stir_fried_loofah">
-                <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
-                  <div class="dish-info-btn btn p-0 d-flex">
-                    <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
-                       data-bs-target="#dishModal"></i>
-                  </div>
-                  <h5 class="card-title text-center">炒絲瓜</h5>
-                  <small class="card-eng-title mb-3 d-block text-center">Stir-fried Loofah</small>
-                  <div class="input-group mx-auto">
-                    <div class="input-group-text" @click.stop="e => e.stopPropagation()">
-                      <input class="form-check-input mt-0" type="checkbox" v-model="isChecked2"
-                             aria-label="Checkbox for following text input" :disabled="mode === 'default'">
-                    </div>
-                    <select class="form-select" aria-label="Default select example"
-                            :disabled="!isChecked2 || mode === 'default'">
-                      <option value="1" selected>1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <DishesComponent :dishes-list="sideDishesList" :mode="mode" modal-name="sideDishesModal"></DishesComponent>
         </div>
-        <div class="entree mb-4" v-if="filter === 'all' || filter === 'entree'">
-          <h3 class="d-inline mx-2">主菜類</h3> <small class="text-danger">*請至少選擇一樣</small>
+        <div class="entree mb-4" v-if="(filter === 'all' || filter === 'entree') && search === ''">
+          <h3 class="d-inline mx-2">主菜類</h3>
+          <small class="text-danger">*請至少選擇一樣</small>
           <hr>
-          <div class="cards row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-4">
-            <div class="col">
-              <div class="card h-100">
-                <img :src="braised_lion_s_head" class="card-img-top object-fit-cover" alt="Braised Lion's Head">
-                <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
-                  <div class="dish-info-btn btn p-0 d-flex">
-                    <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
-                       data-bs-target="#dishModal"></i>
-                  </div>
-                  <h5 class="card-title text-center">紅燒獅子頭</h5>
-                  <small class="card-eng-title mb-3 d-block text-center">Braised Laised Laised Laised Laised Laised Laised
-                    Laised Lio</small>
-                  <div class="input-group mx-auto">
-                    <div class="input-group-text">
-                      <input class="form-check-input mt-0" type="checkbox" v-model="isChecked3"
-                             aria-label="Checkbox for following text input" :disabled="mode === 'default'">
-                    </div>
-                    <select class="form-select" aria-label="Default select example"
-                            :disabled="!isChecked3 || mode === 'default'">
-                      <option value="1" selected>1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div v-for="   i   in   9   " :key="i" class="col">
-              <div class="card h-100">
-                <img :src="braised_lion_s_head" class="card-img-top object-fit-cover" alt="Braised Lion's Head">
-                <div class="card-body dish-info mx-auto px-0 py-3 w-80 d-flex flex-column justify-content-between">
-                  <div class="dish-info-btn btn p-0 d-flex">
-                    <i class="fa-solid fa-circle-info text-secondary fs-5 lh-sm" title="菜色介紹" data-bs-toggle="modal"
-                       data-bs-target="#dishModal"></i>
-                  </div>
-                  <h5 class="card-title text-center">紅燒獅子頭</h5>
-                  <small class="card-eng-title mb-3 d-block text-center">Braised Lion's
-                    Head
-                    (pork
-                    balls)</small>
-                  <div class="input-group mx-auto">
-                    <div class="input-group-text">
-                      <input class="form-check-input mt-0" type="checkbox" v-model="isChecked3"
-                             aria-label="Checkbox for following text input">
-                    </div>
-                    <select class="form-select" aria-label="Default select example" :disabled="!isChecked3">
-                      <option value="1" selected>1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <DishesComponent :dishes-list="mainDishesList" :mode="mode" modal-name="mainDishesModal"></DishesComponent>
+        </div>
+        <div class="entree mb-4" v-if="search !== ''">
+          <h3 class="mx-2">搜尋結果</h3>
+          <hr>
+          <DishesComponent :dishes-list="searchedList" :mode="mode" modal-name="searchedDishesModal"></DishesComponent>
         </div>
       </div>
     </div>
     <div id="bentoGenerator" class="bento-generator text-center">
       <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3" data-bs-toggle="modal"
-              data-bs-target="#bentoModal">生成便當</button>
+              data-bs-target="#bentoModal"
+              @click="bentoTemp.sideDishes?.length === 0 ? generateBento() : null">生成便當</button>
     </div>
     <aside class="aside">
       <div class="aside-head">
-        <a href="javascript:;" class="aside-link aside-link-generator" @click="moveToGeneratorBtn">
+        <a href="javascript:;" class="aside-link aside-link-generator" @click="moveToGeneratorBentoBtn">
           <i class="fa-solid fa-angles-down"></i>
-          <!-- <i class="bi bi-caret-down-fill"></i> -->
         </a>
       </div>
     </aside>
   </div>
 
-
   <!-- Modal -->
+
   <!-- 網站介紹 Modal -->
   <div class="modal fade " id="siteIntroModal" tabindex="-1" aria-labelledby="siteIntroModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content vh-75">
-        <div class="modal-header">
-          <h4 class="modal-title" id="siteIntroModalLabel">網站介紹</h4> <small> {{ introIndex }} / 7 </small>
-          <button type="button" class="btn text-primary" data-bs-dismiss="modal" aria-label="Close">略過</button>
+        <div class="modal-header justify-content-between">
+          <h4 class="modal-title" id="siteIntroModalLabel">網站介紹</h4>
+          <small> {{ introIndex }} / 7 </small>
+          <button type="button" class="btn text-primary p-0" data-bs-dismiss="modal" aria-label="Close">略過</button>
         </div>
         <div class="modal-body d-flex justify-content-between align-items-center p-3">
           <button v-if="introIndex !== 1" type="button" class="btn prev-btn"><i class="bi bi-chevron-left"></i></button>
@@ -224,106 +118,14 @@
             </div>
           </div>
 
-          <button v-if="introIndex !== 7" type="button" class="btn next-btn"><i class="bi bi-chevron-right"></i></button>
+          <button v-if="introIndex !== 7" type="button" class="btn next-btn"><i
+               class="bi bi-chevron-right"></i></button>
         </div>
         <div class="modal-footer">
           <div class="no-show-again d-flex gap-2 mx-auto">
             <input type="checkbox" id="no-show-again" name="no-show-again"
                    class="form-check-input no-show-again-checkout">
             <label for="no-show-again">不再顯示</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 菜色介紹 Modal -->
-  <div class="modal fade" id="dishModal" tabindex="-1" aria-labelledby="dishModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content dish">
-        <div class="modal-header px-4">
-          <h3 class="modal-title" id="dishModalLabel">菜色介紹</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row row-cols-1 row-cols-lg-2">
-            <div class="col order-last order-lg-1 row row-cols-1 gap-3 mt-0 py-3 px-0 mx-auto justify-content-center">
-              <div class="col row align-items-start">
-                <div class="col">
-                  <h6 class="m-0 lh-base">中文菜名：</h6>
-                </div>
-                <div class="col">
-                  <p class="m-0">{{ temp.name }}</p>
-                </div>
-              </div>
-              <div class="col row align-items-start">
-                <div class="col">
-                  <h6 class="m-0 lh-base">英文菜名：</h6>
-                </div>
-                <div class="col">
-                  <p class="m-0">{{ temp.engName }} sdfsdfsdf sdfsdfasdf sdf sdf ssdf</p>
-                </div>
-              </div>
-              <div class="col row align-items-center">
-                <div class="col">
-                  <h6 class="m-0 lh-base">喜好程度：</h6>
-                </div>
-                <div class="col">
-                  <select class="form-select w-50" aria-label="Default select example" :disabled="!isChecked3"
-                          v-model="temp.preferenceLevel">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                  </select>
-                </div>
-              </div>
-              <div class="col row align-items-start">
-                <div class="col">
-                  <h6 class="m-0 lh-base">健康推薦指數：</h6>
-                </div>
-                <div class="col">
-                  <p class="m-0">{{ temp.healthPoint }}</p>
-                </div>
-              </div>
-              <div class="col row align-items-start">
-                <div class="col">
-                  <h6 class="m-0 lh-base">營養比例：</h6>
-                </div>
-                <div class="col">
-                  <div class="row row-cols-1 justify-content-between">
-                    <div class="col row">
-                      <div class="col">
-                        <p class="m-0">澱粉</p>
-                      </div>
-                      <div class="col">
-                        <p class="m-0 text-end">{{ temp.portion.starch / 4 }} 碗</p>
-                      </div>
-                    </div>
-                    <div class="col row">
-                      <div class="col">
-                        <p class="m-0">蛋白質</p>
-                      </div>
-                      <div class="col">
-                        <p class="m-0 text-end">{{ temp.portion.protein }} 份</p>
-                      </div>
-                    </div>
-                    <div class="col row">
-                      <div class="col">
-                        <p class="m-0">蔬菜</p>
-                      </div>
-                      <div class="col">
-                        <p class="m-0 text-end">{{ temp.portion.vegetable }} 份</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col col-lg-5 col-8 p-3 order-first order-lg-2 mx-auto align-self-center">
-              <img class="object-fit-cover" :src="white_rice" alt="">
-            </div>
           </div>
         </div>
       </div>
@@ -348,7 +150,7 @@
                     <p class="m-0">澱粉</p>
                   </div>
                   <div class="col">
-                    <p class="m-0 text-end">{{ 1.225 }} 碗</p>
+                    <p class="m-0 text-end">{{ Math.round(bentoTemp.starchTotalPortion / 4 * 100) / 100 }} 碗</p>
                   </div>
                 </div>
                 <div class="col row row-cols-2">
@@ -356,7 +158,7 @@
                     <p class="m-0">蛋白質</p>
                   </div>
                   <div class="col">
-                    <p class="m-0 text-end">{{ 1.25 }} 份</p>
+                    <p class="m-0 text-end">{{ bentoTemp.proteinTotalPortion }} 份</p>
                   </div>
                 </div>
                 <div class="col row row-cols-2">
@@ -364,13 +166,14 @@
                     <p class="m-0">蔬菜</p>
                   </div>
                   <div class="col">
-                    <p class="m-0 text-end">{{ 1.25 }} 份</p>
+                    <p class="m-0 text-end">{{ bentoTemp.vegetableTotalPortion }} 份</p>
                   </div>
                 </div>
               </div>
             </div>
             <div class="btns text-center p-3 col-6 col-lg-12">
-              <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2">重新生成便當</button>
+              <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
+                      data-bs-target="#confirmRegenerateBentoModal">重新生成便當</button>
               <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2">存至便當日記</button>
             </div>
           </div>
@@ -379,26 +182,31 @@
               <div class="row g-2 h-100">
                 <div class="col col-4 h-50">
                   <div class="side-dish border border-gray border-3 rounded h-100">
-                    <img class="img rounded object-fit-cover h-100" :src="stir_fried_loofah" alt="">
+                    <img class="img rounded object-fit-cover h-100" :src="bentoTemp.sideDishes[0]?.imgUrl"
+                         :alt="bentoTemp.sideDishes[0]?.title + '的圖片'" :title="bentoTemp.sideDishes[0]?.title">
                   </div>
                 </div>
                 <div class="col col-4 h-50">
                   <div class="side-dish border border-gray border-3 rounded h-100">
-                    <img class="img rounded object-fit-cover h-100" :src="stir_fried_loofah" alt="">
+                    <img class="img rounded object-fit-cover h-100" :src="bentoTemp.sideDishes[1]?.imgUrl"
+                         :alt="bentoTemp.sideDishes[1]?.title + '的圖片'" :title="bentoTemp.sideDishes[1]?.title">
                   </div>
                 </div>
                 <div class="col col-4 h-50">
                   <div class="side-dish border border-gray border-3 rounded h-100">
-                    <img class="img rounded object-fit-cover h-100" :src="stir_fried_loofah" alt="">
+                    <img class="img rounded object-fit-cover h-100" :src="bentoTemp.sideDishes[2]?.imgUrl"
+                         :alt="bentoTemp.sideDishes[2]?.title + '的圖片'" :title="bentoTemp.sideDishes[2]?.title">
                   </div>
                 </div>
                 <div class="col col-12 h-50">
                   <div class="border border-gray border-3 rounded col-12 h-100 p-0 d-flex">
                     <div class="staple w-50">
-                      <img class="img img-fluid object-fit-cover h-100" :src="white_rice" alt="">
+                      <img class="img img-fluid object-fit-cover h-100" :src="bentoTemp.stapleCourse?.imgUrl"
+                           :alt="bentoTemp.stapleCourse?.title + '的圖片'" :title="bentoTemp.stapleCourse?.title">
                     </div>
                     <div class="entree w-50">
-                      <img class="img img-fluid object-fit-cover h-100" :src="braised_lion_s_head" alt="">
+                      <img class="img img-fluid object-fit-cover h-100" :src="bentoTemp.mainCourse?.imgUrl"
+                           :alt="bentoTemp.mainCourse?.title + '的圖片'" :title="bentoTemp.mainCourse?.title">
                     </div>
                   </div>
                 </div>
@@ -409,50 +217,235 @@
       </div>
     </div>
   </div>
+
+  <!-- 確認重新生成便當 Modal -->
+  <div class="modal fade" id="confirmRegenerateBentoModal" tabindex="-1"
+       aria-labelledby="confirmRegenerateBentoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmRegenerateBentoModalLabel">是否確認重新生成新的便當？</h5>
+          <button type="button" class="btn-close" aria-label="Close" data-bs-toggle="modal"
+                  data-bs-target="#bentoModal"></button>
+        </div>
+        <div class="modal-body">
+          此操作將無法復原，請確認是否執行。
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                  data-bs-target="#bentoModal">取消</button>
+          <button type="button" class="btn btn-primary" @click="generateBento" data-bs-toggle="modal"
+                  data-bs-target="#bentoModal">確認</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import white_rice from '@/assets/dishes/white_rice.png';
-import stir_fried_loofah from '@/assets/dishes/stirfried_loofah.png';
-import braised_lion_s_head from "@/assets/dishes/braised_lion's_head.png";
+console.clear();
 
+import DishesComponent from '@/components/DishesComponent';
+import memberStore from '@/stores/memberData';
+import { mapState, mapActions } from 'pinia';
 document.title = "來點菜單";
+
 export default {
+  components: { DishesComponent },
   data() {
     return {
+      apiUrl: "https://whatstoday2024-8nsu.onrender.com",
       mode: "default",
-      white_rice,
-      stir_fried_loofah,
-      braised_lion_s_head,
-      isChecked: false,
-      isChecked2: false,
-      isChecked3: false,
       filter: "all",
-      temp: {
-        name: "白飯",
-        engName: "white rice",
-        img: this.white_rice,
-        category: "主食類",
-        portion: {
-          starch: 4,
-          protein: 0,
-          vegetable: 0
-        },
-        preferenceLevel: 5,
-        healthPoint: 3
+      sortBy: "default",
+      search: "",
+      searchInput: "",
+      searchedList: [],
+      allDishesList: [],
+      stapleList: [],
+      mainDishesList: [],
+      sideDishesList: [],
+      introIndex: 1,
+      bentoTemp: {
+        stapleCourse: {},
+        mainCourse: {},
+        sideDishes: [],
+        date: "",
+        mealType: "",
+        starchTotalPortion: 0,
+        proteinTotalPortion: 0,
+        vegetableTotalPortion: 0
       },
-      introIndex: 1
 
     };
   },
   computed: {
+    ...mapState(memberStore, ['memberData'])
   },
-  mounted() {
+  watch: {
+    sortBy() {
+      this.getSortedDishes();
+    }
   },
   methods: {
-    moveToGeneratorBtn() {
+    drawOneDish(dishesList) {
+      let totalWeight = this.mode === "default" ?
+        dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
+        dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
+
+      let randomNumber = Math.random() * totalWeight;
+      console.log(randomNumber, totalWeight)
+      let answerIndex = 0;
+      for (let i = 0; i < dishesList.length; i++) {
+        randomNumber -= this.mode === "default" ?
+          dishesList[i].healthLevel :
+          (dishesList[i].healthLevel + +dishesList[i].preferenceLevel);
+        if (randomNumber <= 0) {
+          answerIndex = i;
+          break;
+        }
+      }
+
+      // console.log(`抽中的選項是：${dishesList[answerIndex].title}`);
+      this.bentoTemp.starchTotalPortion += dishesList[answerIndex].starchPortion;
+      this.bentoTemp.proteinTotalPortion += dishesList[answerIndex].proteinPortion;
+      this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion;
+      return dishesList[answerIndex];
+    },
+    drawThreeDishes(dishesList) {
+      let answers = [];
+      let tempDishesList = [...dishesList];
+
+      while (answers.length < 3) {
+        let totalWeight = tempDishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
+
+        let randomNumber = Math.random() * totalWeight;
+
+        let answerIndex = 0;
+        for (let i = 0; i < tempDishesList.length; i++) {
+          randomNumber -= (tempDishesList[i].healthLevel + tempDishesList[i].preferenceLevel);
+          if (randomNumber <= 0) {
+            answerIndex = i;
+            break;
+          }
+        }
+
+        // console.log('抽中的項目是：', tempDishesList[answerIndex].title);
+        this.bentoTemp.starchTotalPortion += dishesList[answerIndex].starchPortion;
+        this.bentoTemp.proteinTotalPortion += dishesList[answerIndex].proteinPortion;
+        this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion;
+        answers.push(tempDishesList[answerIndex]);
+        tempDishesList.splice(answerIndex, 1);
+      }
+
+      // answers.forEach((index) => {
+      //   console.log('抽中的項目是：', dishesList[index].title);
+      // })
+      return answers;
+    },
+    generateBento() {
+      this.bentoTemp = {
+        starchTotalPortion: 0,
+        proteinTotalPortion: 0,
+        vegetableTotalPortion: 0,
+      }
+      this.bentoTemp.stapleCourse = this.drawOneDish(this.stapleList);
+      this.bentoTemp.mainCourse = this.drawOneDish(this.mainDishesList);
+      this.bentoTemp.sideDishes = this.drawThreeDishes(this.sideDishesList);
+
+    },
+    moveToGeneratorBentoBtn() {
       document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' });
-    }
+    },
+    async getMode() {
+      await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}`)
+        .then(res => {
+          if (res.data.message.mode) {
+            this.mode = res.data.message.mode;
+          } else {
+            this.mode = "default";
+          }
+        })
+    },
+    async setMode(mode) {
+      this.mode = mode;
+      await this.axios.patch(`${this.apiUrl}/600/users/${this.memberData.id}`, { mode })
+        .then(res => {
+          console.log(res.data.message.mode);
+        })
+    },
+    async getAllDishesList() {
+      await this.axios.get(`${this.apiUrl}/dishes`)
+        .then(res => {
+          this.allDishesList = res.data.message;
+          this.allDishesList.forEach((dish) => {
+            dish.isChecked = false;
+            dish.preferenceLevel = 1;
+          })
+          this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
+          this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
+          this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+        })
+    },
+    async getSearchedDishes() {
+      this.searchedList = [];
+      this.search = this.searchInput;
+
+      await this.axios.get(`${this.apiUrl}/dishes?title_like=${this.search}`)
+        .then(res => {
+          this.searchedList = [...this.searchedList, ...res.data.message];
+        });
+
+      await this.axios.get(`${this.apiUrl}/dishes?engTitle_like=${this.search}`)
+        .then(res => {
+          this.searchedList = [...this.searchedList, ...res.data.message];
+        });
+
+      // 使用 Promise.all 確保兩個非同步呼叫都完成後再執行後續操作
+      // Promise.all([titlePromise, engTitlePromise])
+      //   .then(() => {
+      this.searchedList.forEach((dish) => {
+        dish.isChecked = false;
+        dish.preferenceLevel = 1;
+      })
+      this.getSortedDishes();
+      // });
+    },
+    async getSortedDishes() {
+      if (this.sortBy === "default") {
+        await this.getAllDishesList();
+        if (this.search) {
+          this.searchedList = this.searchedList.sort((a, b) => a.id - b.id);
+        }
+      }
+      else if (this.sortBy === "healthLevel") {
+        await this.axios.get(`${this.apiUrl}/dishes?_sort=${this.sortBy}&_order=desc`)
+          .then(res => {
+            this.allDishesList = res.data.message;
+            this.allDishesList.forEach((dish) => {
+              dish.isChecked = false;
+              dish.preferenceLevel = 1;
+            })
+            this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
+            this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
+            this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+
+            if (this.search) {
+              this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel);
+            }
+          });
+      }
+
+    },
+    async init() {
+      await this.getAllDishesList();
+      await this.getUser();
+      await this.getMode();
+    },
+    ...mapActions(memberStore, ['getUser'])
+  },
+  mounted() {
+    this.init();
   }
 };
 </script>
@@ -539,26 +532,6 @@ export default {
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.2);
-}
-
-/* card ----------------------------- */
-.dish-info {
-  position: relative;
-}
-
-.dish-info-btn {
-  position: absolute;
-  right: -8%;
-  top: 1rem;
-}
-
-.dish-info-btn:active {
-  border-color: transparent;
-}
-
-.form-check-input {
-  width: 1.2rem;
-  height: 1.2rem;
 }
 
 /* aside ----------------------------- */
