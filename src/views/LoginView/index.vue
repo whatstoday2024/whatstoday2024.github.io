@@ -12,10 +12,10 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <VForm class="card rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="login">
+          <VForm class="card border-primary rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="login">
             <h1 class="h2 mb-3 text-center">登入會員</h1>
             <div class="text-center">
-              <button type="button" class="btn btn-outline-primary mb-4 rounded-pill" @click="$router.push({name: 'Register'})">還不是會員？前往註冊</button>
+              <button type="button" class="btn btn-outline-primary mb-4 rounded-pill px-3" @click="$router.push({name: 'Register'})">還不是會員？前往註冊</button>
             </div>
             <div class="alert alert-danger mb-4" v-if="loginError">
               登入失敗！請確認帳號與密碼是否正確。

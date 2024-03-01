@@ -32,6 +32,7 @@ export default {
         }else{
           this.isRouterAlive = true
         }
+        this.isLoading = false
       }
     },
     redirect(){
@@ -53,6 +54,7 @@ export default {
     ...mapActions(memberStore, ['getUser'])
   },
   mounted(){
+    this.isLoading = true
     this.checkStatus()
   }
 };

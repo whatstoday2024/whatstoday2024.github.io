@@ -122,8 +122,6 @@
 
 <script>
 import { toast } from 'vue3-toastify';
-import memberStore from '@/stores/memberData'
-import { mapState } from 'pinia'
 import DeleteModal from '../DeleteModal';
 import FreeDaysData from  '../FreeDaysData';
 
@@ -136,13 +134,13 @@ export default {
       isSpecificDay: false,
       template: {
         weekTitle: [
-          '日',
           '一',
           '二',
           '三',
           '四',
           '五',
           '六',
+          '日',
         ],
         day: 30
       },
@@ -164,9 +162,6 @@ export default {
     DeleteModal
   },
   mixins: [FreeDaysData],
-  computed: {
-    ...mapState(memberStore, ['memberData'])
-  },
   methods: {
     updateFreeDaysData(key){
       this.isLoading = true
@@ -300,6 +295,7 @@ export default {
 
 .list-group-item:hover{
   background-color: var(--bs-secondary);
+  opacity: 0.6;
   color: white;
 }
 </style>

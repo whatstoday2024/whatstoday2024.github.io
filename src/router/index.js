@@ -14,7 +14,6 @@ const router = createRouter({
         { path: 'login', name: 'Login', component: () => import('@/views/LoginView') },
         { path: 'issue', name: 'IssueForm', component: () => import('@/views/IssueFormView') },
         { path: 'menu', name: 'MenuView', component: () => import('@/views/MenuView') },
-        { path: 'bento-dairy', name: 'BentoDiaryView', component: () => import('@/views/BentoDiaryView') },
         {
           path: 'member',
           name: 'memberLayout',
@@ -25,6 +24,7 @@ const router = createRouter({
           children: [
             { path: 'profile', name: 'Profile', component: () => import('@/views/Member/ProfileView') },
             { path: 'freeDays', name: 'FreeDays', component: () => import('@/views/Member/FreeDaysView') },
+            { path: 'bento-dairy', name: 'BentoDiaryView', component: () => import('@/views/Member/BentoDiaryView') },
           ]
         },
         {

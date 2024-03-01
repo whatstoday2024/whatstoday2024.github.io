@@ -1,7 +1,12 @@
 <script>
 import { toast } from 'vue3-toastify';
+import memberStore from '@/stores/memberData'
+import { mapState } from 'pinia'
 
 export default {
+  computed: {
+    ...mapState(memberStore, ['memberData'])
+  },
   methods: {
     getFreeDaysData(){
       this.isLoading = true

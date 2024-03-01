@@ -14,10 +14,10 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <VForm class="card rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="register">
+          <VForm class="card border-primary rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="register">
             <h3 class="h2 mb-3 text-center">註冊帳號</h3>
             <div class="text-center">
-              <button type="button" class="btn btn-outline-primary mb-4 rounded-pill" @click="$router.push({name: 'Login'})">已有會員，前往登入</button>
+              <button type="button" class="btn btn-outline-primary mb-4 rounded-pill px-3" @click="$router.push({name: 'Login'})">已有會員，前往登入</button>
             </div>
             <div class="alert alert-danger mb-4" v-if="registerError">
               {{ registerError }}

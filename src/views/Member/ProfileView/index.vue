@@ -2,16 +2,16 @@
   <loadingVue :active="isLoading" />
   <div class="flex-fill d-flex align-items-center">
     <div class="container py-5">
-      <h1 class="display-5 mb-4">個人資料總覽</h1>
+      <h2 class="mb-4">個人資料總覽</h2>
       <div class="row g-4" v-if="user.email">
         <div class="col-12">
-          <div class="border rounded-4 p-5 text-center">
+          <div class="border border-primary rounded-4 p-5 text-center">
             <h5 class="fs-4">累積產生的便當數</h5>
             <p class="mb-0" style="font-size: 8rem; line-height: 0.8;">{{ dinnerCount }}</p>
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="border rounded-4 p-5 h-100">
+          <div class="border border-primary rounded-4 p-5 h-100">
             <h5 class="mb-4 fs-4">會員資料</h5>
             <div class="form-floating mb-4">
               <input type="email" class="form-control" :value="user.email" disabled title="會員帳號不得修改" />
@@ -31,7 +31,7 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <div class="border rounded-4 p-5 h-100">
+          <div class="border border-primary rounded-4 p-5 h-100">
             <h5 class="mb-4 fs-4">修改密碼</h5>
             <VForm v-slot="{ errors }" @submit="changePassword">
               <div class="form-floating mb-4">
