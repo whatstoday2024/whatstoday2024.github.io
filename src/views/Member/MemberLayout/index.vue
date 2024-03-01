@@ -1,50 +1,61 @@
 <template>
   <loadingVue :active="isLoading" />
   <RouterView @update-profile="updateProfile" v-if="isRouterAlive"/>
+  <div class="flex-fill" v-else></div>
 </template>
 
 <script>
 import memberStore from '@/stores/memberData'
-import { mapActions } from 'pinia'
+import { mapActions, mapState } from 'pinia'
+import { toast } from 'vue3-toastify';
+
 export default {
   data() {
     return {
-      isRouterAlive: true,
+      isRouterAlive: false,
       isLoading: false
     }
   },
+  computed: {
+    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
+  },
+  watch: {
+    hasCheckLogin(){
+      this.checkStatus()
+    }
+  },
   methods: {
-    checkAuth(){
-      const token = this.$cookie.getMemberToken();
-      const id = this.$cookie.getMemberId();
-      if(!token || !id) {
-        this.redirect()
-        return
-      }
-      this.isLoading = true
-      this.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
-        .then((res) => {
-          this.setMemberData(res.data.message)
-          this.isLoading = false
-        }).catch(() => {
+    checkStatus(){
+      if(this.hasCheckLogin){
+        if(!this.memberData.email){
           this.redirect()
-        });
+        }else{
+          this.isRouterAlive = true
+        }
+        this.isLoading = false
+      }
     },
     redirect(){
       this.isLoading = false
-      alert('請先登入')
-      this.$router.replace({name: 'Login'})
+      const delay = 1000
+      toast.error('請先登入', {
+        autoClose: delay,
+      })
+      setTimeout(() => {
+        this.$router.replace({name: 'Login'})
+      }, delay)
     },
-    async updateProfile(){
+    async updateProfile({ status, message }){
       this.isRouterAlive = false
-      await this.checkAuth()
+      toast[status](message)
+      await this.getUser()
       this.isRouterAlive = true
     },
-    ...mapActions(memberStore, ['setMemberData'])
+    ...mapActions(memberStore, ['getUser'])
   },
-  created(){
-    this.checkAuth()
+  mounted(){
+    this.isLoading = true
+    this.checkStatus()
   }
 };
 </script>

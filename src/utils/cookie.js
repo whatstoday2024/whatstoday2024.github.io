@@ -7,9 +7,23 @@ function getCookie(key){
 }
 
 export function getMemberToken(){
-  return getCookie(memberTokenKey)
+  const token = getCookie(memberTokenKey)
+  if(token){
+    return `Bearer ${token}`
+  }
+  else{
+    return null
+  }
 }
 
 export function getMemberId(){
   return getCookie(memberIdKey)
+}
+
+export function setMemberToken(toekn){
+  document.cookie = `${memberTokenKey}=${toekn}`
+}
+
+export function setMemberId(idKey){
+  document.cookie = `${memberIdKey}=${idKey}`
 }

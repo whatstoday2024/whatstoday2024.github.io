@@ -12,8 +12,6 @@ import { mapActions } from 'pinia'
 import HeaderComponent from '@/components/HeaderComponent'
 import FooterComponent from '@/components/FooterComponent'
 
-
-
 export default {
   components: { HeaderComponent, FooterComponent},
   data() {
@@ -26,7 +24,6 @@ export default {
     ...mapActions(memberStore, ['getUser'])
   },
   mounted(){
-    console.log(123)
     this.getUser()
   }
 };
