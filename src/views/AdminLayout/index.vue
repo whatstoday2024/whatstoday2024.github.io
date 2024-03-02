@@ -1,11 +1,14 @@
 <template>
-  <div> 管理者頁面的主LAYOUT </div>
+  <RouterView></RouterView>
 </template>
 
 <script>
-export default {
-
-}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.btns{
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+</style>
