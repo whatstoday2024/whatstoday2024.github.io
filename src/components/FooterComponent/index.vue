@@ -21,7 +21,7 @@
           <router-link to="/issue" class="link">
             <h6>問題回報</h6>
           </router-link>
-          <router-link to="/admin" class="link">
+          <router-link to="/admin/login" class="link">
             <h6>後台管理</h6>
           </router-link>
         </div>

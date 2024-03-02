@@ -1,4 +1,5 @@
 <template>
+  <loadingVue :active="isLoading" />
   <div class="container flex-fill py-4 py-lg-5 d-flex align-items-center">
     <div class="w-100">
       <div class="row g-3 g-lg-4 justify-content-evenly">
@@ -39,7 +40,8 @@ export default {
         email: '',
         password: '',
       },
-      errorMsg:''
+      errorMsg:'',
+      isLoading: false
     }
   },
   watch:{
@@ -55,6 +57,8 @@ export default {
   },
   methods:{
     login(){
+      document.title = "後台登入";
+      this.isLoading = true
       axios.post(`${import.meta.env.VITE_API}/admin/signin`, { username:this.user.email,password:this.user.password })
         .then((res) => {
           const token = res.data.token
@@ -68,13 +72,13 @@ export default {
             document.cookie = `whatstoday=${accessToken}`
             document.cookie = `whatstodayMember=${user.id}`
             this.setMemberData(user)
-            this.$router.push(`/admin/admin-items`);
+            this.$router.push(`/admin/dashboard`);
           }).catch(() => {
             this.errorMsg = '登入失敗'
         })
       }).catch((error) => {
         this.errorMsg = error.response.data.message
-    })
+    }).finally(()=> { this.isLoading = false })
     },
     ...mapActions(memberStore, ['setMemberData'])
   },
