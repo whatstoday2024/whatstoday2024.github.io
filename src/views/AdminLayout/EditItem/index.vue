@@ -1,12 +1,21 @@
 <template>
+  <loadingVue :active="isLoading" />
   <div class="container my-5">
     <div class="text-start mb-4 d-flex justify-content-between border-bottom pb-3">
       <h3>編輯菜色</h3>
-      <button class="btn btn-outline-brand-blue">
+      <div>
+        <button class="btn btn-outline-primary me-2">
+        <RouterLink class="navbar-brand" to="/admin/dashboard">
+          Dashboard
+        </RouterLink>
+        </button>
+        <button class="btn btn-outline-brand-blue">
         <RouterLink class="navbar-brand" to="/admin/admin-items">
           菜色列表
         </RouterLink>
       </button>
+      </div>
+      
     </div>
     <VForm class="row" v-slot="{ errors }" @submit="editItem" >
     <div class="p-2 p-lg-3 col-md-6">
@@ -105,8 +114,8 @@
           <div v-if="item?.images?.length" class="img-box">
             <div v-for="(img,index) in item.images" :key="index" style="position: relative;">
               <img class="img" :src="img" alt="image">
-              <span @click="chooseMainImg(img)"><ElSelect style="width: 30px; height: 30px ;color:yellow; position: absolute; top: 1; left: 1;cursor: pointer;"/></span>
-              <span @click="deleteImg(index)"><DeleteFilled style="width: 30px; height: 30px ;color:#d4d4d4; position: absolute; top: 1; right: 1;cursor: pointer;"/></span>
+              <span @click="chooseMainImg(img)"><ElSelect style="width: 20px; height: 20px ;color:yellow; position: absolute; top: 1; left: 1;cursor: pointer;"/></span>
+              <span @click="deleteImg(index, img)"><DeleteFilled style="width: 20px; height: 20px ;color:#d4d4d4; position: absolute; top: 1; right: 1;cursor: pointer;"/></span>
             </div>
           </div>
         </div>
@@ -151,6 +160,7 @@ export default {
       tempImg1:'',
       tempImg2:'',
       errorMsg:'',
+      isLoading: false
     }
   },
   components: {
@@ -163,7 +173,9 @@ export default {
         const form = document.querySelector('#upload-image');
         const imageInput = document.querySelector("#file-input");
         const formData = new FormData(form);
+
         if (imageInput.value) {
+            this.isLoading = true
             const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
             axios.defaults.headers.common.Authorization = token;
             axios.post(`${import.meta.env.VITE_API}/api/${import.meta.env.VITE_PATH}/admin/upload`, formData)
@@ -175,7 +187,7 @@ export default {
                 .catch(err => {
                     alert(err.data.message);
                     axios.defaults.headers.common.Authorization = null;
-                })
+                }).finally(()=>{this.isLoading = false})
         } else {
             alert("請先選擇欲上傳之圖片。");
             axios.defaults.headers.common.Authorization = null;
@@ -186,6 +198,7 @@ export default {
         this.errorMsg = '主圖為必填'
         return
       }
+      this.isLoading = true
       try{
         await axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${this.item.id}`,this.item)
         toast.success("成功編輯菜色");
@@ -193,7 +206,7 @@ export default {
       }catch(err){
         toast.error(err.data.message);
       }
-      
+      this.isLoading = false
     },
     addImage1(){
       this.item.images.push(this.tempImg1)
@@ -206,10 +219,25 @@ export default {
     chooseMainImg(img){
       this.item.imgUrl = img
     },
-    deleteImg(index){
+    deleteImg(index, img){
+      if(img === this.item.imgUrl){
+        toast.error('不能刪除當前主圖，若欲刪除請先置換主圖')
+        return
+      }
       this.item.images.splice(index,1)
     },
-    ...mapActions(memberStore, ['checkIsAdmin'])
+    async getItem(id){
+      this.isLoading = true
+      try{
+      const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
+      console.log(res.data.message)
+      this.item = res.data.message
+      }catch(err){
+      toast.error('查無此菜色');
+      }
+    this.isLoading = false
+    },
+    ...mapActions(memberStore, ['checkIsAdmin','getUser'])
   },
   watch:{
     'item.imgUrl':function(){
@@ -217,14 +245,15 @@ export default {
     },
   },
   async mounted() {
+    document.title = "菜色編輯";
+    await this.getUser()
     if(!this.checkIsAdmin()) {
       toast.error('非管理者無法執行')
       this.$router.push(`/`);
     }
-
+    
     const id = this.$route.params.id
-    const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
-    this.item = res.data.message
+    await this.getItem(id)
   },
 }
 </script>
@@ -232,9 +261,11 @@ export default {
 <style lang="scss" scoped>
 .img-box{
   display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 .img{
-  width: 12rem;
+  width: 8rem;
 }
 
 .container{
