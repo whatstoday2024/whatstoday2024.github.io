@@ -1,12 +1,21 @@
 <template>
+  <loadingVue :active="isLoading" />
   <section class="container my-5 text-center">
     <div class="text-start mb-5 d-flex justify-content-between">
       <h3>菜色列表</h3>
-      <button class="btn btn-outline-brand-blue">
+      <div>
+        <button class="btn btn-outline-primary me-2">
+        <RouterLink class="navbar-brand" to="/admin/dashboard">
+          Dashboard
+        </RouterLink>
+        </button>
+        <button class="btn btn-outline-brand-blue">
         <RouterLink class="navbar-brand" to="/admin/add-item">
           新增菜色
         </RouterLink>
-      </button>
+        </button>
+    </div>
+
     </div>
     <table class="table align-middle">
       <thead>
@@ -38,8 +47,23 @@
             <td class="d-md-none">{{ item.healthLevel }}</td>
 
             <td>{{ item.starchPortion }} / {{ item.proteinPortion }} / {{ item.vegetablePortion }}</td>
-            <td><button @click="goToItem(item.id)" type="button" class="btn btn-brand-blue">編輯</button></td>
-            <td><button @click="showDeleteItemModal(item.id)" type="button" class="btn btn-outline-danger">刪除</button></td>
+            <td>
+              <button @click="goToItem(item.id)" type="button" class="btn btn-brand-blue d-none d-lg-block">
+                  編輯
+              </button>
+              <button @click="goToItem(item.id)" type="button" class="btn d-lg-none">
+                <Edit style="width: 20px; height: 20px ;color:#144bb8;"/>
+              </button>
+              
+            </td>
+            <td>
+              <button @click="showDeleteItemModal(item.id)" type="button" class="btn btn-outline-danger d-none d-lg-block">
+                  刪除
+              </button>
+              <button @click="showDeleteItemModal(item.id)" type="button" class="btn d-lg-none">
+                  <DeleteFilled style="width: 20px; height: 20px ;color:#dc3545;"/>
+              </button>
+            </td>
         </tr>
       </tbody>
     </table>
@@ -53,6 +77,7 @@
 </template>
 
 <script>
+import { DeleteFilled,Edit } from "@element-plus/icons-vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import StarRating from 'vue-star-rating'
@@ -69,13 +94,16 @@ export default {
       items:[],
       item: {},
       currentPage:'',
-      totalPages:''
+      totalPages:'',
+      isLoading: false
     }
   },
   components: {
     DeleteItemModal,
     StarRating,
-    Pagination
+    Pagination,
+    DeleteFilled,
+    Edit
   },
   methods: {
     goToItem(id){
@@ -99,14 +127,22 @@ export default {
     },
     async getItems(toPage = 1){
       this.currentPage = toPage
-      const resTotal = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
-      const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`)
-      this.totalPages = Math.ceil(resTotal.data.message.length / 10) 
-      this.items = res.data.message
+      this.isLoading = true
+      try{
+        const resTotal = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
+        const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`)
+        this.totalPages = Math.ceil(resTotal.data.message.length / 10) 
+        this.items = res.data.message
+      }catch(error){
+        console.log(error)
+      }
+      this.isLoading = false
     },
-    ...mapActions(memberStore, ['checkIsAdmin'])
+    ...mapActions(memberStore, ['checkIsAdmin','getUser'])
   },
   async mounted() {
+    document.title = "菜色列表";
+    await this.getUser()
     if(!this.checkIsAdmin()) {
       toast.error('非管理者無法執行')
       this.$router.push(`/`);

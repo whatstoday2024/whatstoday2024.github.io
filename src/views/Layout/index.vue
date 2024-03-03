@@ -23,8 +23,8 @@ export default {
   methods: {
     ...mapActions(memberStore, ['getUser'])
   },
-  mounted(){
-    this.getUser()
+  async mounted(){
+    await this.getUser()
   }
 };
 </script>
