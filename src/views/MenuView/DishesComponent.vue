@@ -138,8 +138,7 @@ export default {
     props: ['dishesList', 'mode', "modalName"],
     data() {
         return {
-            dishInfo: {},
-            showModal: false
+            dishInfo: {}
         };
     },
     methods: {}

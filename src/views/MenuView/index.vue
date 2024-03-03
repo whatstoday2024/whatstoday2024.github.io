@@ -19,10 +19,10 @@
       <div class="category-filter" style="width: 8rem;">
         <select class="form-select outline-primary" aria-label="Default select example" v-model="filter">
           <option selected disabled>篩選</option>
-          <option value="all">全部</option>
-          <option value="staple">主食類</option>
-          <option value="dishes">配菜類</option>
-          <option value="entree">主菜類</option>
+          <option value="全部">全部</option>
+          <option value="主食類">主食類</option>
+          <option value="配菜類">配菜類</option>
+          <option value="主菜類">主菜類</option>
         </select>
       </div>
       <div class="sort-search-container d-flex justify-content-between gap-2">
@@ -32,12 +32,12 @@
             <strong>三</strong>
           </button>
           <ul class="dropdown-menu" aria-labelledby="SortByWhatFactorDropdownMenuButton">
-            <li><a class="dropdown-item" href="javascript:;" @click="sortBy = 'default'">依 預設
-                排序</a></li>
-            <li><a class="dropdown-item" href="javascript:;" @click="sortBy = 'preferenceLevel'">依
-                喜好程度 排序</a></li>
-            <li><a class="dropdown-item" href="javascript:;" @click="sortBy = 'healthLevel'">依 健康分數
-                排序</a></li>
+            <li><a class="dropdown-item" :class="{ active: sortBy === 'default' }" href="javascript:;"
+                 @click="sortBy = 'default'">依 預設 排序</a></li>
+            <li><a class="dropdown-item disabled" href="javascript:;" @click="sortBy = 'preferenceLevel'"
+                 aria-disabled="true">依 喜好程度 排序</a></li>
+            <li><a class="dropdown-item" :class="{ active: sortBy === 'healthLevel' }" href="javascript:;"
+                 @click="sortBy = 'healthLevel'">依 健康分數 排序</a></li>
           </ul>
         </div>
         <form class="search-input input-group" @submit.prevent="getSearchedDishes">
@@ -51,19 +51,19 @@
     </div>
     <div class="menu border border-primary rounded mb-3 position-relative" :class="{ mask: mode === 'default' }">
       <div class="wrap w-80 mx-auto pt-5 pb-4">
-        <div class="staple mb-4" v-if="(filter === 'all' || filter === 'staple') && search === ''">
+        <div class="staple mb-4" v-if="(filter === '全部' || filter === '主食類') && search === ''">
           <h3 class="d-inline mx-2">主食類</h3>
           <small class="text-danger">*請至少選擇一樣</small>
           <hr>
           <DishesComponent :dishes-list="stapleList" :mode="mode" modal-name="stapleModal"></DishesComponent>
         </div>
-        <div class="dishes mb-4" v-if="(filter === 'all' || filter === 'dishes') && search === ''">
+        <div class="dishes mb-4" v-if="(filter === '全部' || filter === '配菜類') && search === ''">
           <h3 class="d-inline mx-2">配菜類</h3>
           <small class="text-danger">*請至少選擇三樣</small>
           <hr>
           <DishesComponent :dishes-list="sideDishesList" :mode="mode" modal-name="sideDishesModal"></DishesComponent>
         </div>
-        <div class="entree mb-4" v-if="(filter === 'all' || filter === 'entree') && search === ''">
+        <div class="entree mb-4" v-if="(filter === '全部' || filter === '主菜類') && search === ''">
           <h3 class="d-inline mx-2">主菜類</h3>
           <small class="text-danger">*請至少選擇一樣</small>
           <hr>
@@ -90,8 +90,6 @@
     </aside>
   </div>
 
-  <!-- Modal -->
-
   <!-- 網站介紹 Modal -->
   <div class="modal fade " id="siteIntroModal" tabindex="-1" aria-labelledby="siteIntroModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -106,7 +104,6 @@
 
           <div class="row row-cols-1 row-cols-lg-2 align-items-center h-100 w-100">
             <div class="col col-lg-5 col-8 p-3 mx-auto align-self-center">
-              <!-- <img class="object-fit-cover" :src="white_rice" alt=""> -->
               <div>
                 <p class="text-center">我是gif</p>
               </div>
@@ -132,131 +129,32 @@
     </div>
   </div>
 
-  <!-- 便當生成 Modal -->
-  <div class="modal fade" id="bentoModal" tabindex="-1" aria-labelledby="bentoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content bento">
-        <div class="modal-header px-4">
-          <h3 class="modal-title" id="bentoModalLabel">今天吃什麼？</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body row m-0 row-cols-1 row-cols-lg-2">
-          <div class="bento-description col-lg-4 order-last order-lg-1 row m-0 p-lg-3">
-            <div class="nutrition-portion p-3 col-6 col-lg-12">
-              <h4 class="mb-3 lh-base">營養比例：</h4>
-              <div class="row row-cols-1">
-                <div class="col row row-cols-2">
-                  <div class="col">
-                    <p class="m-0">澱粉</p>
-                  </div>
-                  <div class="col">
-                    <p class="m-0 text-end">{{ Math.round(bentoTemp.starchTotalPortion / 4 * 100) / 100 }} 碗</p>
-                  </div>
-                </div>
-                <div class="col row row-cols-2">
-                  <div class="col">
-                    <p class="m-0">蛋白質</p>
-                  </div>
-                  <div class="col">
-                    <p class="m-0 text-end">{{ bentoTemp.proteinTotalPortion }} 份</p>
-                  </div>
-                </div>
-                <div class="col row row-cols-2">
-                  <div class="col">
-                    <p class="m-0">蔬菜</p>
-                  </div>
-                  <div class="col">
-                    <p class="m-0 text-end">{{ bentoTemp.vegetableTotalPortion }} 份</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="btns text-center p-3 col-6 col-lg-12">
-              <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
-                      data-bs-target="#confirmRegenerateBentoModal">重新生成便當</button>
-              <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2">存至便當日記</button>
-            </div>
-          </div>
-          <div class="bento-presentation col-lg-8 order-first order-lg-2">
-            <div class="border border-gray border-3 rounded w-100 h-100 p-3 pb-4">
-              <div class="row g-2 h-100">
-                <div class="col col-4 h-50">
-                  <div class="side-dish border border-gray border-3 rounded h-100">
-                    <img class="img rounded object-fit-cover h-100" :src="bentoTemp.sideDishes[0]?.imgUrl"
-                         :alt="bentoTemp.sideDishes[0]?.title + '的圖片'" :title="bentoTemp.sideDishes[0]?.title">
-                  </div>
-                </div>
-                <div class="col col-4 h-50">
-                  <div class="side-dish border border-gray border-3 rounded h-100">
-                    <img class="img rounded object-fit-cover h-100" :src="bentoTemp.sideDishes[1]?.imgUrl"
-                         :alt="bentoTemp.sideDishes[1]?.title + '的圖片'" :title="bentoTemp.sideDishes[1]?.title">
-                  </div>
-                </div>
-                <div class="col col-4 h-50">
-                  <div class="side-dish border border-gray border-3 rounded h-100">
-                    <img class="img rounded object-fit-cover h-100" :src="bentoTemp.sideDishes[2]?.imgUrl"
-                         :alt="bentoTemp.sideDishes[2]?.title + '的圖片'" :title="bentoTemp.sideDishes[2]?.title">
-                  </div>
-                </div>
-                <div class="col col-12 h-50">
-                  <div class="border border-gray border-3 rounded col-12 h-100 p-0 d-flex">
-                    <div class="staple w-50">
-                      <img class="img img-fluid object-fit-cover h-100" :src="bentoTemp.stapleCourse?.imgUrl"
-                           :alt="bentoTemp.stapleCourse?.title + '的圖片'" :title="bentoTemp.stapleCourse?.title">
-                    </div>
-                    <div class="entree w-50">
-                      <img class="img img-fluid object-fit-cover h-100" :src="bentoTemp.mainCourse?.imgUrl"
-                           :alt="bentoTemp.mainCourse?.title + '的圖片'" :title="bentoTemp.mainCourse?.title">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- 便當相關 Modal -->
+  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento"></BentoComponent>
 
-  <!-- 確認重新生成便當 Modal -->
-  <div class="modal fade" id="confirmRegenerateBentoModal" tabindex="-1"
-       aria-labelledby="confirmRegenerateBentoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmRegenerateBentoModalLabel">是否確認重新生成新的便當？</h5>
-          <button type="button" class="btn-close" aria-label="Close" data-bs-toggle="modal"
-                  data-bs-target="#bentoModal"></button>
-        </div>
-        <div class="modal-body">
-          此操作將無法復原，請確認是否執行。
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                  data-bs-target="#bentoModal">取消</button>
-          <button type="button" class="btn btn-primary" @click="generateBento" data-bs-toggle="modal"
-                  data-bs-target="#bentoModal">確認</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script>
 console.clear();
 
-import DishesComponent from '@/components/DishesComponent';
+import DishesComponent from './DishesComponent.vue';
+import BentoComponent from './BentoComponent.vue';
 import memberStore from '@/stores/memberData';
 import { mapState, mapActions } from 'pinia';
-document.title = "來點菜單";
+import { toast } from 'vue3-toastify';
 
+document.title = "來點菜單";
+const delay = 1000
+toast.error('請先登入', {
+  autoClose: delay,
+})
 export default {
-  components: { DishesComponent },
+  components: { DishesComponent, BentoComponent },
   data() {
     return {
       apiUrl: "https://whatstoday2024-8nsu.onrender.com",
       mode: "default",
-      filter: "all",
+      filter: "全部",
       sortBy: "default",
       search: "",
       searchInput: "",
@@ -276,7 +174,6 @@ export default {
         proteinTotalPortion: 0,
         vegetableTotalPortion: 0
       },
-
     };
   },
   computed: {
@@ -285,6 +182,9 @@ export default {
   watch: {
     sortBy() {
       this.getSortedDishes();
+    },
+    filter() {
+      this.getSearchedDishes();
     }
   },
   methods: {
@@ -292,9 +192,7 @@ export default {
       let totalWeight = this.mode === "default" ?
         dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
         dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
-
       let randomNumber = Math.random() * totalWeight;
-      console.log(randomNumber, totalWeight)
       let answerIndex = 0;
       for (let i = 0; i < dishesList.length; i++) {
         randomNumber -= this.mode === "default" ?
@@ -317,10 +215,10 @@ export default {
       let tempDishesList = [...dishesList];
 
       while (answers.length < 3) {
-        let totalWeight = tempDishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
-
+        let totalWeight = this.mode === "default" ?
+          dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
+          dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
         let randomNumber = Math.random() * totalWeight;
-
         let answerIndex = 0;
         for (let i = 0; i < tempDishesList.length; i++) {
           randomNumber -= (tempDishesList[i].healthLevel + tempDishesList[i].preferenceLevel);
@@ -338,9 +236,6 @@ export default {
         tempDishesList.splice(answerIndex, 1);
       }
 
-      // answers.forEach((index) => {
-      //   console.log('抽中的項目是：', dishesList[index].title);
-      // })
       return answers;
     },
     generateBento() {
@@ -352,20 +247,16 @@ export default {
       this.bentoTemp.stapleCourse = this.drawOneDish(this.stapleList);
       this.bentoTemp.mainCourse = this.drawOneDish(this.mainDishesList);
       this.bentoTemp.sideDishes = this.drawThreeDishes(this.sideDishesList);
-
     },
     moveToGeneratorBentoBtn() {
       document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' });
     },
-    async getMode() {
-      await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}`)
-        .then(res => {
-          if (res.data.message.mode) {
-            this.mode = res.data.message.mode;
-          } else {
-            this.mode = "default";
-          }
-        })
+    getMode() {
+      if (Object.keys(this.memberData).length !== 0) {
+        this.mode = this.memberData?.mode;
+      } else {
+        this.mode = "default";
+      }
     },
     async setMode(mode) {
       this.mode = mode;
@@ -391,25 +282,29 @@ export default {
       this.searchedList = [];
       this.search = this.searchInput;
 
-      await this.axios.get(`${this.apiUrl}/dishes?title_like=${this.search}`)
+      let titleSearchApiUrl = this.filter === "全部" ?
+        `${this.apiUrl}/dishes?title_like=${this.search}` :
+        `${this.apiUrl}/dishes?category=${this.filter}&title_like=${this.search}`
+      await this.axios.get(titleSearchApiUrl)
         .then(res => {
           this.searchedList = [...this.searchedList, ...res.data.message];
         });
 
-      await this.axios.get(`${this.apiUrl}/dishes?engTitle_like=${this.search}`)
+      let engTitleSearchApiUrl = this.filter === "全部" ?
+        `${this.apiUrl}/dishes?engTitle_like=${this.search}` :
+        `${this.apiUrl}/dishes?category=${this.filter}&engTitle_like=${this.search}`
+
+      await this.axios.get(engTitleSearchApiUrl)
         .then(res => {
           this.searchedList = [...this.searchedList, ...res.data.message];
         });
 
-      // 使用 Promise.all 確保兩個非同步呼叫都完成後再執行後續操作
-      // Promise.all([titlePromise, engTitlePromise])
-      //   .then(() => {
       this.searchedList.forEach((dish) => {
         dish.isChecked = false;
         dish.preferenceLevel = 1;
       })
+
       this.getSortedDishes();
-      // });
     },
     async getSortedDishes() {
       if (this.sortBy === "default") {
@@ -437,10 +332,18 @@ export default {
       }
 
     },
+    async getFilteredDishes() {
+      await this.getSearchedDishes();
+      if (this.filter !== "全部") {
+        this.searchedList = this.searchedList.filter((dish) => dish.category === this.filter);
+      }
+    },
     async init() {
       await this.getAllDishesList();
       await this.getUser();
-      await this.getMode();
+      if (Object.keys(this.memberData).length !== 0) {
+        this.getMode();
+      }
     },
     ...mapActions(memberStore, ['getUser'])
   },
@@ -453,6 +356,7 @@ export default {
 <style scoped>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
+/* tool ----------------------------- */
 .vh-75 {
   height: 75vh;
 }
@@ -461,58 +365,7 @@ export default {
   color: white;
 }
 
-.bento-generator-btn {
-  position: relative;
-}
-
-.bento-generator-btn::before {
-  content: "";
-  width: 20%;
-  height: 80%;
-  background-color: silver;
-  /* border-radius: 0% 0% 20% 0%; */
-  bottom: 10%;
-  right: -20%;
-  position: absolute;
-  clip-path: polygon(80% 0, 100% 0, 100% 100%, 0 100%, 0 90%, 80% 90%);
-}
-
-.bento-generator-btn::after {
-  content: "";
-  width: 12%;
-  height: 24%;
-  background-color: red;
-  border-radius: 50%;
-  position: absolute;
-  top: 10%;
-  right: -20%;
-  transform: translateX(32%) translateY(-20%);
-}
-
-/* title ----------------------------- */
-.title {
-  position: relative;
-}
-
-.site-induction-btn {
-  position: absolute;
-  right: 0;
-  top: 7%;
-}
-
-.site-induction-btn:active {
-  border-color: transparent;
-}
-
-.site-induction-btn i {
-  opacity: 0.5;
-}
-
-.site-induction-btn i:hover {
-  opacity: 1;
-  transition-duration: .3s;
-}
-
+/* mode-btn ----------------------------- */
 .default-mode {
   border-right-color: white;
 }
@@ -553,5 +406,58 @@ export default {
 
 .aside-link-generator {
   font-size: 4vw;
+}
+
+/* site-induction-btn ----------------------------- */
+.title {
+  position: relative;
+}
+
+.site-induction-btn {
+  position: absolute;
+  right: 0;
+  top: 7%;
+}
+
+.site-induction-btn:active {
+  border-color: transparent;
+}
+
+.site-induction-btn i {
+  opacity: 0.5;
+}
+
+.site-induction-btn i:hover {
+  opacity: 1;
+  transition-duration: .3s;
+}
+
+/* bento-generator-btn ----------------------------- */
+.bento-generator-btn {
+  position: relative;
+}
+
+.bento-generator-btn::before {
+  content: "";
+  width: 20%;
+  height: 80%;
+  background-color: silver;
+  /* border-radius: 0% 0% 20% 0%; */
+  bottom: 10%;
+  right: -20%;
+  position: absolute;
+  clip-path: polygon(80% 0, 100% 0, 100% 100%, 0 100%, 0 90%, 80% 90%);
+}
+
+.bento-generator-btn::after {
+  content: "";
+  width: 12%;
+  height: 24%;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: 10%;
+  right: -20%;
+  transform: translateX(32%) translateY(-20%);
 }
 </style>
