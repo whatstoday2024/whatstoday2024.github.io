@@ -19,19 +19,20 @@ export default defineStore('memberData', {
         this.setMemberData({})
         this.hasCheckLogin = true
         return
-      }
-      axios.defaults.headers.common.Authorization = token;
-      await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
-        .then((res) => {
-          this.setMemberData(res.data.message)
-          this.hasCheckLogin = true
-        }).catch(() => {
-          this.setMemberData({})
-          this.hasCheckLogin = true
-        });
+      } 
+      try {
+        axios.defaults.headers.common.Authorization = token;
+        const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${id}`)
+        this.setMemberData(res.data.message)
+        this.hasCheckLogin = true
+        }
+      catch(error) {
+        this.setMemberData({})
+        this.hasCheckLogin = true
+      }   
     },
-    checkIsAdmin() {
-      if (!this.memberData.isAdmin) {
+    checkIsAdmin(){
+      if(!this.memberData?.isAdmin){
         return false
       } else {
         return true
