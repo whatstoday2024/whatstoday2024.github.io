@@ -32,7 +32,7 @@
                     <svg width="40" height="40">
                       <circle cx="20" cy="20" r="20" fill="#144bb8" />
                       <text x="20" y="22" text-anchor="middle" alignment-baseline="middle" font-size="24"
-                            fill="white">{{ nickname.charAt(0) }}</text>
+                            fill="white">{{ nicknameOne }}</text>
                     </svg>
                   </a>
                   <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink" style="">
@@ -80,16 +80,16 @@ export default {
   data() {
     return {
       isLogin: false,
-      nickname: ''
+      nicknameOne: ''
     }
   },
   methods: {
     checkStatus(){
       if(this.hasCheckLogin){
-        this.nickname = this?.memberData.nickname;
+        this.nicknameOne = this?.memberData.nickname.charAt(0);
         this.isLogin = true;
       }else{
-        this.nickname = '';
+        this.nicknameOne = '';
         this.isLogin = false;
       }
     },
@@ -104,6 +104,7 @@ export default {
       setTimeout(() => {
         //重整後轉頁至首頁
         location.reload('/');
+        this.$router.push();
       }, delay)
     },
     ...mapActions(memberStore, ['getUser'])
