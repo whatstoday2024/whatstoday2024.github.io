@@ -73,6 +73,8 @@
   
 <script>
 import { toast } from 'vue3-toastify';
+import memberStore from '@/stores/memberData'
+import { mapActions, mapState } from 'pinia'
 
 export default {
   data() {
@@ -82,18 +84,14 @@ export default {
     }
   },
   methods: {
-    checkAuth(){
-      const token = this.$cookie.getMemberToken();
-      const id = this.$cookie.getMemberId();
-
-      this.axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/users/${id}`)
-        .then((res) => {
-          this.nickname = res.data.message.nickname;
-          this.isLogin = true;
-        }).catch(() => {
-          this.isLogin = false;
-        });
+    checkStatus(){
+      if(this.hasCheckLogin){
+        this.nickname = this?.memberData.nickname;
+        this.isLogin = true;
+      }else{
+        this.nickname = '';
+        this.isLogin = false;
+      }
     },
     logout(){
       document.cookie = `whatstoday=`;
@@ -107,10 +105,19 @@ export default {
         //重整後轉頁至首頁
         location.reload('/');
       }, delay)
+    },
+    ...mapActions(memberStore, ['getUser'])
+  },
+  computed: {
+    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
+  },
+  watch: {
+    hasCheckLogin(){
+      this.checkStatus()
     }
   },
   created(){
-    this.checkAuth()
+    this.checkStatus()
   }
 
 };
