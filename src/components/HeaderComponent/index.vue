@@ -35,7 +35,7 @@
                             fill="white">{{ nicknameOne }}</text>
                     </svg>
                   </a>
-                  <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink" style="">
+                  <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink">
                     <li>
                       <RouterLink to="/member/profile" class="dropdown-item">
                         <span class="material-symbols-outlined">face</span>
@@ -52,14 +52,14 @@
                 </div>
               </li>
             </ul>
-            <div class="d-flex flex-column flex-md-row">
+            <div class="d-flex flex-column flex-md-row" data-bs-dismiss="offcanvas">
               <hr v-if="isLogin" class="mb-3">
               <ul v-if="isLogin" class="navbar-nav text-center align-items-center d-block d-md-none">
                 <li class="nav-item">
                   <a href="#" class="mx-2" @click.prevent="logout">登出</a>
                 </li>
               </ul>
-              <RouterLink v-if="!isLogin" to="/login" class="btn btn-brand-blue rounded-pill" style="height: 3rem;padding: 12px 12px 12px 16px;">
+              <RouterLink v-if="!isLogin" to="/login" class="btn btn-brand-blue rounded-pill" style="padding: 12px 12px 12px 16px;">
                 登入 / 註冊
                 <i class="bi bi-chevron-right"></i>
               </RouterLink>
@@ -104,7 +104,7 @@ export default {
       setTimeout(() => {
         //重整後轉頁至首頁
         location.reload('/');
-        this.$router.push();
+        this.$router.push('/');
       }, delay)
     },
     ...mapActions(memberStore, ['getUser'])
