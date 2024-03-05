@@ -1,26 +1,29 @@
 <template>
   <section class="section">
-    <h1 class="section-title fw-bold"> 為了解決上述困擾，我們提供了... </h1>
+    <h1 class="section-title fw-bold">為了解決上述困擾，我們提供了...</h1>
     <div class="row">
       <div class="col-12 col-lg-7">
         <div class="card-left bg-primary-light">
           <!-- <div class="row"> -->
           <div class="row mb-2" v-for="(item, index) in provideOptions" :key="item.id">
-            <div class="col-2"><img :src="item.icon" alt="icon"></div>
+            <div class="col-2"><img :src="item.icon" alt="icon" /></div>
             <div class="col-10">
               <h3 class="fw-bold">{{ item.title }}</h3>
-              <h6>{{ item.content }}</h6></div>
+              <h6>{{ item.content }}</h6>
+            </div>
           </div>
           <div class="text-start mt-4">
             <router-link to="/menu" class="btn btn-lg btn-brand-blue text-white rounded-pill">
-              <div class="d-flex align-items-center py-2 px-3">立即開始 <ArrowRightBold style="width: 20px; height: 20px ;color:white;;"/></div>
+              <div class="d-flex align-items-center py-2 px-3">
+                立即開始 <i class="bi bi-chevron-right"></i>
+              </div>
             </router-link>
           </div>
         </div>
       </div>
       <div class="d-none d-lg-block col-12 col-lg-5">
         <div class="card-right">
-          <img class="img" :src="eatingImg" alt="eating">
+          <img class="img" :src="eatingImg" alt="eating" />
         </div>
       </div>
     </div>
@@ -31,23 +34,22 @@
 import eatingImg from '@/assets/img/sloution_person.png'
 import { provideOptions } from '@/utils/variables'
 import axios from 'axios'
-import { CaretLeft, CaretRight, ArrowRightBold } from "@element-plus/icons-vue";
+import { CaretLeft, CaretRight } from '@element-plus/icons-vue'
 
 export default {
   data() {
     return {
       eatingImg,
-      provideOptions,
+      provideOptions
     }
   },
   components: {
     CaretRight,
-    CaretLeft,
-    ArrowRightBold
-},
+    CaretLeft
+  },
   computed: {
     classObject: () => {}
-  },
+  }
 }
 </script>
 
@@ -71,7 +73,7 @@ export default {
   width: 60px;
 }
 
-.img{
+.img {
   // object-fit: fill;
   object-fit: cover;
   object-position: center;
