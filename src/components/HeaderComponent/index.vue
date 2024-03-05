@@ -10,32 +10,35 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasNavbar2"
-            aria-labelledby="offcanvasNavbar2Label">
+             aria-labelledby="offcanvasNavbar2Label">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasNavbar2Label"></h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body d-flex flex-column flex-md-row justify-content-between justify-content-md-end my-5 my-md-0">
+          <div
+               class="offcanvas-body d-flex flex-column flex-md-row justify-content-between justify-content-md-end my-5 my-md-0">
             <ul class="navbar-nav align-items-center" data-bs-dismiss="offcanvas">
               <li class="nav-item text-center ">
                 <RouterLink to="/menu" class="m-2">立即開始</RouterLink>
               </li>
               <li class="nav-item text-center ">
-                <RouterLink to="/member/bento-dairy" class="mx-2">便當日記</RouterLink>
-              </li>            
+                <RouterLink to="/member/bento-diary" class="mx-2">便當日記</RouterLink>
+              </li>
               <li v-if="isLogin" class="nav-item text-center d-block d-md-none">
                 <RouterLink to="/member/profile" class="mx-2">會員中心</RouterLink>
               </li>
               <li v-if="isLogin" class="nav-item mx-2 d-none d-md-block">
                 <div class="dropdown">
-                  <a href="#" class="dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a href="#" class="dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown"
+                     aria-expanded="false">
                     <svg width="40" height="40">
                       <circle cx="20" cy="20" r="20" fill="#144bb8" />
                       <text x="20" y="22" text-anchor="middle" alignment-baseline="middle" font-size="24"
                             fill="white">{{ nicknameOne }}</text>
                     </svg>
                   </a>
-                  <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink" style="">
+                  <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink"
+                      style="">
                     <li>
                       <RouterLink to="/member/profile" class="dropdown-item">
                         <span class="material-symbols-outlined">face</span>
@@ -59,7 +62,8 @@
                   <a href="#" class="mx-2" @click.prevent="logout">登出</a>
                 </li>
               </ul>
-              <RouterLink v-if="!isLogin" to="/login" class="btn btn-brand-blue rounded-pill" style="height: 3rem;padding: 12px 12px 12px 16px;">
+              <RouterLink v-if="!isLogin" to="/login" class="btn btn-brand-blue rounded-pill"
+                          style="height: 3rem;padding: 12px 12px 12px 16px;">
                 登入 / 註冊
                 <i class="bi bi-chevron-right"></i>
               </RouterLink>
@@ -70,7 +74,7 @@
     </nav>
   </section>
 </template>
-  
+
 <script>
 import { toast } from 'vue3-toastify';
 import memberStore from '@/stores/memberData'
@@ -84,19 +88,19 @@ export default {
     }
   },
   methods: {
-    checkStatus(){
-      if(this.hasCheckLogin){
+    checkStatus() {
+      if (this.hasCheckLogin) {
         this.nicknameOne = this?.memberData.nickname.charAt(0);
         this.isLogin = true;
-      }else{
+      } else {
         this.nicknameOne = '';
         this.isLogin = false;
       }
     },
-    logout(){
+    logout() {
       document.cookie = `whatstoday=`;
       document.cookie = `whatstodayMember=`;
-      
+
       const delay = 1000
       toast.success('登出成功！前往首頁', {
         autoClose: delay,
@@ -113,17 +117,17 @@ export default {
     ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    hasCheckLogin(){
+    hasCheckLogin() {
       this.checkStatus()
     }
   },
-  created(){
+  created() {
     this.checkStatus()
   }
 
 };
 </script>
-  
+
 <style lang="scss" scoped>
 .dropdown-menu {
   --bs-dropdown-link-active-bg: '';
