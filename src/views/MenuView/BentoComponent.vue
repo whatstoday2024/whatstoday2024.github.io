@@ -135,6 +135,12 @@
                         <label class="mx-2" for="bentoDate">便當日記：</label>
                         <input class="form-control me-4 w-auto d-inline-block" id="bentoDate" type="date"
                                v-model="bentoDate">
+                        <label class="mx-2" for="bentoDate">當天天氣：</label>
+                        <select class="form-select w-auto d-inline-block" aria-label="what's the weather that date?">
+                            <option value="sunny" selected>晴</option>
+                            <option value="cloudy">陰</option>
+                            <option value="rainy">雨</option>
+                        </select>
                     </div>
                     <div>
                         <label class="mx-2" for="bentoDate">這是我的：</label>

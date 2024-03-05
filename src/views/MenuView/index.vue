@@ -34,8 +34,8 @@
           <ul class="dropdown-menu" aria-labelledby="SortByWhatFactorDropdownMenuButton">
             <li><a class="dropdown-item" :class="{ active: sortBy === 'default' }" href="javascript:;"
                  @click="sortBy = 'default'">依 預設 排序</a></li>
-            <li><a class="dropdown-item disabled" href="javascript:;" @click="sortBy = 'preferenceLevel'"
-                 aria-disabled="true">依 喜好程度 排序</a></li>
+            <li><a class="dropdown-item" :class="{ active: sortBy === 'preferenceLevel' }" href=" javascript:;"
+                 @click="sortBy = 'preferenceLevel'">依 喜好程度 排序</a></li>
             <li><a class="dropdown-item" :class="{ active: sortBy === 'healthLevel' }" href="javascript:;"
                  @click="sortBy = 'healthLevel'">依 健康分數 排序</a></li>
           </ul>
@@ -150,17 +150,16 @@ import BentoComponent from './BentoComponent.vue';
 import memberStore from '@/stores/memberData';
 import { mapState, mapActions } from 'pinia';
 import { toast } from 'vue3-toastify';
+const delay = 2000;
 
 document.title = "來點菜單";
-const delay = 1000
-toast.error('請先登入', {
-  autoClose: delay,
-})
+
 export default {
   components: { DishesComponent, BentoComponent },
   data() {
     return {
       apiUrl: "https://whatstoday2024-8nsu.onrender.com",
+      introIndex: 1,
       mode: "default",
       filter: "全部",
       sortBy: "default",
@@ -171,8 +170,7 @@ export default {
       stapleList: [],
       mainDishesList: [],
       sideDishesList: [],
-      selected: [],
-      introIndex: 1,
+      selectedList: [],
       bentoTemp: {
         stapleCourse: {},
         mainCourse: {},
@@ -233,7 +231,10 @@ export default {
 
         let answerIndex = 0;
         for (let i = 0; i < tempDishesList.length; i++) {
-          randomNumber -= (tempDishesList[i].healthLevel + tempDishesList[i].preferenceLevel);
+          randomNumber -= this.mode === "default" ?
+            tempDishesList[i].healthLevel :
+            (tempDishesList[i].healthLevel + +tempDishesList[i].preferenceLevel);
+
           if (randomNumber <= 0) {
             answerIndex = i;
             break;
@@ -252,14 +253,40 @@ export default {
     },
     generateBento() {
       // console.clear()
+      let isSatisfied = true
+      const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
+      const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
+      const sideDishesTemp = this.mode === "default" ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
+      if (stapleTemp.length < 1) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少一種主食。', {
+          autoClose: delay,
+        })
+      }
+      if (sideDishesTemp.length < 3) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少三種配菜。', {
+          autoClose: delay,
+        })
+      }
+      if (mainDishesTemp.length < 1) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少一種主菜。', {
+          autoClose: delay,
+        })
+      }
+      console.log(this.bentoTemp.sideDishes?.length)
+      if (!isSatisfied) {
+        return;
+      }
       this.bentoTemp = {
         starchTotalPortion: 0,
         proteinTotalPortion: 0,
         vegetableTotalPortion: 0,
       }
-      this.bentoTemp.stapleCourse = this.drawOneDish(this.stapleList);
-      this.bentoTemp.mainCourse = this.drawOneDish(this.mainDishesList);
-      this.bentoTemp.sideDishes = this.drawThreeDishes(this.sideDishesList);
+      this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
+      this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
+      this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
     },
     moveToGeneratorBentoBtn() {
       document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' });
@@ -281,19 +308,16 @@ export default {
     async getAllDishesList() {
       await this.axios.get(`${this.apiUrl}/dishes`)
         .then(res => {
-
           this.allDishesList = res.data.message;
           this.allDishesList = this.allDishesList.map(dish => {
-            const selectedTemp = this.selected.find(selectedItem => selectedItem.dishId === dish.id);
-            // console.log(selectedTemp)
+            const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
             if (selectedTemp) {
               return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
             } else {
-              // console.log(123)
               return { ...dish, isChecked: false, preferenceLevel: 1 };
             }
           });
-          console.log(this.allDishesList)
+          // console.log(this.allDishesList)
 
           this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
           this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
@@ -304,17 +328,32 @@ export default {
       this.searchedList = [];
       this.search = this.searchInput;
 
-      let titleSearchApiUrl = this.filter === "全部" ?
-        `${this.apiUrl}/dishes?title_like=${this.search}` :
-        `${this.apiUrl}/dishes?category=${this.filter}&title_like=${this.search}`
+      // let titleSearchApiUrl = this.filter === "全部" ?
+      //   `${this.apiUrl}/dishes?title_like=${this.search}` :
+      //   `${this.apiUrl}/dishes?category=${this.filter}&title_like=${this.search}`
+
+      // let titleSearchApiUrl = `${this.apiUrl}/dishes?title_like=${this.search}${this.filter === "全部" ? "" : '&category=' + this.filter}${this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc'}`
+
+      let titleSearchApiUrl = this.apiUrl + "/dishes?title_like=" + this.search +
+        (this.filter === "全部" ? "" : '&category=' + this.filter) +
+        (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
+      // console.log(titleSearchApiUrl)
+
       await this.axios.get(titleSearchApiUrl)
         .then(res => {
           this.searchedList = [...this.searchedList, ...res.data.message];
         });
 
-      let engTitleSearchApiUrl = this.filter === "全部" ?
-        `${this.apiUrl}/dishes?engTitle_like=${this.search}` :
-        `${this.apiUrl}/dishes?category=${this.filter}&engTitle_like=${this.search}`
+      // let engTitleSearchApiUrl = this.filter === "全部" ?
+      //   `${this.apiUrl}/dishes?engTitle_like=${this.search}` :
+      //   `${this.apiUrl}/dishes?category=${this.filter}&engTitle_like=${this.search}`
+
+      // let engTitleSearchApiUrl = `${this.apiUrl}/dishes?engTitle_like=${this.search}${this.filter === "全部" ? "" : '&category=' + this.filter}${this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc'}`
+
+      let engTitleSearchApiUrl = this.apiUrl + "/dishes?engTitle_like=" + this.search +
+        (this.filter === "全部" ? "" : '&category=' + this.filter) +
+        (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
+      // console.log(engTitleSearchApiUrl)
 
       await this.axios.get(engTitleSearchApiUrl)
         .then(res => {
@@ -322,7 +361,7 @@ export default {
         });
 
       this.searchedList = this.searchedList.map(dish => {
-        const selectedTemp = this.selected.find(selectedItem => selectedItem.dishId === dish.id);
+        const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
         if (selectedTemp) {
           return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
         } else {
@@ -339,45 +378,51 @@ export default {
           this.searchedList = this.searchedList.sort((a, b) => a.id - b.id);
         }
       }
+      else if (this.sortBy === "preferenceLevel") {
+        await this.getAllDishesList();
+        this.allDishesList = [...this.allDishesList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
+        ...this.allDishesList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+
+        this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
+        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
+        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+
+        this.searchedList = [...this.searchedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
+        ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+
+        this.selectedList = [...this.selectedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
+        ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+      }
       else if (this.sortBy === "healthLevel") {
         await this.axios.get(`${this.apiUrl}/dishes?_sort=${this.sortBy}&_order=desc`)
           .then(res => {
             this.allDishesList = res.data.message;
+
             this.allDishesList = this.allDishesList.map(dish => {
-              const selectedTemp = this.selected.find(selectedItem => selectedItem.dishId === dish.id);
+              const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
               if (selectedTemp) {
                 return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
               } else {
                 return { ...dish, isChecked: false, preferenceLevel: 1 };
               }
             });
+
             this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
             this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
             this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
-
-            if (this.search) {
-              this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel);
-            }
           });
-      }
-
-    },
-    async getFilteredDishes() {
-      await this.getSearchedDishes();
-      if (this.filter !== "全部") {
-        this.searchedList = this.searchedList.filter((dish) => dish.category === this.filter);
       }
     },
     async getSelected() {
       await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/selecteds?_expand=dish`)
         .then(res => {
-          this.selected = res.data.message;
-          console.log(this.selected)
+          this.selectedList = res.data.message;
+          console.log(this.selectedList)
         })
     },
     async addToSelected(dish) {
-      const selectedTemp = this.selected.find((item) => item.dishId === dish.id);
-      console.log(selectedTemp)
+      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
+      // console.log(selectedTemp)
       if (selectedTemp) {
         await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { isChecked: true })
           .then(() => {
@@ -397,18 +442,22 @@ export default {
       console.log("done")
     },
     async updatePreferenceLevel(dish) {
-      const selectedTemp = this.selected.find((item) => item.dishId === dish.id);
+      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { preferenceLevel: +dish.preferenceLevel })
         .then(() => {
           this.getSelected();
-        }).catch(err => {
-          console.dir(err)
-          console.log("wrong!")
+        }).catch(() => {
+          toast.error('發生了某些錯誤，將重新整理頁面。', {
+            autoClose: delay,
+          })
+          setTimeout(() => {
+            location.reload()
+          }, delay);
         })
     },
-    async removeFromSelected(dish) {
-      const selectedTemp = this.selected.find((item) => item.dishId === dish.id);
-      console.log(selectedTemp)
+    async uncheckFromSelected(dish) {
+      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
+      // console.log(selectedTemp)
       if (selectedTemp) {
         if (+dish.preferenceLevel === 1) {
           await this.axios.delete(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`)
@@ -421,14 +470,17 @@ export default {
               this.getSelected();
             })
         }
-
       } else {
-        console.log("something wrong.")
+        toast.error('發生了某些錯誤，將重新整理頁面。', {
+          autoClose: delay,
+        })
+        setTimeout(() => {
+          location.reload()
+        }, delay);
       }
-      console.log("done2")
     },
     updateSelected(dish) {
-      dish.isChecked === true ? this.addToSelected(dish) : this.removeFromSelected(dish);
+      dish.isChecked === true ? this.addToSelected(dish) : this.uncheckFromSelected(dish);
     },
     async init() {
       await this.getUser();
