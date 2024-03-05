@@ -97,7 +97,7 @@ export default {
   methods: {
     getProfile() {
       this.isLoading = true
-      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records?user=${this.memberData.id}`, {
+      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records`, {
           headers: {
             'authorization': this.$cookie.getMemberToken()
           }
@@ -108,9 +108,6 @@ export default {
           }
           this.isLoading = false
         }).catch(() => {
-          toast.error('無法取得便當紀錄，請稍後再嘗試', {
-            autoClose: 1500
-          })
           this.isLoading = false
         })
     },
