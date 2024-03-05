@@ -148,7 +148,7 @@ console.clear();
 import DishesComponent from './DishesComponent.vue';
 import BentoComponent from './BentoComponent.vue';
 import memberStore from '@/stores/memberData';
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
 import { toast } from 'vue3-toastify';
 const delay = 2000;
 
@@ -184,7 +184,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
   },
   watch: {
     sortBy() {
@@ -192,6 +192,9 @@ export default {
     },
     filter() {
       this.getSearchedDishes();
+    },
+    hasCheckLogin() {
+      this.init();
     }
   },
   methods: {
@@ -417,7 +420,6 @@ export default {
       await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/selecteds?_expand=dish`)
         .then(res => {
           this.selectedList = res.data.message;
-          console.log(this.selectedList)
         })
     },
     async addToSelected(dish) {
@@ -483,17 +485,14 @@ export default {
       dish.isChecked === true ? this.addToSelected(dish) : this.uncheckFromSelected(dish);
     },
     async init() {
-      await this.getUser();
-      if (Object.keys(this.memberData).length !== 0) {
+      if (this.memberData.id) {
         this.getMode();
         await this.getSelected();
       }
       await this.getAllDishesList();
-    },
-    ...mapActions(memberStore, ['getUser'])
+    }
   },
   mounted() {
-    this.init();
   }
 };
 </script>
