@@ -1,5 +1,5 @@
 <template>
-  <loadingVue :active="isLoading"/>
+  <loadingVue :active="isLoading" />
   <div class="container flex-fill">
     <h2 class="text-center my-2">我的便當日記</h2>
     <div class="calendar-wrap rounded border border-primary bg-light p-4 my-3 mx-auto">
@@ -14,13 +14,14 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import rrulePlugin from '@fullcalendar/rrule'
 import FreeDaysData from '../FreeDaysData'
+import { mapState, mapActions } from 'pinia'
+import memberStore from '@/stores/memberData'
+
 
 let calendarWrap = null;
 
 export default {
-  components: {
-    FullCalendar // make the <FullCalendar> tag available
-  },
+  components: { FullCalendar },
   data() {
     return {
       isLoading: false,
@@ -38,10 +39,8 @@ export default {
           setFreeDayBtn: {
             text: '設定放縱日',
             click: () => {
-              // alert('clicked the custom button!');
-              this.$router.push({name: 'FreeDays'})
-            },
-            backgroundColor: "524786",
+              this.$router.push({ name: 'FreeDays' })
+            }
           }
         },
         fixedWeekCount: false,
@@ -49,55 +48,28 @@ export default {
         height: "auto",
         dateClick: this.handleDateClick,
         events: [
-          { title: '午餐便當', date: '2024-02-25' },
-          { title: '晚餐便當', date: '2024-02-25' },
-          // {
-          //   title: 'event 2',
-          //   date: '2024-02-28'
-          // },
-          // {
-          //   start: '2024-02-24',
-          //   display: 'background',
-          //   backgroundColor: "#462056",
-          // },
-          // {
-          //   start: '2024-02-23',
-          //   display: 'background',
-          //   backgroundColor: "#462056",
-          // },
-          {
-            title: "午餐",
-            daysOfWeek: [3], // 指定事件在星期三發生
-            // start: '2024-02-24', // 設定事件的開始時間
-            // endTime: "17:00", // 設定事件的結束時間
-            startRecur: "2024-02-24", // 開始日期（第一次事件發生的日期）
-            // endRecur: "2024-12-31" // 結束日期（最後一次事件發生的日期）
-          },
-          // {
-            // daysOfWeek: [3], // 指定事件在星期三發生
-            // start: '8:00', // 設定事件的開始時間
-            // endTime: "17:00", // 設定事件的結束時間
-            // startRecur: "2024-02-27", // 開始日期（第一次事件發生的日期）
-            // endRecur: "2024-12-31" // 結束日期（最後一次事件發生的日期）
-            // display: 'background',
-            // backgroundColor: "orange",
-          // }
+          { title: '午餐便當', date: '2024-03-25' },
+          { title: '晚餐便當', date: '2024-03-25' },
         ],
         eventClick: this.eventClick,
         eventClassNames: this.eventClassNames,
       },
       freeDays: {},
-      fullCalendarDOM: null
+      fullCalendarDOM: null,
+      bentoRecords: []
     }
   },
   emits: ['updateProfile'],
   mixins: [FreeDaysData],
   watch: {
-    freeDays(value){
-      if(value.weekly){
+    freeDays(value) {
+      if (value.weekly) {
         this.initFreeDaysRule()
       }
     }
+  },
+  computed: {
+    ...mapState(memberStore, ['memberData'])
   },
   methods: {
     handleDateClick(arg) {
@@ -112,9 +84,9 @@ export default {
     },
     eventClassNames(arg) {
       if (arg.event.title === "午餐便當") {
-        return ['lunch-bento']
+        return ['lunch-bento', "bg-brand-blue"]
       } else if (arg.event.title === "晚餐便當") {
-        return ['dinner-bento']
+        return ['dinner-bento', "bg-brand-red"]
       }
     },
     resizeCalendar() {
@@ -124,13 +96,13 @@ export default {
         calendarWrap.classList.remove("col-md-10");
       }
     },
-    initFreeDaysRule(){
+    initFreeDaysRule() {
       // 設定所有週期放縱日的起始時間
       const dtstart_init = ['2024', '01', '01']
       const dtstart = dtstart_init.join('-')
 
       // 設定每週的放縱日事件
-      if(this.freeDays.weekly.length){
+      if (this.freeDays.weekly.length) {
         this.renderFreeDays({
           rrule: {
             freq: 'weekly',
@@ -139,9 +111,9 @@ export default {
           }
         })
       }
-      
+
       // 設定每月的放縱日事件
-      if(this.freeDays.monthly.length){
+      if (this.freeDays.monthly.length) {
         this.renderFreeDays({
           rrule: {
             freq: 'monthly',
@@ -150,7 +122,7 @@ export default {
           }
         })
       }
-      
+
       // 設定每年的放縱日事件
       this.freeDays.yearly.forEach(date => {
         const [month, day] = date.split('/')
@@ -170,7 +142,7 @@ export default {
         })
       })
     },
-    renderFreeDays(rules){
+    renderFreeDays(rules) {
       const settings = {
         title: ' free day',  // 前方留空白，讓放縱日事件維持在最上方
         display: 'list-item',
@@ -181,8 +153,22 @@ export default {
         ...rules
       })
     },
+    async getBentoRecords() {
+      await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`)
+        .then(res => {
+          this.bentoRecords = res.data.message;
+        })
+
+      this.bentoRecords.forEach((record) => {
+        this.fullCalendarDOM.addEvent({
+          ...record,
+          title: `${record.mealType}便當`
+        })
+      })
+    },
+    ...mapActions(memberStore, ['getUser'])
   },
-  mounted() {
+  async mounted() {
     calendarWrap = document.querySelector(".calendar-wrap");
     this.resizeCalendar();
     window.addEventListener("resize", this.resizeCalendar);
@@ -195,6 +181,10 @@ export default {
     // api 取得放縱日資料
     this.getFreeDaysData();
     this.fullCalendarDOM = this.$refs.FullCalendar.calendar
+
+    // api 取得便當紀錄
+    await this.getUser();
+    await this.getBentoRecords();
   }
 }
 </script>
@@ -259,25 +249,29 @@ export default {
 }
 
 /* 放縱日重複事件，只顯示一次 */
-.fc-daygrid-event-harness:not(:first-child) .fc-daygrid-dot-event{
+.fc-daygrid-event-harness:not(:first-child) .fc-daygrid-dot-event {
   display: none;
 }
 
 /* 調整 dot 大小 */
-.fc-daygrid-event-dot{
+.fc-daygrid-event-dot {
   border-width: 3px;
 }
+
 /* 放縱日僅為標示，不使用 hover 互動 */
-.fc-daygrid-dot-event.fc-event-mirror, .fc-daygrid-dot-event:hover{
+.fc-daygrid-dot-event.fc-event-mirror,
+.fc-daygrid-dot-event:hover {
   background: inherit;
   color: var(--bs-primary);
 }
+
 /* 手機板將字體縮小 */
 @media (max-width: 575px) {
   a.fc-daygrid-dot-event .fc-event-title {
     font-size: 9px;
   }
-  .fc-daygrid-event-dot{
+
+  .fc-daygrid-event-dot {
     display: none;
   }
 }
