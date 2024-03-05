@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-md navbar-light" aria-label="Offcanvas navbar large">
       <div class="container-fluid d-flex justify-content-between px-0">
         <RouterLink class="navbar-brand" to="/">
-          <img class="logo" height="50" alt="login">
+          <img class="logo" height="50" alt="login" />
         </RouterLink>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2"
                 aria-controls="offcanvasNavbar2" aria-label="Toggle navigation">
@@ -18,10 +18,10 @@
           <div
                class="offcanvas-body d-flex flex-column flex-md-row justify-content-between justify-content-md-end my-5 my-md-0">
             <ul class="navbar-nav align-items-center" data-bs-dismiss="offcanvas">
-              <li class="nav-item text-center ">
+              <li class="nav-item text-center">
                 <RouterLink to="/menu" class="m-2">立即開始</RouterLink>
               </li>
-              <li class="nav-item text-center ">
+              <li class="nav-item text-center me-3">
                 <RouterLink to="/member/bento-diary" class="mx-2">便當日記</RouterLink>
               </li>
               <li v-if="isLogin" class="nav-item text-center d-block d-md-none">
@@ -33,37 +33,37 @@
                      aria-expanded="false">
                     <svg width="40" height="40">
                       <circle cx="20" cy="20" r="20" fill="#144bb8" />
-                      <text x="20" y="22" text-anchor="middle" alignment-baseline="middle" font-size="24"
-                            fill="white">{{ nicknameOne }}</text>
+                      <text x="20" y="22" text-anchor="middle" alignment-baseline="middle" font-size="24" fill="white">
+                        {{ nicknameOne }}
+                      </text>
                     </svg>
                   </a>
-                  <ul class="dropdown-menu text-small shadow dropdown-menu-end" aria-labelledby="dropdownNavLink"
-                      style="">
-                    <li>
+                  <ul class="dropdown-menu text-small shadow dropdown-menu-end m-2" aria-labelledby="dropdownNavLink">
+                    <li class="mb-2">
                       <RouterLink to="/member/profile" class="dropdown-item">
                         <span class="material-symbols-outlined">face</span>
-                        會員中心
+                        <span>會員中心</span>
                       </RouterLink>
                     </li>
                     <li>
                       <a class="dropdown-item" href="#" @click.prevent="logout">
                         <span class="material-symbols-outlined">move_item</span>
-                        登出
+                        <span>登出</span>
                       </a>
                     </li>
                   </ul>
                 </div>
               </li>
             </ul>
-            <div class="d-flex flex-column flex-md-row">
-              <hr v-if="isLogin" class="mb-3">
+            <div class="d-flex flex-column flex-md-row" data-bs-dismiss="offcanvas">
+              <hr v-if="isLogin" class="mb-3" />
               <ul v-if="isLogin" class="navbar-nav text-center align-items-center d-block d-md-none">
                 <li class="nav-item">
                   <a href="#" class="mx-2" @click.prevent="logout">登出</a>
                 </li>
               </ul>
               <RouterLink v-if="!isLogin" to="/login" class="btn btn-brand-blue rounded-pill"
-                          style="height: 3rem;padding: 12px 12px 12px 16px;">
+                          style="padding: 12px 12px 12px 16px">
                 登入 / 註冊
                 <i class="bi bi-chevron-right"></i>
               </RouterLink>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { toast } from 'vue3-toastify';
+import { toast } from 'vue3-toastify'
 import memberStore from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 
@@ -90,25 +90,25 @@ export default {
   methods: {
     checkStatus() {
       if (this.hasCheckLogin) {
-        this.nicknameOne = this?.memberData.nickname.charAt(0);
-        this.isLogin = true;
+        this.nicknameOne = this?.memberData.nickname.charAt(0)
+        this.isLogin = true
       } else {
-        this.nicknameOne = '';
-        this.isLogin = false;
+        this.nicknameOne = ''
+        this.isLogin = false
       }
     },
     logout() {
-      document.cookie = `whatstoday=`;
-      document.cookie = `whatstodayMember=`;
+      document.cookie = `whatstoday=`
+      document.cookie = `whatstodayMember=`
 
       const delay = 1000
       toast.success('登出成功！前往首頁', {
-        autoClose: delay,
+        autoClose: delay
       })
       setTimeout(() => {
         //重整後轉頁至首頁
-        location.reload('/');
-        this.$router.push();
+        location.reload('/')
+        this.$router.push('/')
       }, delay)
     },
     ...mapActions(memberStore, ['getUser'])
@@ -124,13 +124,18 @@ export default {
   created() {
     this.checkStatus()
   }
-
-};
+}
 </script>
 
 <style lang="scss" scoped>
 .dropdown-menu {
   --bs-dropdown-link-active-bg: '';
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .navbar-nav a {
@@ -143,7 +148,7 @@ export default {
 }
 
 .logo {
-  content: url("@/assets/logo.png");
+  content: url('@/assets/logo.png');
 }
 
 @media screen and (max-width: 767px) {
@@ -153,7 +158,7 @@ export default {
   }
 
   .logo {
-    content: url("@/assets/logo_small.png");
+    content: url('@/assets/logo_small.png');
     height: 40px;
   }
 }
