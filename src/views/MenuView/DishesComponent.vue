@@ -14,11 +14,13 @@
                         <small class="card-eng-title mb-3 d-block text-center">{{ dish.engTitle }}</small>
                         <div class="input-group mx-auto">
                             <div class="input-group-text" :class="{ 'bg-grey9F': mode === 'default' }">
-                                <input class="form-check-input mt-0" type="checkbox" v-model="dish.isChecked"
-                                       aria-label="Checkbox for following text input" :disabled="mode === 'default'">
+                                <input class="form-check-input mt-0" type="checkbox"
+                                       aria-label="Checkbox for following text input" v-model="dish.isChecked"
+                                       @change="updateSelected(dish)" :disabled="mode === 'default'">
                             </div>
                             <select class="form-select" aria-label="Default select example"
-                                    :disabled="!dish.isChecked || mode === 'default'" v-model="dish.preferenceLevel">
+                                    v-model="dish.preferenceLevel" @change="updatePreferenceLevel(dish)"
+                                    :disabled="!dish.isChecked || mode === 'default'">
                                 <option value="1" selected>1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -135,13 +137,18 @@
 
 <script>
 export default {
-    props: ['dishesList', 'mode', "modalName"],
+    props: ['dishesList', 'mode', 'modalName', "updateSelected", "updatePreferenceLevel"],
     data() {
         return {
-            dishInfo: {}
+            dishInfo: {},
         };
     },
-    methods: {}
+    methods: {
+
+    },
+
+    mounted() {
+    }
 };
 </script>
 

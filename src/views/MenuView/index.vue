@@ -55,24 +55,32 @@
           <h3 class="d-inline mx-2">主食類</h3>
           <small class="text-danger">*請至少選擇一樣</small>
           <hr>
-          <DishesComponent :dishes-list="stapleList" :mode="mode" modal-name="stapleModal"></DishesComponent>
+          <DishesComponent :dishes-list="stapleList" :mode="mode" modal-name="stapleModal"
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
+          </DishesComponent>
         </div>
         <div class="dishes mb-4" v-if="(filter === '全部' || filter === '配菜類') && search === ''">
           <h3 class="d-inline mx-2">配菜類</h3>
           <small class="text-danger">*請至少選擇三樣</small>
           <hr>
-          <DishesComponent :dishes-list="sideDishesList" :mode="mode" modal-name="sideDishesModal"></DishesComponent>
+          <DishesComponent :dishes-list="sideDishesList" :mode="mode" modal-name="sideDishesModal"
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
+          </DishesComponent>
         </div>
         <div class="entree mb-4" v-if="(filter === '全部' || filter === '主菜類') && search === ''">
           <h3 class="d-inline mx-2">主菜類</h3>
           <small class="text-danger">*請至少選擇一樣</small>
           <hr>
-          <DishesComponent :dishes-list="mainDishesList" :mode="mode" modal-name="mainDishesModal"></DishesComponent>
+          <DishesComponent :dishes-list="mainDishesList" :mode="mode" modal-name="mainDishesModal"
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
+          </DishesComponent>
         </div>
         <div class="entree mb-4" v-if="search !== ''">
           <h3 class="mx-2">搜尋結果</h3>
           <hr>
-          <DishesComponent :dishes-list="searchedList" :mode="mode" modal-name="searchedDishesModal"></DishesComponent>
+          <DishesComponent :dishes-list="searchedList" :mode="mode" modal-name="searchedDishesModal"
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
+          </DishesComponent>
         </div>
       </div>
     </div>
@@ -130,7 +138,7 @@
   </div>
 
   <!-- 便當相關 Modal -->
-  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento"></BentoComponent>
+  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData"></BentoComponent>
 
 </template>
 
@@ -163,6 +171,7 @@ export default {
       stapleList: [],
       mainDishesList: [],
       sideDishesList: [],
+      selected: [],
       introIndex: 1,
       bentoTemp: {
         stapleCourse: {},
@@ -193,6 +202,7 @@ export default {
         dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
         dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
       let randomNumber = Math.random() * totalWeight;
+      console.log(randomNumber, totalWeight)
       let answerIndex = 0;
       for (let i = 0; i < dishesList.length; i++) {
         randomNumber -= this.mode === "default" ?
@@ -219,6 +229,8 @@ export default {
           dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
           dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
         let randomNumber = Math.random() * totalWeight;
+        console.log(randomNumber, totalWeight)
+
         let answerIndex = 0;
         for (let i = 0; i < tempDishesList.length; i++) {
           randomNumber -= (tempDishesList[i].healthLevel + tempDishesList[i].preferenceLevel);
@@ -239,6 +251,7 @@ export default {
       return answers;
     },
     generateBento() {
+      // console.clear()
       this.bentoTemp = {
         starchTotalPortion: 0,
         proteinTotalPortion: 0,
@@ -253,7 +266,7 @@ export default {
     },
     getMode() {
       if (Object.keys(this.memberData).length !== 0) {
-        this.mode = this.memberData?.mode;
+        this.mode = this.memberData.mode !== undefined ? this.memberData.mode : "default";
       } else {
         this.mode = "default";
       }
@@ -268,11 +281,20 @@ export default {
     async getAllDishesList() {
       await this.axios.get(`${this.apiUrl}/dishes`)
         .then(res => {
+
           this.allDishesList = res.data.message;
-          this.allDishesList.forEach((dish) => {
-            dish.isChecked = false;
-            dish.preferenceLevel = 1;
-          })
+          this.allDishesList = this.allDishesList.map(dish => {
+            const selectedTemp = this.selected.find(selectedItem => selectedItem.dishId === dish.id);
+            // console.log(selectedTemp)
+            if (selectedTemp) {
+              return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+            } else {
+              // console.log(123)
+              return { ...dish, isChecked: false, preferenceLevel: 1 };
+            }
+          });
+          console.log(this.allDishesList)
+
           this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
           this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
           this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
@@ -299,10 +321,14 @@ export default {
           this.searchedList = [...this.searchedList, ...res.data.message];
         });
 
-      this.searchedList.forEach((dish) => {
-        dish.isChecked = false;
-        dish.preferenceLevel = 1;
-      })
+      this.searchedList = this.searchedList.map(dish => {
+        const selectedTemp = this.selected.find(selectedItem => selectedItem.dishId === dish.id);
+        if (selectedTemp) {
+          return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+        } else {
+          return { ...dish, isChecked: false, preferenceLevel: 1 };
+        }
+      });
 
       this.getSortedDishes();
     },
@@ -317,10 +343,14 @@ export default {
         await this.axios.get(`${this.apiUrl}/dishes?_sort=${this.sortBy}&_order=desc`)
           .then(res => {
             this.allDishesList = res.data.message;
-            this.allDishesList.forEach((dish) => {
-              dish.isChecked = false;
-              dish.preferenceLevel = 1;
-            })
+            this.allDishesList = this.allDishesList.map(dish => {
+              const selectedTemp = this.selected.find(selectedItem => selectedItem.dishId === dish.id);
+              if (selectedTemp) {
+                return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+              } else {
+                return { ...dish, isChecked: false, preferenceLevel: 1 };
+              }
+            });
             this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
             this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
             this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
@@ -338,12 +368,75 @@ export default {
         this.searchedList = this.searchedList.filter((dish) => dish.category === this.filter);
       }
     },
+    async getSelected() {
+      await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/selecteds?_expand=dish`)
+        .then(res => {
+          this.selected = res.data.message;
+          console.log(this.selected)
+        })
+    },
+    async addToSelected(dish) {
+      const selectedTemp = this.selected.find((item) => item.dishId === dish.id);
+      console.log(selectedTemp)
+      if (selectedTemp) {
+        await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { isChecked: true })
+          .then(() => {
+            this.getSelected();
+          })
+      } else {
+        const data = {
+          dishId: dish.id,
+          isChecked: dish.isChecked,
+          preferenceLevel: +dish.preferenceLevel
+        }
+        await this.axios.post(`${this.apiUrl}/600/users/${this.memberData.id}/selecteds/`, data)
+          .then(() => {
+            this.getSelected();
+          })
+      }
+      console.log("done")
+    },
+    async updatePreferenceLevel(dish) {
+      const selectedTemp = this.selected.find((item) => item.dishId === dish.id);
+      await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { preferenceLevel: +dish.preferenceLevel })
+        .then(() => {
+          this.getSelected();
+        }).catch(err => {
+          console.dir(err)
+          console.log("wrong!")
+        })
+    },
+    async removeFromSelected(dish) {
+      const selectedTemp = this.selected.find((item) => item.dishId === dish.id);
+      console.log(selectedTemp)
+      if (selectedTemp) {
+        if (+dish.preferenceLevel === 1) {
+          await this.axios.delete(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`)
+            .then(() => {
+              this.getSelected();
+            })
+        } else {
+          await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { isChecked: false })
+            .then(() => {
+              this.getSelected();
+            })
+        }
+
+      } else {
+        console.log("something wrong.")
+      }
+      console.log("done2")
+    },
+    updateSelected(dish) {
+      dish.isChecked === true ? this.addToSelected(dish) : this.removeFromSelected(dish);
+    },
     async init() {
-      await this.getAllDishesList();
       await this.getUser();
       if (Object.keys(this.memberData).length !== 0) {
         this.getMode();
+        await this.getSelected();
       }
+      await this.getAllDishesList();
     },
     ...mapActions(memberStore, ['getUser'])
   },
