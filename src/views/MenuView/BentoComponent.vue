@@ -42,7 +42,8 @@
                         <div class="btns text-center p-3 col-6 col-lg-12">
                             <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
                                     data-bs-target="#confirmRegenerateBentoModal">重新生成便當</button>
-                            <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2">存至便當日記</button>
+                            <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2" data-bs-toggle="modal"
+                                    data-bs-target="#saveToBentoDiaryModal">存至便當日記</button>
                         </div>
                     </div>
                     <div class="bento-presentation col-lg-8 order-first order-lg-2">
@@ -118,18 +119,94 @@
             </div>
         </div>
     </div>
+
+    <!-- 存至便當日記 Modal -->
+    <div class="modal fade" id="saveToBentoDiaryModal" tabindex="-1" aria-labelledby="saveToBentoDiaryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveToBentoDiaryModalLabel">存至便當日記</h5>
+                    <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#bentoModal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="mx-2" for="bentoDate">便當日記：</label>
+                        <input class="form-control me-4 w-auto d-inline-block" id="bentoDate" type="date"
+                               v-model="bentoDate">
+                    </div>
+                    <div>
+                        <label class="mx-2" for="bentoDate">這是我的：</label>
+                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                            <button type="button" class="lunch-btn btn btn-outline-primary px-2 py-1"
+                                    :class="{ active: mealType === 'lunch' }" @click="mealType = 'lunch'">午餐</button>
+                            <button type="button" class="dinner-btn btn btn-outline-primary px-2 py-1"
+                                    :class="{ active: mealType === 'dinner' }" @click="mealType = 'dinner'">晚餐</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#bentoModal"
+                            @click="getBentoRecords">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            @click="saveToDiary">確認儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 
 <script>
 export default {
-    props: ['bentoTemp', 'generateBento'],
+    props: ['bentoTemp', 'generateBento', "memberData"],
     data() {
         return {
+            apiUrl: "https://whatstoday2024-8nsu.onrender.com",
+            mealType: "lunch",
+            bentoDate: "",
+            bentoRecords: [],
         };
     },
-    methods: {}
+    methods: {
+        async getBentoRecords() {
+            await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/records/`)
+                .then(res => {
+                    console.log(res)
+                    this.bentoRecords = res.data.message;
+                })
+        },
+        async saveToDiary() {
+            const data = {
+                ...this.bentoTemp,
+                date: this.bentoDate,
+                mealType: this.mealType,
+            }
+            this.getBentoRecords();
+            const recordTemp = this.bentoRecords.find((record) => record.date === data.date && record.mealType === data.mealType);
+            console.log(777, recordTemp)
+            if (recordTemp) {
+                const overwrite = confirm('該時段已有便當紀錄，請問是否決定覆蓋該紀錄？')
+                if (overwrite) {
+                    await this.axios.patch(`${this.apiUrl}/600/records/${recordTemp.id}`, data)
+                        .then(res => {
+                            console.log("done-patch", res.data.message)
+                        })
+                }
+            } else {
+                await this.axios.post(`${this.apiUrl}/600/users/${this.memberData.id}/records/`, data)
+                    .then(res => {
+                        console.log("done-post", res.data.message)
+                    })
+            }
+        }
+    }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.active {
+    color: white;
+}
+</style>
