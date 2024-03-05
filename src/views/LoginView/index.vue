@@ -72,7 +72,7 @@ export default {
               autoClose: delay,
             })
             setTimeout(() => {
-              this.$router.push({name: 'AdminItems'})
+              this.$router.push({name: 'AdminDashboard'})
             }, delay)
           }else{
             toast.success('登入成功！前往菜單', {

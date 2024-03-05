@@ -23,9 +23,9 @@
               {{ registerError }}
             </div>
             <div class="form-floating mb-4">
-              <VField type="text" id="username" placeholder="請輸入暱稱" name="暱稱" class="form-control" :class="{ 'is-invalid': errors['暱稱'] }" rules="required" v-model="user.nickname" />
+              <VField type="text" id="name" placeholder="請輸入暱稱" name="暱稱" class="form-control" :class="{ 'is-invalid': errors['暱稱'] }" rules="required" v-model="user.nickname" />
               <ErrorMessage name="暱稱" class="invalid-feedback"/>
-              <label for="username">請輸入暱稱</label>
+              <label for="name">請輸入暱稱</label>
             </div>
             <div class="form-floating mb-4">
               <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
