@@ -1,13 +1,13 @@
 <template>
   <loadingVue :active="isLoading" />
   <div class="flex-fill d-flex align-items-center">
-    <div class="container py-5">
-      <h2 class="mb-4">個人資料總覽</h2>
+    <div class="container pb-5">
+      <h2 class="text-center my-3">個人資料總覽</h2>
       <div class="row g-4" v-if="user.email">
         <div class="col-12">
           <div class="border border-primary rounded-4 p-5 text-center">
-            <h5 class="fs-4">累積產生的便當數</h5>
             <p class="mb-0" style="font-size: 8rem; line-height: 0.8;">{{ dinnerCount }}</p>
+            <h5 class="fs-4 fw-normal mt-4 mb-0 text-muted">累積產生的便當數</h5>
           </div>
         </div>
         <div class="col-lg-6">
@@ -61,8 +61,8 @@
 </template>
 
 <script>
-import memberStore from '@/stores/memberData'
 import { mapState } from 'pinia'
+import memberStore from '@/stores/memberData'
 
 document.title = "會員中心";
 
@@ -95,8 +95,20 @@ export default {
   },
   methods: {
     getProfile() {
-      // 取得便當數量資料
-      this.dinnerCount = 166
+      this.isLoading = true
+      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records?userId=${this.memberData.id}`, {
+          headers: {
+            'authorization': this.$cookie.getMemberToken()
+          }
+        }).then((res) => {
+          const count = res.data.message.length
+          if(count){
+            this.dinnerCount = count
+          }
+          this.isLoading = false
+        }).catch(() => {
+          this.isLoading = false
+        })
     },
     editProfile() {
       if (this.user.nickname === this.memberData.nickname) {

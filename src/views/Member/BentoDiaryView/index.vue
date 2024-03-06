@@ -1,7 +1,7 @@
 <template>
   <loadingVue :active="isLoading"/>
   <div class="container flex-fill">
-    <h2 class="text-center my-2">我的便當日記</h2>
+    <h2 class="text-center my-3">我的便當日記</h2>
     <div class="calendar-wrap rounded border border-primary bg-light p-4 my-3 mx-auto">
       <FullCalendar :options="calendarOptions" ref="FullCalendar" />
     </div>
@@ -14,6 +14,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import rrulePlugin from '@fullcalendar/rrule'
 import FreeDaysData from '../FreeDaysData'
+
+document.title = "飲食紀錄";
 
 let calendarWrap = null;
 

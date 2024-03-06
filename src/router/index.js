@@ -24,7 +24,7 @@ const router = createRouter({
           children: [
             { path: 'profile', name: 'Profile', component: () => import('@/views/Member/ProfileView') },
             { path: 'freeDays', name: 'FreeDays', component: () => import('@/views/Member/FreeDaysView') },
-            { path: 'bento-dairy', name: 'BentoDiaryView', component: () => import('@/views/Member/BentoDiaryView') },
+            { path: 'bento-diary', name: 'BentoDiaryView', component: () => import('@/views/Member/BentoDiaryView') },
           ]
         },
         {
@@ -39,13 +39,13 @@ const router = createRouter({
             { path: 'edit-item/:id', name: 'EditItem', component: () => import('@/views/AdminLayout/EditItem') },
           ]
         },
-        
+
       ]
     },
     {
-      path:'/:catchAll(.*)',
-      name:'404',
-      component:()=>import("@/views/ErrorView")
+      path: '/:catchAll(.*)',
+      name: '404',
+      component: () => import("@/views/ErrorView")
     }
   ]
 })

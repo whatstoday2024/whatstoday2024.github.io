@@ -2,7 +2,7 @@
   <loadingVue :active="isLoading"/>
   <DeleteModal ref="DeleteModal" @remove-item="removeFreeDays"/>
   <div class="container flex-fill d-flex flex-column pb-5">
-    <h2 class="text-center mb-5">我的放縱日</h2>
+    <h2 class="text-center my-3">我的放縱日</h2>
     <template v-if="freeDays.weekly">
       <div class="btn-group">
         <input type="radio" class="btn-check" id="btn-check" name="mode" @click="isSpecificDay = false" :checked="!isSpecificDay">
