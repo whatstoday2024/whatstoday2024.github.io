@@ -62,7 +62,6 @@
 
 <script>
 import { mapState } from 'pinia'
-import { toast } from 'vue3-toastify';
 import memberStore from '@/stores/memberData'
 
 document.title = "會員中心";
@@ -97,7 +96,7 @@ export default {
   methods: {
     getProfile() {
       this.isLoading = true
-      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records`, {
+      this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records?userId=${this.memberData.id}`, {
           headers: {
             'authorization': this.$cookie.getMemberToken()
           }
