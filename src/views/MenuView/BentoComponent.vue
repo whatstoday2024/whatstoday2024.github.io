@@ -146,9 +146,9 @@
                         <label class="mx-2" for="bentoDate">這是我的：</label>
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <button type="button" class="lunch-btn btn btn-outline-primary px-2 py-1"
-                                    :class="{ active: mealType === 'lunch' }" @click="mealType = 'lunch'">午餐</button>
+                                    :class="{ active: mealType === '午餐' }" @click="mealType = '午餐'">午餐</button>
                             <button type="button" class="dinner-btn btn btn-outline-primary px-2 py-1"
-                                    :class="{ active: mealType === 'dinner' }" @click="mealType = 'dinner'">晚餐</button>
+                                    :class="{ active: mealType === '晚餐' }" @click="mealType = '晚餐'">晚餐</button>
                         </div>
                     </div>
                 </div>
@@ -170,7 +170,7 @@ export default {
     data() {
         return {
             apiUrl: "https://whatstoday2024-8nsu.onrender.com",
-            mealType: "lunch",
+            mealType: "午餐",
             bentoDate: "",
             bentoRecords: [],
         };
@@ -184,12 +184,14 @@ export default {
                 })
         },
         async saveToDiary() {
+            await this.getBentoRecords();
+            let today = new Date().toISOString().slice(0, 10);
+            console.log(today)
             const data = {
                 ...this.bentoTemp,
-                date: this.bentoDate,
+                date: this.bentoDate ? this.bentoDate : today,
                 mealType: this.mealType,
             }
-            this.getBentoRecords();
             const recordTemp = this.bentoRecords.find((record) => record.date === data.date && record.mealType === data.mealType);
             console.log(777, recordTemp)
             if (recordTemp) {
