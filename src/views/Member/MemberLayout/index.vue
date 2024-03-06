@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import memberStore from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 import { toast } from 'vue3-toastify';
+import memberStore from '@/stores/memberData'
 
 export default {
   data() {

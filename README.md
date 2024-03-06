@@ -12,9 +12,8 @@
     - 過去有用React+Vite做過todolist
     - 團隊專題實作 Git 流程
 - hua
-    - 我是桃園人，非本科系出身。 目前待業，規劃之後到雙北就業。 今年的願望就是希望能順利轉職
     - CSS等級4
-    - 熟悉 bootstrap JS 等級4
+    - 熟悉 bootstrap， JS 等級4
     - 有整合過第三方JS套件 (使用過C3.js) 
     - 團隊專題實作 Git 流程
 - jeremyChan
