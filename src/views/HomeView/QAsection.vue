@@ -22,10 +22,11 @@
 
 <script>
 import { QAs } from '@/utils/variables'
+
 export default {
   data() {
     return {
-      items: [],
+      items: QAs,
       activeItem: 1,
     }
   },
@@ -38,7 +39,7 @@ export default {
     },
   },
   mounted() {
-    this.items = QAs
+    // this.items = QAs
   }
 }
 </script>

@@ -6,7 +6,6 @@
         <div class="col-lg-6">
           <VForm class="card rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="login">
             <h1 class="h2 mb-3 text-center">後台登入(僅供管理者)</h1>
-            {{ memberStore }}
             <h4 v-if="errorMsg" class="text-center text-danger">{{ errorMsg }}</h4>
             <div class="form-floating mb-4">
               <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
@@ -67,7 +66,7 @@ export default {
           document.cookie = `expDate=${exp}`
 
         axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
-          .then((res) => {
+          .then((res) => {    
             const { accessToken, user } = res.data
             document.cookie = `whatstoday=${accessToken}`
             document.cookie = `whatstodayMember=${user.id}`

@@ -4,14 +4,25 @@
     <div class="text-start mb-5 d-flex justify-content-between">
       <h3>菜色列表</h3>
       <div>
+        <form class="search-input input-group" @submit.prevent="getItems">
+          <input type="text" class="form-control" placeholder="搜尋菜色" aria-label="Search"
+                aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput">
+          <button class="btn btn-outline-primary search" type="button" id="button-addon2" @click="getItems">
+              <Search style="width: 18px; height: 18px;" class=""/>
+          </button>
+        </form>
+      </div>
+      <div>
         <button class="btn btn-outline-primary me-2">
-        <RouterLink class="navbar-brand" to="/admin/dashboard">
-          Dashboard
+        <RouterLink class="navbar-brand search" to="/admin/dashboard">
+            <span class="d-none d-md-block">Dashboard</span>
+            <span class="d-block d-md-none"><Grid style="width: 15px; height: 15px;"/></span> 
         </RouterLink>
         </button>
         <button class="btn btn-outline-brand-blue">
-        <RouterLink class="navbar-brand" to="/admin/add-item">
-          新增菜色
+        <RouterLink class="navbar-brand search" to="/admin/add-item">
+          <span class="d-none d-md-block">新增菜色</span> 
+          <span class="d-block d-md-none "><Plus style="width: 12px; height: 12px;"/></span>
         </RouterLink>
         </button>
     </div>
@@ -68,6 +79,7 @@
       </tbody>
     </table>
     <Pagination
+            v-show="totalPages > 1"
             :currentPage="currentPage"
             :totalPages="totalPages"
             @goToPage="getItems"
@@ -77,7 +89,7 @@
 </template>
 
 <script>
-import { DeleteFilled,Edit } from "@element-plus/icons-vue";
+import { DeleteFilled, Edit, Search,Plus,Grid } from "@element-plus/icons-vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import StarRating from 'vue-star-rating'
@@ -95,7 +107,10 @@ export default {
       item: {},
       currentPage:'',
       totalPages:'',
-      isLoading: false
+      isLoading: false,
+      searchInput:'',
+      searchUrl:'',
+      totalSearchUrl:''
     }
   },
   components: {
@@ -103,7 +118,10 @@ export default {
     StarRating,
     Pagination,
     DeleteFilled,
-    Edit
+    Edit,
+    Search,
+    Plus,
+    Grid
   },
   methods: {
     goToItem(id){
@@ -122,19 +140,27 @@ export default {
       }catch(err){
         toast.error(err.data.message)
       }
-
-
     },
     async getItems(toPage = 1){
       this.currentPage = toPage
       this.isLoading = true
+
+      this.totalSearchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes`
+      this.searchUrl =`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`
+
+      if(this.searchInput){
+        this.totalSearchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes?q=${this.searchInput}`
+          this.searchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes?q=${this.searchInput}&_page=${toPage}`
+        }
+
       try{
-        const resTotal = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
-        const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`)
+        const resTotal = await axios.get(this.totalSearchUrl)
+        const res = await axios.get(`${this.searchUrl}`)
+        if(!res.data.message.length) throw new Error('查無菜色')
         this.totalPages = Math.ceil(resTotal.data.message.length / 10) 
         this.items = res.data.message
       }catch(error){
-        console.log(error)
+        toast.error('查無菜色') 
       }
       this.isLoading = false
     },
@@ -159,5 +185,10 @@ export default {
 
   margin-top: 1rem;
   padding-bottom: 2rem;
+}
+
+.search{
+display: grid;
+place-items: center
 }
 </style>
