@@ -1,6 +1,6 @@
 <template>
-  <section class="section w-100 my-0">
-    <nav class="navbar navbar-expand-md navbar-light" aria-label="Offcanvas navbar large">
+  <section class="section w-100 my-0 bg-white fixed-top">
+    <nav class="navbar navbar-expand-md  navbar-light" aria-label="Offcanvas navbar large">
       <div class="container-fluid d-flex justify-content-between px-0">
         <RouterLink class="navbar-brand" to="/">
           <img class="logo" height="50" alt="login" />
@@ -89,29 +89,29 @@ export default {
   },
   methods: {
     checkStatus() {
-      if (this.hasCheckLogin) {
+      if(this?.memberData.email){
         this.nicknameOne = this?.memberData.nickname.charAt(0)
         this.isLogin = true
-      } else {
+      }else{
         this.nicknameOne = ''
         this.isLogin = false
       }
     },
     logout() {
-      document.cookie = `whatstoday=`
-      document.cookie = `whatstodayMember=`
+      this.$cookie.setMemberToken('')
+      this.$cookie.setMemberId('')
 
       const delay = 1000
       toast.success('登出成功！前往首頁', {
         autoClose: delay
       })
       setTimeout(() => {
-        //重整後轉頁至首頁
-        location.reload('/')
-        this.$router.push('/')
+        //轉頁至首頁
+        this.logoutClear()
+        this.$router.push({name: 'HomeView'});
       }, delay)
     },
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberStore, ['getUser', 'logoutClear'])
   },
   computed: {
     ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
