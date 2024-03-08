@@ -75,6 +75,10 @@ export default {
 .isBottom{
 
   transform: rotate(180deg);
+
+  &:hover{
+    transform: rotate(180deg) translateY(2px)
+  }
 }
 
 </style>
