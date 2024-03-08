@@ -31,6 +31,10 @@ export default defineStore('memberData', {
         this.hasCheckLogin = true
       }
     },
+    logoutClear() {
+      this.setMemberData({})
+      this.hasCheckLogin = false
+    },
     checkIsAdmin() {
       if (!this.memberData?.isAdmin) {
         return false

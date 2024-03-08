@@ -4,7 +4,16 @@
       <div class="col-lg-6">
         <div class="w-100">
             <VForm ref="form" class="card rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="sendEmail">
-              <h1 class="h2 mb-3 text-center">問題回報</h1>
+              <h1 class="h2 mb-3 text-center">問題回報/菜色許願</h1>
+              <div class="form-floating mb-4">
+                <Field id="type" name="問題類型" as="select" class="form-select" aria-label="請選擇問題類型" :class="{ 'is-invalid': errors['問題類型'] }" rules="required" v-model="issue.type">
+                  <option value="問題回報">問題回報</option>
+                  <option value="菜色許願">菜色許願</option>
+                </Field>
+                <ErrorMessage name="問題類型" class="invalid-feedback"/>
+                <label for="name">請選擇問題類型</label>
+              </div>
+              
               <div class="form-floating mb-4">
                 <VField type="text" id="name" placeholder="請輸入姓名" name="姓名" class="form-control" :class="{ 'is-invalid': errors['姓名'] }" rules="required" v-model="issue.name" />
                 <ErrorMessage name="姓名" class="invalid-feedback"/>
@@ -35,6 +44,7 @@ export default {
   data() {
     return {
       issue: {
+        type: '問題回報',
         name: '',
         email: '',
         content: '',
@@ -48,6 +58,7 @@ export default {
         .then(()=>{
           alert("問題回報完成!");
           this.issue = {
+            type: '問題回報',
             name: '',
             email: '',
             content: '',
