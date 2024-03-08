@@ -212,6 +212,13 @@ export default {
   padding-left: 0.2rem;
 }
 
+@media (max-width: 576px) {
+  .fc-daygrid-day-frame {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
 /* 減少日期格子的margin-bottom以免畫面過長 */
 .fc .fc-daygrid-body-natural .fc-daygrid-day-events {
   margin-bottom: 0.5rem;
@@ -223,6 +230,13 @@ export default {
 
 
 /* headerToolbar */
+/* 調整title與bts的水平置中 */
+.fc .fc-toolbar-chunk div {
+  display: flex;
+  align-items: center;
+  /* gap: 1rem; */
+}
+
 /* 將title換成inline-block避免換行 */
 .fc-header-toolbar .fc-toolbar-title {
   display: inline-block;
@@ -230,11 +244,22 @@ export default {
   margin-left: 1rem;
 }
 
-/* 調整title與bts的水平置中 */
-.fc .fc-toolbar-chunk div {
-  display: flex;
-  align-items: center;
-  /* gap: 1rem; */
+/* 手機版的時後將margin、padding、font-size調小 */
+@media (max-width: 576px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 10px;
+  }
+
+  .fc-header-toolbar .fc-toolbar-title {
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+    margin-left: 0.2rem;
+  }
+
+  .fc-header-toolbar .fc-button-primary {
+    padding-right: 6px;
+    padding-left: 6px;
+  }
 }
 
 
@@ -243,6 +268,12 @@ export default {
 .fc-event-title-container {
   padding: 0.5rem;
   text-align: center;
+}
+
+@media (max-width: 576px) {
+  .fc-event-title-container {
+    padding: 0.4rem;
+  }
 }
 
 /* 增加事件之間的間距 */
