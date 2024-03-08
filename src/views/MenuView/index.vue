@@ -256,13 +256,16 @@ export default {
 
       return answers;
     },
-    generateBento() {
+    async generateBento() {
       console.clear()
+      await this.getAllDishesList();
+
       this.isLoading = true;
       let isSatisfied = true;
       const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
       const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
       const sideDishesTemp = this.mode === "default" ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
+
       if (stapleTemp.length < 1) {
         isSatisfied = false;
         toast.error('自選模式必須選取至少一種主食。', {
@@ -285,6 +288,7 @@ export default {
         this.isLoading = false;
         return;
       }
+
       this.bentoTemp = {
         starchTotalPortion: 0,
         proteinTotalPortion: 0,
@@ -371,17 +375,17 @@ export default {
         }
       });
 
-      this.getSortedDishes();
+      await this.getSortedDishes();
     },
     async getSortedDishes() {
+      await this.getAllDishesList();
+
       if (this.sortBy === "default") {
-        await this.getAllDishesList();
-        if (this.search) {
+        if (this.searchedList.length) {
           this.searchedList = this.searchedList.sort((a, b) => a.id - b.id);
         }
       }
       else if (this.sortBy === "preferenceLevel") {
-        await this.getAllDishesList();
         this.allDishesList = [...this.allDishesList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
         ...this.allDishesList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
 
@@ -389,11 +393,19 @@ export default {
         this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
         this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
 
-        this.searchedList = [...this.searchedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-        ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+        if (this.searchedList.length) {
+          this.searchedList = [...this.searchedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
+          ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+        }
 
-        this.selectedList = [...this.selectedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-        ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+        if (this.selectedList.length) {
+          this.selectedList = [...this.selectedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
+          ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+
+          if (!this.memberData.id) {
+            localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+          }
+        }
       }
       else if (this.sortBy === "healthLevel") {
         await this.axios.get(`${this.apiUrl}/dishes?_sort=${this.sortBy}&_order=desc`)
@@ -412,6 +424,10 @@ export default {
             this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
             this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
             this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+
+            if (this.searchedList.length) {
+              this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel);
+            }
           });
       }
     },
@@ -427,7 +443,7 @@ export default {
       }
     },
     async addToSelected(dish) {
-      this.getSelected();
+      await this.getSelected();
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
       if (selectedTemp) {
@@ -456,10 +472,9 @@ export default {
           localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
         }
       }
-      this.getSelected();
     },
     async updatePreferenceLevel(dish) {
-      this.getSelected();
+      await this.getSelected();
 
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
@@ -481,10 +496,10 @@ export default {
         localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
       }
 
-      this.getSelected();
+      await this.getSelected();
     },
     async uncheckFromSelected(dish) {
-      this.getSelected();
+      await this.getSelected();
 
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
@@ -519,10 +534,11 @@ export default {
         }, delay);
       }
 
-      this.getSelected();
+      await this.getSelected();
     },
-    updateSelected(dish) {
-      dish.isChecked === true ? this.addToSelected(dish) : this.uncheckFromSelected(dish);
+    async updateSelected(dish) {
+      dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish);
+      await this.getAllDishesList();
     },
     async init() {
       await this.getUser();
