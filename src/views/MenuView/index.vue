@@ -496,7 +496,7 @@ export default {
         localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
       }
 
-      await this.getSelected();
+      await this.getAllDishesList();
     },
     async uncheckFromSelected(dish) {
       await this.getSelected();
@@ -533,8 +533,6 @@ export default {
           location.reload()
         }, delay);
       }
-
-      await this.getSelected();
     },
     async updateSelected(dish) {
       dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish);
