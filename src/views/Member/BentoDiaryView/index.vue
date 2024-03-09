@@ -6,6 +6,10 @@
       <FullCalendar :options="calendarOptions" ref="FullCalendar" />
     </div>
   </div>
+
+  <!-- 便當相關 Modal -->
+  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData"></BentoComponent>
+
 </template>
 
 <script>
@@ -16,14 +20,19 @@ import rrulePlugin from '@fullcalendar/rrule'
 import FreeDaysData from '../FreeDaysData'
 import { mapState, mapActions } from 'pinia'
 import memberStore from '@/stores/memberData'
+import BentoComponent from '@/views/MenuView/BentoComponent.vue';
+import modal from "bootstrap/js/dist/modal";
+import { toast } from 'vue3-toastify';
+const delay = 2000;
 
+let bentoModal = null;
 
 document.title = "飲食紀錄";
 
 let calendarWrap = null;
 
 export default {
-  components: { FullCalendar },
+  components: { FullCalendar, BentoComponent },
   data() {
     return {
       isLoading: false,
@@ -59,7 +68,18 @@ export default {
       },
       freeDays: {},
       fullCalendarDOM: null,
-      bentoRecords: []
+      bentoRecords: [],
+      bentoTemp: {
+        stapleCourse: {},
+        mainCourse: {},
+        sideDishes: [],
+        date: "",
+        mealType: "",
+        starchTotalPortion: 0,
+        proteinTotalPortion: 0,
+        vegetableTotalPortion: 0
+      },
+
     }
   },
   emits: ['updateProfile'],
@@ -79,11 +99,13 @@ export default {
       alert('date click! ' + arg.dateStr)
     },
     eventClick(info) {
+      this.bentoTemp = info.event._def.extendedProps;
+      bentoModal.show();
       // 檢查被點選的事件元素是否包含 lunch-bento 的className
-      if (info.el.classList.contains("lunch-bento")) {
-        alert("午餐便當: " + info.event.title);
-        info.el.style.borderColor = "red";
-      }
+      // if (info.el.classList.contains("lunch-bento")) {
+      //   alert("午餐便當: " + info.event.title);
+      //   info.el.style.borderColor = "red";
+      // }
     },
     eventClassNames(info) {
       if (info.event.title === "午餐便當") {
@@ -175,9 +197,54 @@ export default {
       this.bentoRecords.forEach((record) => {
         this.fullCalendarDOM.addEvent({
           ...record,
+          dateTemp: record.date,
+          idTemp: record.id,
           title: `${record.mealType}便當`
         })
       })
+    },
+    async generateBento() {
+      console.clear()
+      await this.getAllDishesList();
+
+      this.isLoading = true;
+      let isSatisfied = true;
+      const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
+      const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
+      const sideDishesTemp = this.mode === "default" ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
+
+      if (stapleTemp.length < 1) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少一種主食。', {
+          autoClose: delay,
+        })
+      }
+      if (sideDishesTemp.length < 3) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少三種配菜。', {
+          autoClose: delay,
+        })
+      }
+      if (mainDishesTemp.length < 1) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少一種主菜。', {
+          autoClose: delay,
+        })
+      }
+      if (!isSatisfied) {
+        this.isLoading = false;
+        return;
+      }
+
+      this.bentoTemp = {
+        starchTotalPortion: 0,
+        proteinTotalPortion: 0,
+        vegetableTotalPortion: 0,
+      }
+      this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
+      this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
+      this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
+      this.isLoading = false
     },
     ...mapActions(memberStore, ['getUser'])
   },
@@ -198,6 +265,8 @@ export default {
     // api 取得便當紀錄
     await this.getUser();
     await this.getBentoRecords();
+
+    bentoModal = new modal(document.querySelector('#bentoModal'));
   }
 }
 </script>

@@ -39,13 +39,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btns text-center p-3 col-6 col-lg-12">
+                        <div v-if="path === '/menu'" class="btns text-center p-3 col-6 col-lg-12">
                             <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
                                     data-bs-target="#confirmRegenerateBentoModal" title="重新生成便當">重新生成便當</button>
                             <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2" data-bs-toggle="modal"
                                     data-bs-target="#saveToBentoDiaryModal"
                                     :title="memberData.id ? '存至便當日記' : '便當日記為會員限定功能'"
                                     :disabled="!memberData.id">存至便當日記</button>
+                        </div>
+                        <div v-if="path === '/member/bento-diary'" class="btns text-center p-3 col-6 col-lg-12">
+                            <p>{{ bentoTemp.dateTemp }}</p>
+                            <p>{{ bentoTemp.mealType }}</p>
+                            <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
+                                    data-bs-target="#confirmDeleteRecordModal" title="刪除此便當紀錄">刪除此便當紀錄</button>
                         </div>
                     </div>
                     <div class="bento-presentation col-lg-8 order-first order-lg-2">
@@ -157,6 +163,30 @@
             </div>
         </div>
     </div>
+
+    <!-- 確認刪除便當紀錄 Modal -->
+    <div class="modal fade" id="confirmDeleteRecordModal" tabindex="-1" aria-labelledby="confirmDeleteRecordModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteRecordModalLabel">是否確認刪除此便當紀錄？</h5>
+                    <button type="button" class="btn-close" aria-label="Close" data-bs-toggle="modal"
+                            data-bs-target="#bentoModal"></button>
+                </div>
+                <div class="modal-body">
+                    此操作將無法復原，請確認是否執行。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#bentoModal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="deleteRecord"
+                            data-bs-dismiss="modal">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 
@@ -169,27 +199,27 @@ export default {
             mealType: "午餐",
             bentoDate: "",
             bentoRecords: [],
+            path: ""
         };
     },
     methods: {
         async getBentoRecords() {
             await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/records/`)
                 .then(res => {
-                    console.log(res)
+                    // console.log(res)
                     this.bentoRecords = res.data.message;
                 })
         },
         async saveToDiary() {
             await this.getBentoRecords();
             let today = new Date().toISOString().slice(0, 10);
-            console.log(today)
+            // console.log(this.bentoDate)
             const data = {
                 ...this.bentoTemp,
                 date: this.bentoDate ? this.bentoDate : today,
                 mealType: this.mealType,
             }
             const recordTemp = this.bentoRecords.find((record) => record.date === data.date && record.mealType === data.mealType);
-            console.log(777, recordTemp)
             if (recordTemp) {
                 const overwrite = confirm('該時段已有便當紀錄，請問是否決定覆蓋該紀錄？')
                 if (overwrite) {
@@ -204,7 +234,17 @@ export default {
                         console.log("done-post", res.data.message)
                     })
             }
+        },
+        async deleteRecord() {
+            await this.axios.delete(`${this.apiUrl}/600/records/${this.bentoTemp.idTemp}`)
+                .then(() => {
+                    location.reload();
+                })
+
         }
+    },
+    mounted() {
+        this.path = this.$route.path;
     }
 };
 </script>
