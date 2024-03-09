@@ -96,7 +96,7 @@ export default {
       alert('date click! ' + arg.dateStr)
     },
     eventClick(info) {
-      if (info.event.title.endswith("便當")) {
+      if (info.event.title.endsWith("便當")) {
         this.bentoTemp = info.event._def.extendedProps;
         bentoModal.show();
       }
