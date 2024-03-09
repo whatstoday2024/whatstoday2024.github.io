@@ -1,0 +1,1 @@
+import{_ as o,A as t,o as c,r as n}from"./index-Ct6APPqb.js";const r={};function s(_,a){const e=n("RouterView");return c(),t(e)}const p=o(r,[["render",s],["__scopeId","data-v-90484f1e"]]);export{p as default};
