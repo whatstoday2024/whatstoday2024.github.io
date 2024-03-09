@@ -41,7 +41,8 @@
 
 <script>
 import emailjs from '@emailjs/browser';
-import Swal from 'sweetalert2';
+import { toast } from 'vue3-toastify';
+
 
 export default {
   data() {
@@ -59,10 +60,9 @@ export default {
       try {
         emailjs.send('service_wrg9fdg', 'template_u74y2ir', this.issue, 'cU7MJETmO9Fcn--g1')
         .then(()=>{
-          Swal.fire({
-            title: "客服信箱",
-            text: this.issue.type + "已送出完成!",
-            icon: "success"
+          const delay = 1000
+          toast.success(this.issue.type + "已送出完成!", {
+            autoClose: delay
           });
           this.$router.push({name: 'IssueForm'});
         });
