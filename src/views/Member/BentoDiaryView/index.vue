@@ -54,6 +54,7 @@ export default {
           { title: '晚餐便當', date: '2024-03-25' },
         ],
         eventClick: this.eventClick,
+        eventContent: this.eventContent,
         eventClassNames: this.eventClassNames,
       },
       freeDays: {},
@@ -78,17 +79,27 @@ export default {
       alert('date click! ' + arg.dateStr)
     },
     eventClick(info) {
-      // 檢查被點選的事件元素是否包含 lunch-bento 類
+      // 檢查被點選的事件元素是否包含 lunch-bento 的className
       if (info.el.classList.contains("lunch-bento")) {
         alert("午餐便當: " + info.event.title);
         info.el.style.borderColor = "red";
       }
     },
-    eventClassNames(arg) {
-      if (arg.event.title === "午餐便當") {
+    eventClassNames(info) {
+      if (info.event.title === "午餐便當") {
         return ['lunch-bento', "bg-brand-blue"]
-      } else if (arg.event.title === "晚餐便當") {
+      } else if (info.event.title === "晚餐便當") {
         return ['dinner-bento', "bg-brand-red"]
+      }
+    },
+    eventContent(info) {
+      const eventTitle = info.event.title;
+      if (window.innerWidth < 576) { // 小於sm的畫面大小
+        // 只顯示標題的前兩個字
+        const truncatedTitle = eventTitle.substring(0, 2);
+        return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${truncatedTitle}</div></div>` };
+      } else {
+        return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${eventTitle}</div></div>` };
       }
     },
     resizeCalendar() {
