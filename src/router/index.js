@@ -3,6 +3,7 @@ import Layout from '@/views/Layout'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
+  linkActiveClass: 'active',
   routes: [
     {
       path: '/',

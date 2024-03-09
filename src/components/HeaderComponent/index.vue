@@ -147,6 +147,10 @@ export default {
   color: $primary;
 }
 
+.navbar-nav a.active{
+  color: $primary;
+}
+
 .logo {
   content: url('@/assets/logo.png');
 }
