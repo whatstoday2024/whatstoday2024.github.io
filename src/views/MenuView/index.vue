@@ -603,7 +603,8 @@ export default {
 }
 
 .aside-link-generator {
-  font-size: 4vw;
+  /* font-size: 4vw; */
+  font-size: 40px;
 }
 
 /* site-induction-btn ----------------------------- */

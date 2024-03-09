@@ -41,9 +41,11 @@
                         </div>
                         <div class="btns text-center p-3 col-6 col-lg-12">
                             <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
-                                    data-bs-target="#confirmRegenerateBentoModal">重新生成便當</button>
+                                    data-bs-target="#confirmRegenerateBentoModal" title="重新生成便當">重新生成便當</button>
                             <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2" data-bs-toggle="modal"
-                                    data-bs-target="#saveToBentoDiaryModal">存至便當日記</button>
+                                    data-bs-target="#saveToBentoDiaryModal"
+                                    :title="memberData.id ? '存至便當日記' : '便當日記為會員限定功能'"
+                                    :disabled="!memberData.id">存至便當日記</button>
                         </div>
                     </div>
                     <div class="bento-presentation col-lg-8 order-first order-lg-2">
@@ -135,12 +137,6 @@
                         <label class="mx-2" for="bentoDate">便當日記：</label>
                         <input class="form-control me-4 w-auto d-inline-block" id="bentoDate" type="date"
                                v-model="bentoDate">
-                        <label class="mx-2" for="bentoDate">當天天氣：</label>
-                        <select class="form-select w-auto d-inline-block" aria-label="what's the weather that date?">
-                            <option value="sunny" selected>晴</option>
-                            <option value="cloudy">陰</option>
-                            <option value="rainy">雨</option>
-                        </select>
                     </div>
                     <div>
                         <label class="mx-2" for="bentoDate">這是我的：</label>
