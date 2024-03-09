@@ -60,7 +60,7 @@ export default {
         dateClick: this.handleDateClick,
         events: [],
         eventClick: this.eventClick,
-        eventContent: this.eventContent,
+        // eventContent: this.eventContent,
         eventClassNames: this.eventClassNames,
       },
       freeDays: {},
@@ -114,16 +114,18 @@ export default {
         return ['dinner-bento', "bg-brand-red"]
       }
     },
-    eventContent(info) {
-      const eventTitle = info.event.title;
-      if (window.innerWidth < 576) { // 小於sm的畫面大小
-        // 只顯示標題的前兩個字
-        const truncatedTitle = eventTitle.substring(0, 2);
-        return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${truncatedTitle}</div></div>` };
-      } else {
-        return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${eventTitle}</div></div>` };
-      }
-    },
+    // eventContent(info) {
+    //   const eventTitle = info.event.title;
+    //   // if (eventTitle.endsWith("便當")) {
+    //   if (window.innerWidth < 576) { // 小於sm的畫面大小
+    //     // 只顯示標題的前兩個字
+    //     const truncatedTitle = eventTitle.substring(0, 2);
+    //     return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${truncatedTitle}</div></div>` };
+    //   } else {
+    //     return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${eventTitle}</div></div>` };
+    //   }
+    //   // }
+    // },
     resizeCalendar() {
       if (window.innerWidth >= 992) {
         calendarWrap.classList.add("col-md-10");
