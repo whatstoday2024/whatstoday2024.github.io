@@ -96,8 +96,11 @@ export default {
       alert('date click! ' + arg.dateStr)
     },
     eventClick(info) {
-      this.bentoTemp = info.event._def.extendedProps;
-      bentoModal.show();
+      if (info.event.title.endswith("便當")) {
+        this.bentoTemp = info.event._def.extendedProps;
+        bentoModal.show();
+      }
+
       // 檢查被點選的事件元素是否包含 lunch-bento 的className
       // if (info.el.classList.contains("lunch-bento")) {
       //   alert("午餐便當: " + info.event.title);
