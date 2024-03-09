@@ -58,10 +58,7 @@ export default {
         showNonCurrentDates: false,
         height: "auto",
         dateClick: this.handleDateClick,
-        events: [
-          { title: '午餐便當', date: '2024-03-25' },
-          { title: '晚餐便當', date: '2024-03-25' },
-        ],
+        events: [],
         eventClick: this.eventClick,
         eventContent: this.eventContent,
         eventClassNames: this.eventClassNames,
