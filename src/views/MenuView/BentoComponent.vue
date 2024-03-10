@@ -191,6 +191,9 @@
 
 
 <script>
+import { toast } from 'vue3-toastify';
+const delay = 2000;
+
 export default {
     props: ['bentoTemp', 'generateBento', "memberData"],
     data() {
@@ -224,23 +227,31 @@ export default {
                 const overwrite = confirm('該時段已有便當紀錄，請問是否決定覆蓋該紀錄？')
                 if (overwrite) {
                     await this.axios.patch(`${this.apiUrl}/600/records/${recordTemp.id}`, data)
-                        .then(res => {
-                            console.log("done-patch", res.data.message)
+                        .then(() => {
+                            // console.log("done-patch", res.data.message)
+                            toast.success('紀錄已存至便當日記！', {
+                                autoClose: delay,
+                            })
                         })
                 }
             } else {
                 await this.axios.post(`${this.apiUrl}/600/users/${this.memberData.id}/records/`, data)
-                    .then(res => {
-                        console.log("done-post", res.data.message)
+                    .then(() => {
+                        // console.log("done-post", res.data.message)
+                        toast.success('紀錄已存至便當日記！', {
+                            autoClose: delay,
+                        })
                     })
             }
         },
         async deleteRecord() {
             await this.axios.delete(`${this.apiUrl}/600/records/${this.bentoTemp.idTemp}`)
                 .then(() => {
-                    location.reload();
+                    toast.success('便當紀錄刪除成功！', {
+                        autoClose: delay,
+                    })
+                    setTimeout(() => { location.reload() }, delay);
                 })
-
         }
     },
     mounted() {

@@ -57,11 +57,11 @@ export default {
         fixedWeekCount: false,
         showNonCurrentDates: false,
         height: "auto",
-        dateClick: this.handleDateClick,
         events: [],
         eventClick: this.eventClick,
-        // eventContent: this.eventContent,
         eventClassNames: this.eventClassNames,
+        // eventContent: this.eventContent,
+        // dateClick: this.handleDateClick,
       },
       freeDays: {},
       fullCalendarDOM: null,
@@ -92,9 +92,9 @@ export default {
     ...mapState(memberStore, ['memberData'])
   },
   methods: {
-    handleDateClick(arg) {
-      alert('date click! ' + arg.dateStr)
-    },
+    // handleDateClick(arg) {
+    //   alert('date click! ' + arg.dateStr)
+    // },
     eventClick(info) {
       if (info.event.title.endsWith("便當")) {
         this.bentoTemp = info.event._def.extendedProps;
