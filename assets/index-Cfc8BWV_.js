@@ -1,1 +1,0 @@
-import{_ as o,y as t,o as c,r as n}from"./index-BAHTa9ty.js";const r={};function s(_,a){const e=n("RouterView");return c(),t(e)}const p=o(r,[["render",s],["__scopeId","data-v-90484f1e"]]);export{p as default};
