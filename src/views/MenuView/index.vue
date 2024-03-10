@@ -258,6 +258,7 @@ export default {
     },
     async generateBento() {
       console.clear()
+      this.isLoading = true;
       await this.getAllDishesList();
 
       this.isLoading = true;
@@ -297,7 +298,7 @@ export default {
       this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
       this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
       this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
-      this.isLoading = false
+      this.isLoading = false;
     },
     moveToGeneratorBentoBtn() {
       document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' });
@@ -311,6 +312,7 @@ export default {
       }
     },
     async setMode(mode) {
+      this.isLoading = true;
       this.mode = mode;
       if (this.memberData.id) {
         await this.axios.patch(`${this.apiUrl}/600/users/${this.memberData.id}`, { mode })
@@ -320,6 +322,7 @@ export default {
       } else {
         localStorage.setItem("mode", this.mode);
       }
+      this.isLoading = false;
     },
     async getAllDishesList() {
       await this.getSelected();
@@ -343,6 +346,7 @@ export default {
         })
     },
     async getSearchedDishes() {
+      this.isLoading = true;
       this.searchedList = [];
       this.search = this.searchInput;
 
@@ -376,8 +380,10 @@ export default {
       });
 
       await this.getSortedDishes();
+      this.isLoading = false;
     },
     async getSortedDishes() {
+      this.isLoading = true;
       await this.getAllDishesList();
 
       if (this.sortBy === "default") {
@@ -430,6 +436,7 @@ export default {
             }
           });
       }
+      this.isLoading = false;
     },
     async getSelected() {
       if (this.memberData.id) {
@@ -474,6 +481,7 @@ export default {
       }
     },
     async updatePreferenceLevel(dish) {
+      this.isLoading = true;
       await this.getSelected();
 
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
@@ -497,6 +505,7 @@ export default {
       }
 
       await this.getAllDishesList();
+      this.isLoading = false;
     },
     async uncheckFromSelected(dish) {
       await this.getSelected();
@@ -535,13 +544,17 @@ export default {
       }
     },
     async updateSelected(dish) {
+      this.isLoading = true;
       dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish);
       await this.getAllDishesList();
+      this.isLoading = false;
     },
     async init() {
+      this.isLoading = true;
       await this.getUser();
       this.getMode();
       await this.getAllDishesList();
+      this.isLoading = false;
     },
     ...mapActions(memberStore, ['getUser'])
   },
