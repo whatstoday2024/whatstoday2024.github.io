@@ -1,9 +1,11 @@
 <template>
   <loadingVue :active="isLoading" />
-  <div class="container flex-fill">
-    <h2 class="text-center my-3">我的便當日記</h2>
-    <div class="calendar-wrap rounded border border-primary bg-light p-4 my-3 mx-auto">
-      <FullCalendar :options="calendarOptions" ref="FullCalendar" />
+  <div class="container flex-fill d-flex align-items-center">
+    <div>
+      <h2 class="text-center my-3">我的便當日記</h2>
+      <div class="calendar-wrap rounded border border-primary bg-light p-4 my-3 mx-auto">
+        <FullCalendar :options="calendarOptions" ref="FullCalendar" />
+      </div>
     </div>
   </div>
 
