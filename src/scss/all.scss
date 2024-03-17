@@ -21,6 +21,7 @@ body {
   font-family: 'Noto Sans TC', sans-serif;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  padding-top: 76px;
 }
 
 img {
@@ -35,27 +36,72 @@ a {
 h1 {
   font-size: 3rem;
 }
+
 h2 {
   font-size: 2rem;
 }
+
 h3 {
   font-size: 1.75rem;
 }
+
 h4 {
   font-size: 1.5rem;
 }
+
 h5 {
   font-size: 1.25rem;
 }
+
 h6 {
   font-size: 1rem;
 }
 
 .section {
-  max-width: 100rem;
-  margin: 6rem 2rem;
+  max-width: 95rem;
+  // margin: 6rem 2rem;
+  margin: 6rem auto;
+  padding: 0 2rem;
+
+  @include respond(sm) {
+    padding: 0 1rem;
+  }
 }
 
 .section-title {
   margin-bottom: 2rem;
+}
+
+.w-80 {
+  width: 80% !important;
+}
+
+.h-25 {
+  height: 25% !important;
+}
+
+.h-33 {
+  height: 33% !important;
+}
+
+.h-50 {
+  height: 50% !important;
+}
+
+.h-75 {
+  height: 75% !important;
+}
+
+.h-80 {
+  height: 80% !important;
+}
+
+.btn-primary {
+  color: white;
+}
+
+.btn-outline-primary:hover {
+  background-color: $primary;
+  border-color: $primary;
+  color: white;
 }

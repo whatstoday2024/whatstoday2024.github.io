@@ -1,12 +1,20 @@
 <template>
+  <h1 class="title fw-bold">成為會員，您可以...</h1>
   <section class="member-section table-img">
-    <h1 class="section-title fw-bold">成為會員，您可以...</h1>
     <!-- <div class="d-flex justify-content-around "> -->
     <div class="row">
-      <div class="col d-flex flex-column align-items-center" v-for="(option, index) in  memberOptions " :key="option.id">
-        <div class="option-item relative" :style="isShow === option.id ? obj : ''" @click="showDetail(option.id)">
+      <div
+        class="col-6 col-lg-3 g-5 d-flex flex-column align-items-center"
+        v-for="(option, index) in memberOptions"
+        :key="option.id"
+      >
+        <div
+          class="option-item relative"
+          :style="isShow === option.id ? obj : ''"
+          @click="showDetail(option.id)"
+        >
           <div class="d-flex flex-column gap-1 align-items-center">
-            <img :src="option.icon" alt="icon" class="icon">
+            <img :src="option.icon" alt="icon" class="icon" />
             <h5 class="fw-bold">{{ option.title }}</h5>
           </div>
         </div>
@@ -17,9 +25,11 @@
         </div>
       </div>
     </div>
-    <div class="col text-center">
-      <router-link to="/register" class="btn btn btn-brand-blue text-white">
-        <span>成為會員 &#62;</span>
+    <div class="text-center mt-5">
+      <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
+        <div class="d-flex align-items-center py-2 px-3">
+          成為會員 <i class="bi bi-chevron-right"></i>
+        </div>
       </router-link>
     </div>
   </section>
@@ -28,20 +38,23 @@
 <script>
 import { memberOptions } from '@/utils/variables'
 import tableImg from '@/assets/img/table.png'
+import { ArrowRightBold } from '@element-plus/icons-vue'
 
 export default {
   data() {
     return {
       memberOptions,
       tableImg,
-      isShow: memberOptions[0].id,
-      obj: { transform: 'translateY(-150px)' }
+      isShow: memberOptions[1].id,
+      obj: { transform: 'translateY(-120px)' }
     }
+  },
+  components: {
+    ArrowRightBold
   },
   methods: {
     showDetail(id) {
       this.isShow = id
-
     }
   }
 }
@@ -49,24 +62,45 @@ export default {
 
 <style lang="scss" scoped>
 .member-section {
-  width: 100vw;
   display: flex;
-  gap: 6.25rem;
+  gap: 4rem;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 6.25rem;
 }
 
 .section-title {
-  margin-left: 4rem;
+  max-width: 95rem;
 
+  @include respond(xl) {
+    margin-left: 2rem;
+  }
+
+  @include respond(sm) {
+    margin-left: 1rem;
+  }
 }
 
 .table-img {
   background-image: url('@/assets/img/table.png');
   background-repeat: no-repeat;
-  background-position: 0% 48%;
-  background-size: 80%;
+  background-position: 0% 30%;
+
+  @include respond(lg) {
+  }
+
+  @include respond(md) {
+    background-position: 0% 20%;
+  }
+}
+.title {
+  max-width: 95rem;
+  // margin: 6rem 2rem;
+  margin: 4rem auto;
+  padding: 0 2rem;
+
+  @include respond(sm) {
+    padding: 0 1rem;
+  }
 }
 
 .icon {
@@ -75,8 +109,8 @@ export default {
 
 .option {
   &-item {
-    width: 22rem;
-    height: 22rem;
+    width: 18rem;
+    height: 18rem;
     display: grid;
     place-items: center;
     background-image: url('@/assets/img/plate.png');
@@ -86,16 +120,21 @@ export default {
     z-index: 999;
     transition: all 0.8s;
 
+    @include respond(sm) {
+      width: 15.5rem;
+      height: 15.5rem;
+    }
+
     &:hover {
       cursor: pointer;
-      transform: translateY(-10px)
+      transform: translateY(-10px);
     }
   }
 }
 
 .option-content {
-  width: 18.125rem;
-  height: 18.125rem;
+  width: 14.5rem;
+  height: 14.5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -105,8 +144,17 @@ export default {
   position: absolute;
   z-index: 1;
 
+  @include respond(sm) {
+    width: 12.5rem;
+    height: 12.5rem;
+  }
   h6 {
+    font-size: 0.8rem;
     transform: translateY(3.125rem);
+
+    @include respond(lg) {
+      transform: translateY(1.5rem);
+    }
   }
 }
 </style>

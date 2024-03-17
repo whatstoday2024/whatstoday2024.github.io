@@ -1,8 +1,8 @@
 <template>
   <div class="section">
     <div class="card bg-primary-mid">
-      <div class="card-body d-flex justify-content-between">
-        <h2 class="card-title fw-bold card-left">常見問題</h2>
+      <div class="card-body d-lg-flex justify-content-between">
+        <h3 class="card-title fw-bold card-left mb-4">常見問題</h3>
         <div class="accordion" id="myAccordion">
           <div v-for="(item, index) in items" :key="index" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + index">
@@ -22,20 +22,24 @@
 
 <script>
 import { QAs } from '@/utils/variables'
+
 export default {
   data() {
     return {
-      items: [],
+      items: QAs,
       activeItem: 1,
     }
   },
   methods: {
     toggleAccordion(index) {
+      if(index === this.activeItem){
+        return
+      }
       this.activeItem = this.activeItem === index ? null : index;
     },
   },
   mounted() {
-    this.items = QAs
+    // this.items = QAs
   }
 }
 </script>
@@ -46,5 +50,17 @@ export default {
   background-repeat: no-repeat;
   // background-position: start;
   background-size: contain;
+}
+
+.accordion{
+  width: 77%;
+
+  @include respond(lg) {
+    width: 100%;
+  }
+
+}
+.accordion-item{
+  width: 100%;
 }
 </style>
