@@ -6,6 +6,10 @@
       <FullCalendar :options="calendarOptions" ref="FullCalendar" />
     </div>
   </div>
+
+  <!-- 便當相關 Modal -->
+  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData"></BentoComponent>
+
 </template>
 
 <script>
@@ -16,14 +20,19 @@ import rrulePlugin from '@fullcalendar/rrule'
 import FreeDaysData from '../FreeDaysData'
 import { mapState, mapActions } from 'pinia'
 import memberStore from '@/stores/memberData'
+import BentoComponent from '@/views/MenuView/BentoComponent.vue';
+import modal from "bootstrap/js/dist/modal";
+import { toast } from 'vue3-toastify';
+const delay = 2000;
 
+let bentoModal = null;
 
 document.title = "飲食紀錄";
 
 let calendarWrap = null;
 
 export default {
-  components: { FullCalendar },
+  components: { FullCalendar, BentoComponent },
   data() {
     return {
       isLoading: false,
@@ -48,17 +57,26 @@ export default {
         fixedWeekCount: false,
         showNonCurrentDates: false,
         height: "auto",
-        dateClick: this.handleDateClick,
-        events: [
-          { title: '午餐便當', date: '2024-03-25' },
-          { title: '晚餐便當', date: '2024-03-25' },
-        ],
+        events: [],
         eventClick: this.eventClick,
         eventClassNames: this.eventClassNames,
+        // eventContent: this.eventContent,
+        // dateClick: this.handleDateClick,
       },
       freeDays: {},
       fullCalendarDOM: null,
-      bentoRecords: []
+      bentoRecords: [],
+      bentoTemp: {
+        stapleCourse: {},
+        mainCourse: {},
+        sideDishes: [],
+        date: "",
+        mealType: "",
+        starchTotalPortion: 0,
+        proteinTotalPortion: 0,
+        vegetableTotalPortion: 0
+      },
+
     }
   },
   emits: ['updateProfile'],
@@ -74,23 +92,40 @@ export default {
     ...mapState(memberStore, ['memberData'])
   },
   methods: {
-    handleDateClick(arg) {
-      alert('date click! ' + arg.dateStr)
-    },
+    // handleDateClick(arg) {
+    //   alert('date click! ' + arg.dateStr)
+    // },
     eventClick(info) {
-      // 檢查被點選的事件元素是否包含 lunch-bento 類
-      if (info.el.classList.contains("lunch-bento")) {
-        alert("午餐便當: " + info.event.title);
-        info.el.style.borderColor = "red";
+      if (info.event.title.endsWith("便當")) {
+        this.bentoTemp = info.event._def.extendedProps;
+        bentoModal.show();
       }
+
+      // 檢查被點選的事件元素是否包含 lunch-bento 的className
+      // if (info.el.classList.contains("lunch-bento")) {
+      //   alert("午餐便當: " + info.event.title);
+      //   info.el.style.borderColor = "red";
+      // }
     },
-    eventClassNames(arg) {
-      if (arg.event.title === "午餐便當") {
+    eventClassNames(info) {
+      if (info.event.title === "午餐便當") {
         return ['lunch-bento', "bg-brand-blue"]
-      } else if (arg.event.title === "晚餐便當") {
+      } else if (info.event.title === "晚餐便當") {
         return ['dinner-bento', "bg-brand-red"]
       }
     },
+    // eventContent(info) {
+    //   const eventTitle = info.event.title;
+    //   // if (eventTitle.endsWith("便當")) {
+    //   if (window.innerWidth < 576) { // 小於sm的畫面大小
+    //     // 只顯示標題的前兩個字
+    //     const truncatedTitle = eventTitle.substring(0, 2);
+    //     return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${truncatedTitle}</div></div>` };
+    //   } else {
+    //     return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${eventTitle}</div></div>` };
+    //   }
+    //   // }
+    // },
     resizeCalendar() {
       if (window.innerWidth >= 992) {
         calendarWrap.classList.add("col-md-10");
@@ -164,9 +199,54 @@ export default {
       this.bentoRecords.forEach((record) => {
         this.fullCalendarDOM.addEvent({
           ...record,
+          dateTemp: record.date,
+          idTemp: record.id,
           title: `${record.mealType}便當`
         })
       })
+    },
+    async generateBento() {
+      console.clear()
+      await this.getAllDishesList();
+
+      this.isLoading = true;
+      let isSatisfied = true;
+      const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
+      const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
+      const sideDishesTemp = this.mode === "default" ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
+
+      if (stapleTemp.length < 1) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少一種主食。', {
+          autoClose: delay,
+        })
+      }
+      if (sideDishesTemp.length < 3) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少三種配菜。', {
+          autoClose: delay,
+        })
+      }
+      if (mainDishesTemp.length < 1) {
+        isSatisfied = false;
+        toast.error('自選模式必須選取至少一種主菜。', {
+          autoClose: delay,
+        })
+      }
+      if (!isSatisfied) {
+        this.isLoading = false;
+        return;
+      }
+
+      this.bentoTemp = {
+        starchTotalPortion: 0,
+        proteinTotalPortion: 0,
+        vegetableTotalPortion: 0,
+      }
+      this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
+      this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
+      this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
+      this.isLoading = false
     },
     ...mapActions(memberStore, ['getUser'])
   },
@@ -187,6 +267,8 @@ export default {
     // api 取得便當紀錄
     await this.getUser();
     await this.getBentoRecords();
+
+    bentoModal = new modal(document.querySelector('#bentoModal'));
   }
 }
 </script>
@@ -212,6 +294,13 @@ export default {
   padding-left: 0.2rem;
 }
 
+@media (max-width: 576px) {
+  .fc-daygrid-day-frame {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
 /* 減少日期格子的margin-bottom以免畫面過長 */
 .fc .fc-daygrid-body-natural .fc-daygrid-day-events {
   margin-bottom: 0.5rem;
@@ -223,6 +312,13 @@ export default {
 
 
 /* headerToolbar */
+/* 調整title與bts的水平置中 */
+.fc .fc-toolbar-chunk div {
+  display: flex;
+  align-items: center;
+  /* gap: 1rem; */
+}
+
 /* 將title換成inline-block避免換行 */
 .fc-header-toolbar .fc-toolbar-title {
   display: inline-block;
@@ -230,11 +326,22 @@ export default {
   margin-left: 1rem;
 }
 
-/* 調整title與bts的水平置中 */
-.fc .fc-toolbar-chunk div {
-  display: flex;
-  align-items: center;
-  /* gap: 1rem; */
+/* 手機版的時後將margin、padding、font-size調小 */
+@media (max-width: 576px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 10px;
+  }
+
+  .fc-header-toolbar .fc-toolbar-title {
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+    margin-left: 0.2rem;
+  }
+
+  .fc-header-toolbar .fc-button-primary {
+    padding-right: 6px;
+    padding-left: 6px;
+  }
 }
 
 
@@ -243,6 +350,12 @@ export default {
 .fc-event-title-container {
   padding: 0.5rem;
   text-align: center;
+}
+
+@media (max-width: 576px) {
+  .fc-event-title-container {
+    padding: 0.4rem;
+  }
 }
 
 /* 增加事件之間的間距 */
