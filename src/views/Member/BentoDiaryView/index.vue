@@ -1,14 +1,17 @@
 <template>
   <loadingVue :active="isLoading" />
-  <div class="container flex-fill">
-    <h2 class="text-center my-3">我的便當日記</h2>
-    <div class="calendar-wrap rounded border border-primary bg-light p-4 my-3 mx-auto">
-      <FullCalendar :options="calendarOptions" ref="FullCalendar" />
+  <div class="container flex-fill d-flex align-items-center">
+    <div>
+      <h2 class="text-center my-3">我的便當日記</h2>
+      <div class="calendar-wrap rounded border border-primary bg-light p-4 my-3 mx-auto">
+        <FullCalendar :options="calendarOptions" ref="FullCalendar" />
+      </div>
     </div>
   </div>
 
   <!-- 便當相關 Modal -->
-  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData"></BentoComponent>
+  <BentoComponent :bento-temp="bentoTemp" :member-data="memberData" :delete-from-calendar="deleteFromCalendar">
+  </BentoComponent>
 
 </template>
 
@@ -22,20 +25,15 @@ import { mapState, mapActions } from 'pinia'
 import memberStore from '@/stores/memberData'
 import BentoComponent from '@/views/MenuView/BentoComponent.vue';
 import modal from "bootstrap/js/dist/modal";
-import { toast } from 'vue3-toastify';
-const delay = 2000;
-
-let bentoModal = null;
 
 document.title = "飲食紀錄";
-
-let calendarWrap = null;
 
 export default {
   components: { FullCalendar, BentoComponent },
   data() {
     return {
       isLoading: false,
+      calendarWrap: null,
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin, rrulePlugin],
         locale: "zh-tw",
@@ -76,7 +74,9 @@ export default {
         proteinTotalPortion: 0,
         vegetableTotalPortion: 0
       },
-
+      bentoModal: null,
+      successDelay: 1500,
+      errorDelay: 2000
     }
   },
   emits: ['updateProfile'],
@@ -95,10 +95,17 @@ export default {
     // handleDateClick(arg) {
     //   alert('date click! ' + arg.dateStr)
     // },
+
+    deleteFromCalendar() {
+      this.isLoading = true;
+      this.fullCalendarDOM.getEventById(this.bentoTemp.idTemp).remove();
+      this.isLoading = false;
+    },
+
     eventClick(info) {
       if (info.event.title.endsWith("便當")) {
         this.bentoTemp = info.event._def.extendedProps;
-        bentoModal.show();
+        this.bentoModal.show();
       }
 
       // 檢查被點選的事件元素是否包含 lunch-bento 的className
@@ -128,9 +135,9 @@ export default {
     // },
     resizeCalendar() {
       if (window.innerWidth >= 992) {
-        calendarWrap.classList.add("col-md-10");
+        this.calendarWrap.classList.add("col-md-10");
       } else {
-        calendarWrap.classList.remove("col-md-10");
+        this.calendarWrap.classList.remove("col-md-10");
       }
     },
     initFreeDaysRule() {
@@ -205,53 +212,10 @@ export default {
         })
       })
     },
-    async generateBento() {
-      console.clear()
-      await this.getAllDishesList();
-
-      this.isLoading = true;
-      let isSatisfied = true;
-      const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
-      const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
-      const sideDishesTemp = this.mode === "default" ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
-
-      if (stapleTemp.length < 1) {
-        isSatisfied = false;
-        toast.error('自選模式必須選取至少一種主食。', {
-          autoClose: delay,
-        })
-      }
-      if (sideDishesTemp.length < 3) {
-        isSatisfied = false;
-        toast.error('自選模式必須選取至少三種配菜。', {
-          autoClose: delay,
-        })
-      }
-      if (mainDishesTemp.length < 1) {
-        isSatisfied = false;
-        toast.error('自選模式必須選取至少一種主菜。', {
-          autoClose: delay,
-        })
-      }
-      if (!isSatisfied) {
-        this.isLoading = false;
-        return;
-      }
-
-      this.bentoTemp = {
-        starchTotalPortion: 0,
-        proteinTotalPortion: 0,
-        vegetableTotalPortion: 0,
-      }
-      this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
-      this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
-      this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
-      this.isLoading = false
-    },
     ...mapActions(memberStore, ['getUser'])
   },
   async mounted() {
-    calendarWrap = document.querySelector(".calendar-wrap");
+    this.calendarWrap = document.querySelector(".calendar-wrap");
     this.resizeCalendar();
     window.addEventListener("resize", this.resizeCalendar);
 
@@ -268,7 +232,7 @@ export default {
     await this.getUser();
     await this.getBentoRecords();
 
-    bentoModal = new modal(document.querySelector('#bentoModal'));
+    this.bentoModal = new modal(document.querySelector('#bentoModal'));
   }
 }
 </script>

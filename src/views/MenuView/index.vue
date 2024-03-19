@@ -43,7 +43,8 @@
         </div>
         <form class="search-input input-group" @submit.prevent="getSearchedDishes">
           <input type="text" class="form-control" placeholder="搜尋菜色" aria-label="Search"
-                 aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput">
+                 aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput"
+                 @blur="searchPretest">
           <button class="btn btn-outline-primary" type="button" id="button-addon2" @click="getSearchedDishes">
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
@@ -89,9 +90,8 @@
       </div>
     </div>
     <div id="bentoGenerator" class="bento-generator text-center">
-      <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3" data-bs-toggle="modal"
-              data-bs-target="#bentoModal"
-              @click="bentoTemp.sideDishes?.length === 0 ? generateBento() : null">生成便當</button>
+      <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3"
+              @click="bentoPretest">生成便當</button>
     </div>
     <aside class="aside">
       <div class="aside-head">
@@ -153,8 +153,8 @@ import DishesComponent from './DishesComponent.vue';
 import BentoComponent from './BentoComponent.vue';
 import memberStore from '@/stores/memberData';
 import { mapState, mapActions } from 'pinia';
+import modal from "bootstrap/js/dist/modal";
 import { toast } from 'vue3-toastify';
-const delay = 2000;
 
 document.title = "來點菜單";
 
@@ -163,7 +163,6 @@ export default {
   data() {
     return {
       isLoading: false,
-      apiUrl: "https://whatstoday2024-8nsu.onrender.com",
       introIndex: 1,
       mode: "default",
       filter: "全部",
@@ -186,6 +185,9 @@ export default {
         proteinTotalPortion: 0,
         vegetableTotalPortion: 0
       },
+      bentoModal: null,
+      successDelay: 1500,
+      errorDelay: 2000
     };
   },
   computed: {
@@ -256,12 +258,14 @@ export default {
 
       return answers;
     },
+    bentoPretest() {
+      this.bentoTemp.sideDishes?.length === 0 ? this.generateBento() : this.bentoModal.show();
+    },
     async generateBento() {
       console.clear()
       this.isLoading = true;
       await this.getAllDishesList();
 
-      this.isLoading = true;
       let isSatisfied = true;
       const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
       const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
@@ -270,19 +274,19 @@ export default {
       if (stapleTemp.length < 1) {
         isSatisfied = false;
         toast.error('自選模式必須選取至少一種主食。', {
-          autoClose: delay,
+          autoClose: this.errorDelay,
         })
       }
       if (sideDishesTemp.length < 3) {
         isSatisfied = false;
         toast.error('自選模式必須選取至少三種配菜。', {
-          autoClose: delay,
+          autoClose: this.errorDelay,
         })
       }
       if (mainDishesTemp.length < 1) {
         isSatisfied = false;
         toast.error('自選模式必須選取至少一種主菜。', {
-          autoClose: delay,
+          autoClose: this.errorDelay,
         })
       }
       if (!isSatisfied) {
@@ -298,6 +302,10 @@ export default {
       this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
       this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
       this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
+      toast.success('新便當已生成。', {
+        autoClose: this.successDelay,
+      })
+      this.bentoModal.show();
       this.isLoading = false;
     },
     moveToGeneratorBentoBtn() {
@@ -315,76 +323,84 @@ export default {
       this.isLoading = true;
       this.mode = mode;
       if (this.memberData.id) {
-        await this.axios.patch(`${this.apiUrl}/600/users/${this.memberData.id}`, { mode })
-        // .then(res => {
-        //   console.log(res.data.message.mode);
-        // })
+        try {
+          await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, { mode });
+        } catch (error) {
+          this.errorProcess();
+        }
       } else {
         localStorage.setItem("mode", this.mode);
       }
       this.isLoading = false;
     },
     async getAllDishesList() {
-      await this.getSelected();
+      try {
+        await this.getSelectedDishes();
+        const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`);
+        this.allDishesList = res.data.message.map(dish => {
+          const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
+          if (selectedTemp) {
+            return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+          } else {
+            return { ...dish, isChecked: false, preferenceLevel: 1 };
+          }
+        });
+        // console.log(this.allDishesList)
 
-      await this.axios.get(`${this.apiUrl}/dishes`)
-        .then(res => {
-          this.allDishesList = res.data.message;
-          this.allDishesList = this.allDishesList.map(dish => {
-            const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
-            if (selectedTemp) {
-              return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
-            } else {
-              return { ...dish, isChecked: false, preferenceLevel: 1 };
-            }
-          });
-          // console.log(this.allDishesList)
-
-          this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
-          this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
-          this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
-        })
+        this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
+        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
+        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+      } catch (error) {
+        this.errorProcess();
+      }
+    },
+    searchPretest() {
+      if (this.search === this.searchInput) {
+        return;
+      }
+      this.getSearchedDishes();
     },
     async getSearchedDishes() {
       this.isLoading = true;
       this.searchedList = [];
       this.search = this.searchInput;
 
-      let titleSearchApiUrl = this.apiUrl + "/dishes?title_like=" + this.search +
-        (this.filter === "全部" ? "" : '&category=' + this.filter) +
-        (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
+      try {
+        let titleSearchApiUrl = import.meta.env.VITE_APP_SERVER_URL + "/dishes?title_like=" + this.search +
+          (this.filter === "全部" ? "" : '&category=' + this.filter) +
+          (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
 
-      await this.axios.get(titleSearchApiUrl)
-        .then(res => {
-          this.searchedList = [...this.searchedList, ...res.data.message];
-        });
-
-
-      let engTitleSearchApiUrl = this.apiUrl + "/dishes?engTitle_like=" + this.search +
-        (this.filter === "全部" ? "" : '&category=' + this.filter) +
-        (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
-
-      await this.axios.get(engTitleSearchApiUrl)
-        .then(res => {
-          this.searchedList = [...this.searchedList, ...res.data.message];
-        });
+        const res = await this.axios.get(titleSearchApiUrl);
+        this.searchedList = [...this.searchedList, ...res.data.message];
 
 
-      this.searchedList = this.searchedList.map(dish => {
-        const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
-        if (selectedTemp) {
-          return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
-        } else {
-          return { ...dish, isChecked: false, preferenceLevel: 1 };
-        }
-      });
+        let engTitleSearchApiUrl = import.meta.env.VITE_APP_SERVER_URL + "/dishes?engTitle_like=" + this.search +
+          (this.filter === "全部" ? "" : '&category=' + this.filter) +
+          (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
 
-      await this.getSortedDishes();
+        const engRes = await this.axios.get(engTitleSearchApiUrl);
+        this.searchedList = [...this.searchedList, ...engRes.data.message];
+
+        await this.getSelectedDishes();
+        this.searchedList = this.searchedList.map(dish => {
+          const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
+          if (selectedTemp) {
+            return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+          } else {
+            return { ...dish, isChecked: false, preferenceLevel: 1 };
+          }
+        })
+
+        await this.getSortedDishes();
+      } catch (error) {
+        this.errorProcess();
+      }
+
       this.isLoading = false;
     },
     async getSortedDishes() {
       this.isLoading = true;
-      await this.getAllDishesList();
+      // await this.getAllDishesList();
 
       if (this.sortBy === "default") {
         if (this.searchedList.length) {
@@ -414,51 +430,53 @@ export default {
         }
       }
       else if (this.sortBy === "healthLevel") {
-        await this.axios.get(`${this.apiUrl}/dishes?_sort=${this.sortBy}&_order=desc`)
-          .then(res => {
-            this.allDishesList = res.data.message;
-
-            this.allDishesList = this.allDishesList.map(dish => {
-              const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
-              if (selectedTemp) {
-                return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
-              } else {
-                return { ...dish, isChecked: false, preferenceLevel: 1 };
-              }
-            });
-
-            this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
-            this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
-            this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
-
-            if (this.searchedList.length) {
-              this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel);
+        try {
+          const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_sort=${this.sortBy}&_order=desc`);
+          this.allDishesList = res.data.message.map(dish => {
+            const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
+            if (selectedTemp) {
+              return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+            } else {
+              return { ...dish, isChecked: false, preferenceLevel: 1 };
             }
           });
+        } catch (error) {
+          this.errorProcess();
+        }
+        this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
+        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
+        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+
+        if (this.searchedList.length) {
+          this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel);
+        }
       }
       this.isLoading = false;
     },
-    async getSelected() {
+    async getSelectedDishes() {
       if (this.memberData.id) {
-        await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/selecteds?_expand=dish`)
-          .then(res => {
-            this.selectedList = res.data.message;
-          })
+        try {
+          const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds?_expand=dish`);
+          this.selectedList = res.data.message;
+        } catch (error) {
+          this.errorProcess();
+        }
       } else {
         let selectedList = JSON.parse(localStorage.getItem("selectedList"));
         this.selectedList = selectedList ? selectedList : [];
       }
     },
     async addToSelected(dish) {
-      await this.getSelected();
+      await this.getSelectedDishes();
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
       if (selectedTemp) {
         if (this.memberData.id) {
-          await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { isChecked: true })
-          // .then(() => {
-          //   this.getSelected();
-          // })
+          try {
+            await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { isChecked: true });
+          } catch (error) {
+            this.errorProcess();
+          }
         } else {
           this.selectedList[selectedTempIndex].isChecked = true;
           localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
@@ -470,10 +488,11 @@ export default {
           preferenceLevel: +dish.preferenceLevel
         }
         if (this.memberData.id) {
-          await this.axios.post(`${this.apiUrl}/600/users/${this.memberData.id}/selecteds/`, data)
-          // .then(() => {
-          //   this.getSelected();
-          // })
+          try {
+            await this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds/`, data);
+          } catch (error) {
+            this.errorProcess();
+          }
         } else {
           this.selectedList.push(data);
           localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
@@ -481,79 +500,80 @@ export default {
       }
     },
     async updatePreferenceLevel(dish) {
-      this.isLoading = true;
-      await this.getSelected();
+      // this.isLoading = true;
+      dish.isLoading = true;
+      await this.getSelectedDishes();
 
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
       if (this.memberData.id) {
-        await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { preferenceLevel: +dish.preferenceLevel })
-          // .then(() => {
-          //   this.getSelected();
-          // })
-          .catch(() => {
-            toast.error('發生了某些錯誤，將重新整理頁面。', {
-              autoClose: delay,
-            })
-            setTimeout(() => {
-              location.reload()
-            }, delay);
-          })
+        try {
+          await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { preferenceLevel: +dish.preferenceLevel });
+        } catch (error) {
+          this.errorProcess();
+        }
       } else {
         this.selectedList[selectedTempIndex].preferenceLevel = +dish.preferenceLevel;
         localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
       }
 
       await this.getAllDishesList();
-      this.isLoading = false;
+      dish.isLoading = false;
+      // this.isLoading = false;
     },
     async uncheckFromSelected(dish) {
-      await this.getSelected();
+      await this.getSelectedDishes();
 
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
       if (selectedTemp) {
         if (+dish.preferenceLevel === 1) {
           if (this.memberData.id) {
-            await this.axios.delete(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`)
-            // .then(() => {
-            //   this.getSelected();
-            // })
+            try {
+              await this.axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`);
+            } catch (error) {
+              this.errorProcess();
+            }
           } else {
             this.selectedList.splice(selectedTempIndex, 1);
             localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
           }
         } else {
           if (this.memberData.id) {
-            await this.axios.patch(`${this.apiUrl}/600/selecteds/${selectedTemp.id}`, { isChecked: false })
-            // .then(() => {
-            //   this.getSelected();
-            // })
+            try {
+              await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { isChecked: false });
+            } catch (error) {
+              this.errorProcess();
+            }
           } else {
             this.selectedList[selectedTempIndex].isChecked = false;
             localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
           }
         }
       } else {
-        toast.error('發生了某些錯誤，將重新整理頁面。', {
-          autoClose: delay,
-        })
-        setTimeout(() => {
-          location.reload()
-        }, delay);
+        this.errorProcess();
       }
     },
     async updateSelected(dish) {
-      this.isLoading = true;
+      // this.isLoading = true;
+      dish.isLoading = true;
       dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish);
       await this.getAllDishesList();
-      this.isLoading = false;
+      dish.isLoading = false;
+      // this.isLoading = false;
+    },
+    errorProcess() {
+      toast.error('發生了某些錯誤，將重新整理頁面。', {
+        autoClose: this.errorDelay,
+      })
+      setTimeout(() => { location.reload() }, this.errorDelay);
     },
     async init() {
       this.isLoading = true;
       await this.getUser();
       this.getMode();
       await this.getAllDishesList();
+      this.bentoModal = new modal(document.querySelector("#bentoModal"));
       this.isLoading = false;
     },
     ...mapActions(memberStore, ['getUser'])
