@@ -5,7 +5,8 @@
             <div class="modal-content bento">
                 <div class="modal-header px-4">
                     <h3 class="modal-title" id="bentoModalLabel">今天吃什麼？</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                            @click="hideModal"></button>
                 </div>
                 <div class="modal-body row m-0 row-cols-1 row-cols-lg-2">
                     <div class="bento-description col-lg-4 order-last order-lg-1 row m-0 p-lg-3">
@@ -18,7 +19,7 @@
                                     </div>
                                     <div class="col">
                                         <p class="m-0 text-end">{{ Math.round(bentoTemp.starchTotalPortion / 4 * 100) /
-                                            100 }} 碗</p>
+                                100 }} 碗</p>
                                     </div>
                                 </div>
                                 <div class="col row row-cols-2">
@@ -40,18 +41,21 @@
                             </div>
                         </div>
                         <div v-if="path === '/menu'" class="btns text-center p-3 col-6 col-lg-12">
-                            <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
-                                    data-bs-target="#confirmRegenerateBentoModal" title="重新生成便當">重新生成便當</button>
-                            <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2" data-bs-toggle="modal"
-                                    data-bs-target="#saveToBentoDiaryModal"
+                            <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2"
+                                    data-bs-dismiss="modal" @click="openModal(confirmRegenerateModal)"
+                                    title="重新生成便當">重新生成便當</button>
+                            <button class="btn btn-primary save-to-diary-btn px-4 py-3 m-2" data-bs-dismiss="modal"
+                                    @click="openModal(saveToBentoDiaryModal)"
                                     :title="memberData.id ? '存至便當日記' : '便當日記為會員限定功能'"
                                     :disabled="!memberData.id">存至便當日記</button>
+                            <small class="d-block text-danger" v-if="!memberData.id">* 登入以享 便當日記 相關功能</small>
                         </div>
                         <div v-if="path === '/member/bento-diary'" class="btns text-center p-3 col-6 col-lg-12">
                             <p>{{ bentoTemp.dateTemp }}</p>
                             <p>{{ bentoTemp.mealType }}</p>
-                            <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2" data-bs-toggle="modal"
-                                    data-bs-target="#confirmDeleteRecordModal" title="刪除此便當紀錄">刪除此便當紀錄</button>
+                            <button class="btn btn-outline-primary re-generate-btn px-4 py-3 m-2"
+                                    data-bs-dismiss="modal" @click="openModal(confirmDeleteRecordModal)"
+                                    title="刪除此便當紀錄">刪除此便當紀錄</button>
                         </div>
                     </div>
                     <div class="bento-presentation col-lg-8 order-first order-lg-2">
@@ -106,23 +110,24 @@
     </div>
 
     <!-- 確認重新生成便當 Modal -->
-    <div class="modal fade" id="confirmRegenerateBentoModal" tabindex="-1"
-         aria-labelledby="confirmRegenerateBentoModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmRegenerateModal" tabindex="-1" aria-labelledby="confirmRegenerateModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="confirmRegenerateBentoModalLabel">是否確認重新生成新的便當？</h5>
-                    <button type="button" class="btn-close" aria-label="Close" data-bs-toggle="modal"
-                            data-bs-target="#bentoModal"></button>
+                    <h5 class="modal-title" id="confirmRegenerateModalLabel">是否確認重新生成新的便當？</h5>
+                    <button type="button" class="btn-close" aria-label="Cancel and Return" data-bs-dismiss="modal"
+                            @click="openModal(bentoModal)">
+                    </button>
                 </div>
                 <div class="modal-body">
                     此操作將無法復原，請確認是否執行。
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#bentoModal">取消</button>
-                    <button type="button" class="btn btn-primary" @click="generateBento" data-bs-toggle="modal"
-                            data-bs-target="#bentoModal">確認</button>
+                    <button type="button" class="btn btn-secondary" aria-label="Cancel and Return"
+                            data-bs-dismiss="modal" @click="openModal(bentoModal)">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            @click="generateBento">確認</button>
                 </div>
             </div>
         </div>
@@ -135,8 +140,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="saveToBentoDiaryModalLabel">存至便當日記</h5>
-                    <button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#bentoModal"
-                            aria-label="Close"></button>
+                    <button type="button" class="btn-close" aria-label="Cancel and Return" data-bs-dismiss="modal"
+                            @click="openModal(bentoModal)"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
@@ -155,8 +160,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#bentoModal"
-                            @click="getBentoRecords">取消</button>
+                    <button type="button" class="btn btn-secondary" aria-label="Cancel and Return"
+                            data-bs-dismiss="modal" @click="openModal(bentoModal)">取消</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
                             @click="saveToDiary">確認儲存</button>
                 </div>
@@ -171,17 +176,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmDeleteRecordModalLabel">是否確認刪除此便當紀錄？</h5>
-                    <button type="button" class="btn-close" aria-label="Close" data-bs-toggle="modal"
-                            data-bs-target="#bentoModal"></button>
+                    <button type="button" class="btn-close" aria-label="Cancel and Return" data-bs-dismiss="modal"
+                            @click="openModal(bentoModal)"></button>
                 </div>
                 <div class="modal-body">
                     此操作將無法復原，請確認是否執行。
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#bentoModal">取消</button>
-                    <button type="button" class="btn btn-primary" @click="deleteRecord"
-                            data-bs-dismiss="modal">確認</button>
+                    <button type="button" class="btn btn-secondary" aria-label="Cancel and Return"
+                            data-bs-dismiss="modal" @click="openModal(bentoModal)">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            @click="deleteRecord">確認</button>
                 </div>
             </div>
         </div>
@@ -189,73 +194,108 @@
 
 </template>
 
-
 <script>
+import modal from "bootstrap/js/dist/modal";
 import { toast } from 'vue3-toastify';
-const delay = 2000;
 
 export default {
-    props: ['bentoTemp', 'generateBento', "memberData"],
+    props: ['bentoTemp', 'generateBento', "memberData", "deleteFromCalendar"],
     data() {
         return {
-            apiUrl: "https://whatstoday2024-8nsu.onrender.com",
+            path: "",
+            bentoModal: null,
+            saveToBentoDiaryModal: null,
+            confirmRegenerateModal: null,
+            confirmDeleteRecordModal: null,
+            bentoDate: new Date().toISOString().slice(0, 10),
             mealType: "午餐",
-            bentoDate: "",
             bentoRecords: [],
-            path: ""
+            successDelay: 1500,
+            errorDelay: 2000
         };
     },
     methods: {
         async getBentoRecords() {
-            await this.axios.get(`${this.apiUrl}/600/users/${this.memberData.id}/records/`)
-                .then(res => {
-                    // console.log(res)
-                    this.bentoRecords = res.data.message;
-                })
+            try {
+                const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`)
+                this.bentoRecords = res.data.message;
+            } catch (error) {
+                this.errorProcess();
+            }
         },
         async saveToDiary() {
             await this.getBentoRecords();
-            let today = new Date().toISOString().slice(0, 10);
-            // console.log(this.bentoDate)
             const data = {
                 ...this.bentoTemp,
-                date: this.bentoDate ? this.bentoDate : today,
+                date: this.bentoDate,
                 mealType: this.mealType,
             }
             const recordTemp = this.bentoRecords.find((record) => record.date === data.date && record.mealType === data.mealType);
             if (recordTemp) {
                 const overwrite = confirm('該時段已有便當紀錄，請問是否決定覆蓋該紀錄？')
                 if (overwrite) {
-                    await this.axios.patch(`${this.apiUrl}/600/records/${recordTemp.id}`, data)
-                        .then(() => {
-                            // console.log("done-patch", res.data.message)
-                            toast.success('紀錄已存至便當日記！', {
-                                autoClose: delay,
-                            })
+                    try {
+                        await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/records/${recordTemp.id}`, data)
+                        // console.log("done-patch", res.data.message)
+                        toast.success('紀錄已存至便當日記！', {
+                            autoClose: this.successDelay,
                         })
+                    } catch (error) {
+                        this.errorProcess();
+                    }
                 }
             } else {
-                await this.axios.post(`${this.apiUrl}/600/users/${this.memberData.id}/records/`, data)
-                    .then(() => {
-                        // console.log("done-post", res.data.message)
-                        toast.success('紀錄已存至便當日記！', {
-                            autoClose: delay,
-                        })
+                try {
+                    await this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`, data)
+                    // console.log("done-patch", res.data.message)
+                    toast.success('紀錄已存至便當日記！', {
+                        autoClose: this.successDelay,
                     })
+                } catch (error) {
+                    this.errorProcess();
+                }
             }
+            this.saveToBentoDiaryModal.hide();
         },
         async deleteRecord() {
-            await this.axios.delete(`${this.apiUrl}/600/records/${this.bentoTemp.idTemp}`)
-                .then(() => {
-                    toast.success('便當紀錄刪除成功！', {
-                        autoClose: delay,
-                    })
-                    setTimeout(() => { location.reload() }, delay);
+            try {
+                await this.axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/600/records/${this.bentoTemp.idTemp}`)
+                toast.success('便當紀錄刪除成功！', {
+                    autoClose: this.successDelay,
                 })
+                this.deleteFromCalendar();
+                // setTimeout(() => { location.reload() }, this.successDelay);
+            } catch (error) {
+                this.errorProcess();
+            }
+            this.confirmDeleteRecordModal.hide();
+        },
+        errorProcess() {
+            toast.error('發生了某些錯誤，將重新整理頁面。', {
+                autoClose: this.errorDelay,
+            })
+            setTimeout(() => { location.reload() }, this.errorDelay);
+        },
+        openModal(modal) {
+            this.hideModal();
+            modal.show();
+        },
+        hideModal() {
+            this.bentoModal.hide();
+            this.saveToBentoDiaryModal.hide();
+            this.confirmRegenerateModal.hide();
+            this.confirmDeleteRecordModal.hide();
+        },
+        init() {
+            this.path = this.$route.path;
+            this.bentoModal = new modal(document.querySelector("#bentoModal"));
+            this.saveToBentoDiaryModal = new modal(document.querySelector("#saveToBentoDiaryModal"));
+            this.confirmRegenerateModal = new modal(document.querySelector("#confirmRegenerateModal"));
+            this.confirmDeleteRecordModal = new modal(document.querySelector("#confirmDeleteRecordModal"));
         }
     },
     mounted() {
-        this.path = this.$route.path;
+        this.init();
     }
 };
 </script>
