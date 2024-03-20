@@ -110,8 +110,8 @@
     </div>
 
     <!-- 確認重新生成便當 Modal -->
-    <div class="modal fade" id="confirmRegenerateModal" tabindex="-1" aria-labelledby="confirmRegenerateModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="confirmRegenerateModal" data-bs-backdrop="static" tabindex="-1"
+         aria-labelledby="confirmRegenerateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,8 +134,8 @@
     </div>
 
     <!-- 存至便當日記 Modal -->
-    <div class="modal fade" id="saveToBentoDiaryModal" tabindex="-1" aria-labelledby="saveToBentoDiaryModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="saveToBentoDiaryModal" data-bs-backdrop="static" tabindex="-1"
+         aria-labelledby="saveToBentoDiaryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -170,8 +170,8 @@
     </div>
 
     <!-- 確認刪除便當紀錄 Modal -->
-    <div class="modal fade" id="confirmDeleteRecordModal" tabindex="-1" aria-labelledby="confirmDeleteRecordModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteRecordModal" data-bs-backdrop="static" tabindex="-1"
+         aria-labelledby="confirmDeleteRecordModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
