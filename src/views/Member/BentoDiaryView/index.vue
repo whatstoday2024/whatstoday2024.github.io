@@ -12,7 +12,6 @@
   <!-- 便當相關 Modal -->
   <BentoComponent :bento-temp="bentoTemp" :member-data="memberData" :delete-from-calendar="deleteFromCalendar">
   </BentoComponent>
-
 </template>
 
 <script>
@@ -25,6 +24,7 @@ import { mapState, mapActions } from 'pinia'
 import memberStore from '@/stores/memberData'
 import BentoComponent from '@/views/MenuView/BentoComponent.vue';
 import modal from "bootstrap/js/dist/modal";
+import { toast } from 'vue3-toastify';
 
 document.title = "飲食紀錄";
 
@@ -34,6 +34,7 @@ export default {
     return {
       isLoading: false,
       calendarWrap: null,
+      windowWidth: window.innerWidth,
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin, rrulePlugin],
         locale: "zh-tw",
@@ -58,8 +59,6 @@ export default {
         events: [],
         eventClick: this.eventClick,
         eventClassNames: this.eventClassNames,
-        // eventContent: this.eventContent,
-        // dateClick: this.handleDateClick,
       },
       freeDays: {},
       fullCalendarDOM: null,
@@ -92,47 +91,25 @@ export default {
     ...mapState(memberStore, ['memberData'])
   },
   methods: {
-    // handleDateClick(arg) {
-    //   alert('date click! ' + arg.dateStr)
-    // },
-
     deleteFromCalendar() {
       this.isLoading = true;
       this.fullCalendarDOM.getEventById(this.bentoTemp.idTemp).remove();
       this.isLoading = false;
     },
-
     eventClick(info) {
-      if (info.event.title.endsWith("便當")) {
+      // if (info.event.title.startsWith("午餐") || info.event.title.startsWith("晚餐")) {
+      if (/^(午餐|晚餐)/.test(info.event.title)) {
         this.bentoTemp = info.event._def.extendedProps;
         this.bentoModal.show();
       }
-
-      // 檢查被點選的事件元素是否包含 lunch-bento 的className
-      // if (info.el.classList.contains("lunch-bento")) {
-      //   alert("午餐便當: " + info.event.title);
-      //   info.el.style.borderColor = "red";
-      // }
     },
     eventClassNames(info) {
-      if (info.event.title === "午餐便當") {
+      if (info.event.title.startsWith("午餐")) {
         return ['lunch-bento', "bg-brand-blue"]
-      } else if (info.event.title === "晚餐便當") {
+      } else if (info.event.title.startsWith("晚餐")) {
         return ['dinner-bento', "bg-brand-red"]
       }
     },
-    // eventContent(info) {
-    //   const eventTitle = info.event.title;
-    //   // if (eventTitle.endsWith("便當")) {
-    //   if (window.innerWidth < 576) { // 小於sm的畫面大小
-    //     // 只顯示標題的前兩個字
-    //     const truncatedTitle = eventTitle.substring(0, 2);
-    //     return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${truncatedTitle}</div></div>` };
-    //   } else {
-    //     return { html: `<div class="fc-event-title-container"><div class="fc-event-title fc-sticky">${eventTitle}</div></div>` };
-    //   }
-    //   // }
-    // },
     resizeCalendar() {
       if (window.innerWidth >= 992) {
         this.calendarWrap.classList.add("col-md-10");
@@ -198,17 +175,22 @@ export default {
       })
     },
     async getBentoRecords() {
-      await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`)
-        .then(res => {
-          this.bentoRecords = res.data.message;
+      try {
+        const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`);
+        this.bentoRecords = res.data.message;
+      } catch (error) {
+        toast.error('發生了某些錯誤，將重新整理頁面。', {
+          autoClose: this.errorDelay,
         })
+        setTimeout(() => { location.reload() }, this.errorDelay);
+      }
 
       this.bentoRecords.forEach((record) => {
         this.fullCalendarDOM.addEvent({
           ...record,
           dateTemp: record.date,
           idTemp: record.id,
-          title: `${record.mealType}便當`
+          title: this.windowWidth > 576 ? `${record.mealType}便當` : record.mealType
         })
       })
     },
@@ -226,7 +208,7 @@ export default {
 
     // api 取得放縱日資料
     this.getFreeDaysData();
-    this.fullCalendarDOM = this.$refs.FullCalendar.calendar
+    this.fullCalendarDOM = this.$refs.FullCalendar.calendar;
 
     // api 取得便當紀錄
     await this.getUser();
@@ -258,6 +240,7 @@ export default {
   padding-left: 0.2rem;
 }
 
+/* 手機版時將padding調小 */
 @media (max-width: 576px) {
   .fc-daygrid-day-frame {
     padding-right: 0;
@@ -290,7 +273,7 @@ export default {
   margin-left: 1rem;
 }
 
-/* 手機版的時後將margin、padding、font-size調小 */
+/* 手機版的時候將margin、padding、font-size調小 */
 @media (max-width: 576px) {
   .fc .fc-toolbar.fc-header-toolbar {
     margin-bottom: 10px;
@@ -316,6 +299,7 @@ export default {
   text-align: center;
 }
 
+/* 手機版的時候將padding調小 */
 @media (max-width: 576px) {
   .fc-event-title-container {
     padding: 0.4rem;

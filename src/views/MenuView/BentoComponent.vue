@@ -150,7 +150,7 @@
                                v-model="bentoDate">
                     </div>
                     <div>
-                        <label class="mx-2" for="bentoDate">這是我的：</label>
+                        <label class="mx-2" for="mealType">這是我的：</label>
                         <div class="btn-group" role="group" aria-label="Basic outlined example">
                             <button type="button" class="lunch-btn btn btn-outline-primary px-2 py-1"
                                     :class="{ active: mealType === '午餐' }" @click="mealType = '午餐'">午餐</button>
