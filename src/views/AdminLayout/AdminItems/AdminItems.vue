@@ -93,12 +93,12 @@ import { DeleteFilled, Edit, Search, Plus, Grid } from '@element-plus/icons-vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import StarRating from 'vue-star-rating'
-import DeleteItemModal from '@/views/AdminLayout/DeleteItemModal'
+import DeleteItemModal from '@/views/AdminLayout/DeleteItemModal/DeleteItemModal.vue'
 import axios from 'axios'
 import memberStore from '@/stores/memberData'
 import { mapActions } from 'pinia'
 
-import Pagination from '@/components/Pagination'
+import Pagination from '@/components/Pagination/PaginationComponents.vue'
 
 export default {
   data () {

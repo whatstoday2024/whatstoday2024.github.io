@@ -16,7 +16,7 @@ import MemberSection from './MemberSection.vue'
 import ProvideSection from './ProvideSection.vue'
 import QAsection from './QAsection.vue'
 import WhatSection from './WhatSection.vue'
-import HomeArrow from '@/components/HomeArrow'
+import HomeArrow from '@/components/HomeArrow/HomeArrow.vue'
 
 export default {
   components: { HeroSection, WhatSection, QAsection, MemberSection, ProvideSection, HomeArrow }
