@@ -1,0 +1,1 @@
+import{_ as o,y as t,o as c,r as n}from"./index-CI6KSxWR.js";const r={};function a(s,_){const e=n("RouterView");return c(),t(e)}const f=o(r,[["render",a],["__scopeId","data-v-3f8d3aa6"]]);export{f as default};
