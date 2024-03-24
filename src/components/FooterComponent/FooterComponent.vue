@@ -32,18 +32,16 @@
 
 <script>
 // import logo from '@/assets/logo_small.png'
-import logo from '@/assets/img/logo_small.png';
-import icon from '@/assets/img/logo_icon.png';
-
+import logo from '@/assets/img/logo_small.png'
+import icon from '@/assets/img/logo_icon.png'
 
 export default {
-  data() {
+  data () {
     return {
       logo,
       icon
     }
-  },
-
+  }
 }
 </script>
 

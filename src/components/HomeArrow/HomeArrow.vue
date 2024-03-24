@@ -1,54 +1,51 @@
 <template>
-
     <div class="home-arrow" :class="{ isBottom: isBottom }" @click="scroll">
         <span ><SortDown style="width: 40px; height: 40px;"/></span>
         <p v-if="!isBottom" class="">scroll</p>
         <p v-if="isBottom" class="isBottom">Top</p>
     </div>
-
-  
-</template> 
+</template>
 
 <script>
-import { SortDown } from "@element-plus/icons-vue";
+import { SortDown } from '@element-plus/icons-vue'
 export default {
-  data() {
+  data () {
     return {
       isBottom: false
     }
   },
   components: {
-    SortDown,
-},
+    SortDown
+  },
   methods: {
-    scroll(){
-      if(!this.isBottom){
-        const distanceToScroll = 500; // 單位是像素
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const targetScroll = scrollTop + distanceToScroll;
+    scroll () {
+      if (!this.isBottom) {
+        const distanceToScroll = 500 // 單位是像素
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        const targetScroll = scrollTop + distanceToScroll
         window.scrollTo({
           top: targetScroll,
           behavior: 'smooth' // 平滑滾動效果
-        });
-      }else{
-      window.scrollTo({
+        })
+      } else {
+        window.scrollTo({
           top: 0,
           left: 0,
-          behavior: "smooth",
+          behavior: 'smooth'
         })
       }
-    },
+    }
   },
-  mounted() {
+  mounted () {
     window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 5) {
+      if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 5) {
       // if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
         this.isBottom = true
-    }else{
-      this.isBottom = false
-    }
-});
-  },
+      } else {
+        this.isBottom = false
+      }
+    })
+  }
 }
 </script>
 

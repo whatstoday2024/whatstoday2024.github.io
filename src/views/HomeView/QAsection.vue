@@ -24,21 +24,21 @@
 import { QAs } from '@/utils/variables'
 
 export default {
-  data() {
+  data () {
     return {
       items: QAs,
-      activeItem: 1,
+      activeItem: 1
     }
   },
   methods: {
-    toggleAccordion(index) {
-      if(index === this.activeItem){
+    toggleAccordion (index) {
+      if (index === this.activeItem) {
         return
       }
-      this.activeItem = this.activeItem === index ? null : index;
-    },
+      this.activeItem = this.activeItem === index ? null : index
+    }
   },
-  mounted() {
+  mounted () {
     // this.items = QAs
   }
 }

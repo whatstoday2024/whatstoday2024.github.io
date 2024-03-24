@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import Modal from 'bootstrap/js/dist/modal';
-import { Warning } from "@element-plus/icons-vue";
+import Modal from 'bootstrap/js/dist/modal'
+import { Warning } from '@element-plus/icons-vue'
 export default {
-  data() {
-    return{
+  data () {
+    return {
       modal: {},
       message: ''
     }
@@ -30,16 +30,16 @@ export default {
     Warning
   },
   methods: {
-    show(message){
+    show (message) {
       this.message = message
       this.modal.show()
     },
-    sendRemove(){
+    sendRemove () {
       this.$emit('removeItem')
       this.modal.hide()
     }
   },
-  mounted(){
+  mounted () {
     this.modal = new Modal(this.$refs.modal)
   }
 }

@@ -41,23 +41,23 @@
 <script>
 import memberStore from '@/stores/memberData'
 import { mapActions } from 'pinia'
-import { toast } from 'vue3-toastify';
+import { toast } from 'vue3-toastify'
 
-document.title = "馬上登入";
+document.title = '馬上登入'
 
 export default {
-  data() {
+  data () {
     return {
       user: {
         email: '',
-        password: '',
+        password: ''
       },
       loginError: false,
       isLoading: false
     }
   },
   methods: {
-    login(){
+    login () {
       this.isLoading = true
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
         .then((res) => {
@@ -67,19 +67,19 @@ export default {
           this.setMemberData(user)
           this.isLoading = false
           const delay = 1000
-          if(user.isAdmin){
+          if (user.isAdmin) {
             toast.success('登入成功！前往後台', {
-              autoClose: delay,
+              autoClose: delay
             })
             setTimeout(() => {
-              this.$router.push({name: 'AdminDashboard'})
+              this.$router.push({ name: 'AdminDashboard' })
             }, delay)
-          }else{
+          } else {
             toast.success('登入成功！前往菜單', {
-              autoClose: delay,
+              autoClose: delay
             })
             setTimeout(() => {
-              this.$router.push({name: 'MenuView'})
+              this.$router.push({ name: 'MenuView' })
             }, delay)
           }
         }).catch(() => {

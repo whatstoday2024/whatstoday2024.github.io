@@ -14,7 +14,7 @@
                   <ErrorMessage name="問題類型" class="invalid-feedback"/>
                   <label for="name">請選擇問題類型</label>
                 </div>
-                
+
                 <div class="form-floating mb-4">
                   <VField type="text" id="name" placeholder="請輸入姓名" name="姓名" class="form-control" :class="{ 'is-invalid': errors['姓名'] }" rules="required" v-model="issue.name" />
                   <ErrorMessage name="姓名" class="invalid-feedback"/>
@@ -40,34 +40,33 @@
 </template>
 
 <script>
-import emailjs from '@emailjs/browser';
-import { toast } from 'vue3-toastify';
-
+import emailjs from '@emailjs/browser'
+import { toast } from 'vue3-toastify'
 
 export default {
-  data() {
+  data () {
     return {
       issue: {
         type: '問題回報',
         name: '',
         email: '',
-        content: '',
+        content: ''
       }
     }
   },
   methods: {
-    sendEmail() {
+    sendEmail () {
       try {
         emailjs.send('service_wrg9fdg', 'template_u74y2ir', this.issue, 'cU7MJETmO9Fcn--g1')
-        .then(()=>{
-          const delay = 1000
-          toast.success(this.issue.type + "已送出完成!", {
-            autoClose: delay
-          });
-          this.$router.push({name: 'IssueForm'});
-        });
-      } catch(error) {
-          console.log({error})
+          .then(() => {
+            const delay = 1000
+            toast.success(this.issue.type + '已送出完成!', {
+              autoClose: delay
+            })
+            this.$router.push({ name: 'IssueForm' })
+          })
+      } catch (error) {
+        console.log({ error })
       }
     }
   }

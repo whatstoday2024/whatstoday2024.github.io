@@ -34,7 +34,7 @@
               <p class="text-muted my-2" v-else>無設定每週的放縱日</p>
             </div>
           </div>
-          
+
           <div class="row mt-4 g-1">
             <div class="col-auto">
               <h5 class="mb-0 mt-2 me-4">每月：</h5>
@@ -57,13 +57,13 @@
               <p class="text-muted my-2" v-else>無設定每月的放縱日</p>
             </div>
           </div>
-          
+
           <div class="row mt-4 g-1">
             <div class="col-auto">
               <h5 class="mb-0 mt-3 me-4">每年：</h5>
             </div>
             <div class="col-12 col-md">
-              <select class="form-select form-select me-4 w-auto d-inline-block" v-model="select.yearly.month" 
+              <select class="form-select form-select me-4 w-auto d-inline-block" v-model="select.yearly.month"
                 @change="setTemplateDay(select.yearly.month)">
                 <option value="" selected disabled>請選擇月份</option>
                 <option :value="i" v-for="i in 12" :key="'day' + i">{{ `${i}月` }}</option>
@@ -73,8 +73,8 @@
                 <option value="" selected disabled>請選擇日期</option>
                 <option :value="i" v-for="i in template.day" :key="'day' + i">{{ `${i}號` }}</option>
               </select>
-              <button type="button" class="btn btn-primary mb-1" 
-                :disabled="select.yearly.month === '' || select.yearly.day === ''" 
+              <button type="button" class="btn btn-primary mb-1"
+                :disabled="select.yearly.month === '' || select.yearly.day === ''"
                 @click="addYearly(select.yearly)">新增</button>
               <p class="text-muted" v-if="!freeDays.yearly.length">無設定每年的放縱日</p>
             </div>
@@ -92,7 +92,7 @@
             </li>
           </ul>
         </template>
-        
+
         <template v-else>
           <div>
             <input type="date" class="form-control me-4 w-auto d-inline-block"
@@ -115,21 +115,21 @@
           <p class="text-muted mt-2 ms-1" v-else>無設定特定日期的放縱日</p>
         </template>
       </div>
-      
+
     </template>
   </div>
 </template>
 
 <script>
-import { toast } from 'vue3-toastify';
-import DeleteModal from '../DeleteModal';
-import FreeDaysData from  '../FreeDaysData';
+import { toast } from 'vue3-toastify'
+import DeleteModal from '../DeleteModal/DeleteModal.vue'
+import FreeDaysData from '../FreeDaysData/FreeDaysData.vue'
 
-document.title = "放縱一下";
+document.title = '放縱一下'
 
 export default {
-  data(){
-    return{
+  data () {
+    return {
       isLoading: false,
       isSpecificDay: false,
       template: {
@@ -140,7 +140,7 @@ export default {
           '四',
           '五',
           '六',
-          '日',
+          '日'
         ],
         day: 30
       },
@@ -163,82 +163,82 @@ export default {
   },
   mixins: [FreeDaysData],
   methods: {
-    updateFreeDaysData(key){
+    updateFreeDaysData (key) {
       this.isLoading = true
       const data = {}
       data[key] = this.freeDays[key]
       this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/freeDays/${this.freeDays.id}`, data, {
         headers: {
-          'authorization': this.$cookie.getMemberToken()
+          authorization: this.$cookie.getMemberToken()
         }
       })
-      .then(() => {
-        toast.success('放縱日已更新')
-        this.getFreeDaysData()
-      }).catch(e => {
-        toast.error(e.data?.message || e)
-      })
+        .then(() => {
+          toast.success('放縱日已更新')
+          this.getFreeDaysData()
+        }).catch(e => {
+          toast.error(e.data?.message || e)
+        })
     },
-    setTemplateDay(month){
+    setTemplateDay (month) {
       this.select.yearly.day = ''
       this.template.day = new Date(2024, month, 0).getDate()
     },
-    setStringFormat(number){
+    setStringFormat (number) {
       return number < 10 ? `0${number}` : number
     },
-    addWeekly(day){
+    addWeekly (day) {
       const index = this.freeDays.weekly.indexOf(day)
-      if(index < 0){
+      if (index < 0) {
         this.freeDays.weekly.push(day)
         this.freeDays.weekly.sort((a, b) => a - b)
         this.updateFreeDaysData('weekly')
-      }else{
+      } else {
         this.showWarningToast(`每週${this.template.weekTitle[day]}`)
       }
       this.select.weekly = ''
     },
-    addMonthly(day){
+    addMonthly (day) {
       const index = this.freeDays.monthly.indexOf(day)
-      if(index < 0){
+      if (index < 0) {
         this.freeDays.monthly.push(day)
         this.freeDays.monthly.sort((a, b) => a - b)
         this.updateFreeDaysData('monthly')
-      }else{
+      } else {
         this.showWarningToast(`每月${day}號`)
       }
       this.select.monthly = ''
     },
-    addYearly({month, day}){
+    addYearly ({ month, day }) {
       const date = `${this.setStringFormat(month)}/${this.setStringFormat(day)}`
       const index = this.freeDays.yearly.indexOf(date)
-      if(index < 0){
+      if (index < 0) {
         this.freeDays.yearly.push(date)
         this.freeDays.yearly.sort()
         this.updateFreeDaysData('yearly')
-      }else{
+      } else {
         this.showWarningToast(date)
       }
       this.select.yearly.month = ''
       this.select.yearly.day = ''
     },
-    addSpecificDay(date){
+    addSpecificDay (date) {
       date = date.replaceAll('-', '/')
       const index = this.freeDays.specific.indexOf(date)
-      if(index < 0){
+      if (index < 0) {
         this.freeDays.specific.push(date)
         this.freeDays.specific.sort()
         this.updateFreeDaysData('specific')
-      }else{
+      } else {
         this.showWarningToast(date)
       }
       this.select.specific = ''
     },
-    showWarningToast(msg){
+    showWarningToast (msg) {
       toast.warn(`「${msg}」放縱日已設定過`, {
-        autoClose: 3000,
+        autoClose: 3000
       })
     },
-    removeConfirm(mode, day){
+    removeConfirm (mode, day) {
       this.deleteTemp = {
         mode,
         day
@@ -266,16 +266,16 @@ export default {
       }
       this.$refs.DeleteModal.show(message)
     },
-    removeFreeDays(){
+    removeFreeDays () {
       const { mode, day } = this.deleteTemp
       const index = this.freeDays[mode].indexOf(day)
-      if(index > -1){
+      if (index > -1) {
         this.freeDays[mode].splice(index, 1)
         this.updateFreeDaysData(mode)
       }
-    },
+    }
   },
-  mounted(){
+  mounted () {
     this.getFreeDaysData()
   }
 }
