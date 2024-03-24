@@ -1,17 +1,31 @@
-/* eslint-env node */
-require('@rushstack/eslint-patch/modern-module-resolution')
-
 module.exports = {
-  root: true,
-  'extends': [
-    'plugin:vue/vue3-essential',
-    'eslint:recommended',
-    '@vue/eslint-config-prettier/skip-formatting'
-  ],
-  rules: {
-    "vue/multi-word-component-names": 0,
+  env: {
+    browser: true,
+    es2021: true
   },
+  extends: [
+    'standard',
+    'plugin:vue/vue3-essential'
+  ],
+  overrides: [
+    {
+      env: {
+        node: true
+      },
+      files: [
+        '.eslintrc.{js,cjs}'
+      ],
+      parserOptions: {
+        sourceType: 'script'
+      }
+    }
+  ],
   parserOptions: {
     ecmaVersion: 'latest'
+  },
+  plugins: [
+    'vue'
+  ],
+  rules: {
   }
 }
