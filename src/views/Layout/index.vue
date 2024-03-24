@@ -13,20 +13,20 @@ import HeaderComponent from '@/components/HeaderComponent'
 import FooterComponent from '@/components/FooterComponent'
 
 export default {
-  components: { HeaderComponent, FooterComponent},
-  data() {
+  components: { HeaderComponent, FooterComponent },
+  data () {
     return {
-    };
+    }
   },
   computed: {
   },
   methods: {
     ...mapActions(memberStore, ['getUser'])
   },
-  async mounted(){
+  async mounted () {
     await this.getUser()
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

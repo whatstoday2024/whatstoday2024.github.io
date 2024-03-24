@@ -84,14 +84,14 @@ import memberStore from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  data() {
+  data () {
     return {
       isLogin: false,
       nicknameOne: ''
     }
   },
   methods: {
-    checkStatus() {
+    checkStatus () {
       if (this?.memberData.email) {
         this.nicknameOne = this?.memberData.nickname.charAt(0)
         this.isLogin = true
@@ -100,7 +100,7 @@ export default {
         this.isLogin = false
       }
     },
-    logout() {
+    logout () {
       this.$cookie.setMemberToken('')
       this.$cookie.setMemberId('')
 
@@ -109,7 +109,7 @@ export default {
         autoClose: delay
       })
       setTimeout(() => {
-        //轉頁至首頁
+        // 轉頁至首頁
         this.logoutClear()
         this.$router.push({ name: 'HomeView' })
       }, delay)
@@ -120,11 +120,11 @@ export default {
     ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    hasCheckLogin() {
+    hasCheckLogin () {
       this.checkStatus()
     }
   },
-  created() {
+  created () {
     this.checkStatus()
   }
 }

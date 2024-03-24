@@ -147,28 +147,28 @@
 </template>
 
 <script>
-console.clear();
+import DishesComponent from './DishesComponent.vue'
+import BentoComponent from './BentoComponent.vue'
+import memberStore from '@/stores/memberData'
+import { mapState, mapActions } from 'pinia'
+import Modal from 'bootstrap/js/dist/modal'
+import { toast } from 'vue3-toastify'
 
-import DishesComponent from './DishesComponent.vue';
-import BentoComponent from './BentoComponent.vue';
-import memberStore from '@/stores/memberData';
-import { mapState, mapActions } from 'pinia';
-import modal from "bootstrap/js/dist/modal";
-import { toast } from 'vue3-toastify';
+console.clear()
 
-document.title = "來點菜單";
+document.title = '來點菜單'
 
 export default {
   components: { DishesComponent, BentoComponent },
-  data() {
+  data () {
     return {
       isLoading: false,
       introIndex: 1,
-      mode: "default",
-      filter: "全部",
-      sortBy: "default",
-      search: "",
-      searchInput: "",
+      mode: 'default',
+      filter: '全部',
+      sortBy: 'default',
+      search: '',
+      searchInput: '',
       searchedList: [],
       allDishesList: [],
       stapleList: [],
@@ -179,8 +179,8 @@ export default {
         stapleCourse: {},
         mainCourse: {},
         sideDishes: [],
-        date: "",
-        mealType: "",
+        date: '',
+        mealType: '',
         starchTotalPortion: 0,
         proteinTotalPortion: 0,
         vegetableTotalPortion: 0
@@ -188,298 +188,295 @@ export default {
       bentoModal: null,
       successDelay: 1500,
       errorDelay: 2000
-    };
+    }
   },
   computed: {
     ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    sortBy() {
-      this.getSortedDishes();
+    sortBy () {
+      this.getSortedDishes()
     },
-    filter() {
-      this.getSearchedDishes();
+    filter () {
+      this.getSearchedDishes()
     }
   },
   methods: {
-    drawOneDish(dishesList) {
-      let totalWeight = this.mode === "default" ?
-        dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
-        dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
-      let randomNumber = Math.random() * totalWeight;
+    drawOneDish (dishesList) {
+      const totalWeight = this.mode === 'default'
+        ? dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0)
+        : dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0)
+      let randomNumber = Math.random() * totalWeight
       // console.log(randomNumber, totalWeight)
-      let answerIndex = 0;
+      let answerIndex = 0
       for (let i = 0; i < dishesList.length; i++) {
-        randomNumber -= this.mode === "default" ?
-          dishesList[i].healthLevel :
-          (dishesList[i].healthLevel + +dishesList[i].preferenceLevel);
+        randomNumber -= this.mode === 'default'
+          ? dishesList[i].healthLevel
+          : (dishesList[i].healthLevel + +dishesList[i].preferenceLevel)
         if (randomNumber <= 0) {
-          answerIndex = i;
-          break;
+          answerIndex = i
+          break
         }
       }
 
       // console.log(`抽中的選項是：${dishesList[answerIndex].title}`);
-      this.bentoTemp.starchTotalPortion += dishesList[answerIndex].starchPortion;
-      this.bentoTemp.proteinTotalPortion += dishesList[answerIndex].proteinPortion;
-      this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion;
-      return dishesList[answerIndex];
+      this.bentoTemp.starchTotalPortion += dishesList[answerIndex].starchPortion
+      this.bentoTemp.proteinTotalPortion += dishesList[answerIndex].proteinPortion
+      this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion
+      return dishesList[answerIndex]
     },
-    drawThreeDishes(dishesList) {
-      let answers = [];
-      let tempDishesList = [...dishesList];
+    drawThreeDishes (dishesList) {
+      const answers = []
+      const tempDishesList = [...dishesList]
 
       while (answers.length < 3) {
-        let totalWeight = this.mode === "default" ?
-          tempDishesList.reduce((acc, cur) => acc + cur.healthLevel, 0) :
-          tempDishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0);
-        let randomNumber = Math.random() * totalWeight;
+        const totalWeight = this.mode === 'default'
+          ? tempDishesList.reduce((acc, cur) => acc + cur.healthLevel, 0)
+          : tempDishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0)
+        let randomNumber = Math.random() * totalWeight
         // console.log(randomNumber, totalWeight)
 
-        let answerIndex = 0;
+        let answerIndex = 0
         for (let i = 0; i < tempDishesList.length; i++) {
-          randomNumber -= this.mode === "default" ?
-            tempDishesList[i].healthLevel :
-            (tempDishesList[i].healthLevel + +tempDishesList[i].preferenceLevel);
+          randomNumber -= this.mode === 'default'
+            ? tempDishesList[i].healthLevel
+            : (tempDishesList[i].healthLevel + +tempDishesList[i].preferenceLevel)
 
           if (randomNumber <= 0) {
-            answerIndex = i;
-            break;
+            answerIndex = i
+            break
           }
         }
 
         // console.log('抽中的項目是：', tempDishesList[answerIndex].title);
-        this.bentoTemp.starchTotalPortion += dishesList[answerIndex].starchPortion;
-        this.bentoTemp.proteinTotalPortion += dishesList[answerIndex].proteinPortion;
-        this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion;
-        answers.push(tempDishesList[answerIndex]);
-        tempDishesList.splice(answerIndex, 1);
+        this.bentoTemp.starchTotalPortion += dishesList[answerIndex].starchPortion
+        this.bentoTemp.proteinTotalPortion += dishesList[answerIndex].proteinPortion
+        this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion
+        answers.push(tempDishesList[answerIndex])
+        tempDishesList.splice(answerIndex, 1)
       }
 
-      return answers;
+      return answers
     },
-    bentoPretest() {
-      this.bentoTemp.sideDishes?.length === 0 ? this.generateBento() : this.bentoModal.show();
+    bentoPretest () {
+      this.bentoTemp.sideDishes?.length === 0 ? this.generateBento() : this.bentoModal.show()
     },
-    async generateBento() {
+    async generateBento () {
       console.clear()
-      this.isLoading = true;
-      await this.getAllDishesList();
+      this.isLoading = true
+      await this.getAllDishesList()
 
-      let isSatisfied = true;
-      const stapleTemp = this.mode === "default" ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
-      const mainDishesTemp = this.mode === "default" ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
-      const sideDishesTemp = this.mode === "default" ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
+      let isSatisfied = true
+      const stapleTemp = this.mode === 'default' ? this.stapleList : this.stapleList.filter((dish) => dish.isChecked === true)
+      const mainDishesTemp = this.mode === 'default' ? this.mainDishesList : this.mainDishesList.filter((dish) => dish.isChecked === true)
+      const sideDishesTemp = this.mode === 'default' ? this.sideDishesList : this.sideDishesList.filter((dish) => dish.isChecked === true)
 
       if (stapleTemp.length < 1) {
-        isSatisfied = false;
+        isSatisfied = false
         toast.error('自選模式必須選取至少一種主食。', {
-          autoClose: this.errorDelay,
+          autoClose: this.errorDelay
         })
       }
       if (sideDishesTemp.length < 3) {
-        isSatisfied = false;
+        isSatisfied = false
         toast.error('自選模式必須選取至少三種配菜。', {
-          autoClose: this.errorDelay,
+          autoClose: this.errorDelay
         })
       }
       if (mainDishesTemp.length < 1) {
-        isSatisfied = false;
+        isSatisfied = false
         toast.error('自選模式必須選取至少一種主菜。', {
-          autoClose: this.errorDelay,
+          autoClose: this.errorDelay
         })
       }
       if (!isSatisfied) {
-        this.isLoading = false;
-        return;
+        this.isLoading = false
+        return
       }
 
       this.bentoTemp = {
         starchTotalPortion: 0,
         proteinTotalPortion: 0,
-        vegetableTotalPortion: 0,
+        vegetableTotalPortion: 0
       }
-      this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp);
-      this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp);
-      this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp);
+      this.bentoTemp.stapleCourse = this.drawOneDish(stapleTemp)
+      this.bentoTemp.mainCourse = this.drawOneDish(mainDishesTemp)
+      this.bentoTemp.sideDishes = this.drawThreeDishes(sideDishesTemp)
       toast.success('新便當已生成。', {
-        autoClose: this.successDelay,
+        autoClose: this.successDelay
       })
-      this.bentoModal.show();
-      this.isLoading = false;
+      this.bentoModal.show()
+      this.isLoading = false
     },
-    moveToGeneratorBentoBtn() {
-      document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' });
+    moveToGeneratorBentoBtn () {
+      document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' })
     },
-    getMode() {
+    getMode () {
       if (this.memberData.id) {
-        this.mode = this.memberData.mode !== undefined ? this.memberData.mode : "default";
+        this.mode = this.memberData.mode !== undefined ? this.memberData.mode : 'default'
       } else {
-        let mode = localStorage.getItem("mode");
-        this.mode = mode ? mode : "default";
+        const mode = localStorage.getItem('mode')
+        this.mode = mode || 'default'
       }
     },
-    async setMode(mode) {
-      this.isLoading = true;
-      this.mode = mode;
+    async setMode (mode) {
+      this.isLoading = true
+      this.mode = mode
       if (this.memberData.id) {
         try {
-          await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, { mode });
+          await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, { mode })
         } catch (error) {
-          this.errorProcess();
+          this.errorProcess()
         }
       } else {
-        localStorage.setItem("mode", this.mode);
+        localStorage.setItem('mode', this.mode)
       }
-      this.isLoading = false;
+      this.isLoading = false
     },
-    async getAllDishesList() {
+    async getAllDishesList () {
       try {
-        await this.getSelectedDishes();
-        const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`);
+        await this.getSelectedDishes()
+        const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
         this.allDishesList = res.data.message.map(dish => {
-          const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
+          const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id)
           if (selectedTemp) {
-            return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+            return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel }
           } else {
-            return { ...dish, isChecked: false, preferenceLevel: 1 };
+            return { ...dish, isChecked: false, preferenceLevel: 1 }
           }
-        });
+        })
         // console.log(this.allDishesList)
 
-        this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
-        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
-        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+        this.stapleList = this.allDishesList.filter((dish) => dish.category === '主食類')
+        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === '主菜類')
+        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === '配菜類')
       } catch (error) {
-        this.errorProcess();
+        this.errorProcess()
       }
     },
-    searchPretest() {
+    searchPretest () {
       if (this.search === this.searchInput) {
-        return;
+        return
       }
-      this.getSearchedDishes();
+      this.getSearchedDishes()
     },
-    async getSearchedDishes() {
-      this.isLoading = true;
-      this.searchedList = [];
-      this.search = this.searchInput;
+    async getSearchedDishes () {
+      this.isLoading = true
+      this.searchedList = []
+      this.search = this.searchInput
 
       try {
-        let titleSearchApiUrl = import.meta.env.VITE_APP_SERVER_URL + "/dishes?title_like=" + this.search +
-          (this.filter === "全部" ? "" : '&category=' + this.filter) +
-          (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
+        const titleSearchApiUrl = import.meta.env.VITE_APP_SERVER_URL + '/dishes?title_like=' + this.search +
+          (this.filter === '全部' ? '' : '&category=' + this.filter) +
+          (this.sortBy !== 'healthLevel' ? '' : '&_sort=' + this.sortBy + '&_order=desc')
 
-        const res = await this.axios.get(titleSearchApiUrl);
-        this.searchedList = [...this.searchedList, ...res.data.message];
+        const res = await this.axios.get(titleSearchApiUrl)
+        this.searchedList = [...this.searchedList, ...res.data.message]
 
+        const engTitleSearchApiUrl = import.meta.env.VITE_APP_SERVER_URL + '/dishes?engTitle_like=' + this.search +
+          (this.filter === '全部' ? '' : '&category=' + this.filter) +
+          (this.sortBy !== 'healthLevel' ? '' : '&_sort=' + this.sortBy + '&_order=desc')
 
-        let engTitleSearchApiUrl = import.meta.env.VITE_APP_SERVER_URL + "/dishes?engTitle_like=" + this.search +
-          (this.filter === "全部" ? "" : '&category=' + this.filter) +
-          (this.sortBy !== "healthLevel" ? "" : '&_sort=' + this.sortBy + '&_order=desc')
+        const engRes = await this.axios.get(engTitleSearchApiUrl)
+        this.searchedList = [...this.searchedList, ...engRes.data.message]
 
-        const engRes = await this.axios.get(engTitleSearchApiUrl);
-        this.searchedList = [...this.searchedList, ...engRes.data.message];
-
-        await this.getSelectedDishes();
+        await this.getSelectedDishes()
         this.searchedList = this.searchedList.map(dish => {
-          const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
+          const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id)
           if (selectedTemp) {
-            return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+            return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel }
           } else {
-            return { ...dish, isChecked: false, preferenceLevel: 1 };
+            return { ...dish, isChecked: false, preferenceLevel: 1 }
           }
         })
 
-        await this.getSortedDishes();
+        await this.getSortedDishes()
       } catch (error) {
-        this.errorProcess();
+        this.errorProcess()
       }
 
-      this.isLoading = false;
+      this.isLoading = false
     },
-    async getSortedDishes() {
-      this.isLoading = true;
+    async getSortedDishes () {
+      this.isLoading = true
       // await this.getAllDishesList();
 
-      if (this.sortBy === "default") {
+      if (this.sortBy === 'default') {
         if (this.searchedList.length) {
-          this.searchedList = this.searchedList.sort((a, b) => a.id - b.id);
+          this.searchedList = this.searchedList.sort((a, b) => a.id - b.id)
         }
-      }
-      else if (this.sortBy === "preferenceLevel") {
+      } else if (this.sortBy === 'preferenceLevel') {
         this.allDishesList = [...this.allDishesList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-        ...this.allDishesList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+          ...this.allDishesList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
 
-        this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
-        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
-        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+        this.stapleList = this.allDishesList.filter((dish) => dish.category === '主食類')
+        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === '主菜類')
+        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === '配菜類')
 
         if (this.searchedList.length) {
           this.searchedList = [...this.searchedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-          ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+            ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
         }
 
         if (this.selectedList.length) {
           this.selectedList = [...this.selectedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-          ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+            ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
 
           if (!this.memberData.id) {
-            localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+            localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
           }
         }
-      }
-      else if (this.sortBy === "healthLevel") {
+      } else if (this.sortBy === 'healthLevel') {
         try {
-          const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_sort=${this.sortBy}&_order=desc`);
+          const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_sort=${this.sortBy}&_order=desc`)
           this.allDishesList = res.data.message.map(dish => {
-            const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id);
+            const selectedTemp = this.selectedList.find(selectedItem => selectedItem.dishId === dish.id)
             if (selectedTemp) {
-              return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel };
+              return { ...dish, isChecked: selectedTemp.isChecked, preferenceLevel: +selectedTemp.preferenceLevel }
             } else {
-              return { ...dish, isChecked: false, preferenceLevel: 1 };
+              return { ...dish, isChecked: false, preferenceLevel: 1 }
             }
-          });
+          })
         } catch (error) {
-          this.errorProcess();
+          this.errorProcess()
         }
-        this.stapleList = this.allDishesList.filter((dish) => dish.category === "主食類");
-        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === "主菜類");
-        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === "配菜類");
+        this.stapleList = this.allDishesList.filter((dish) => dish.category === '主食類')
+        this.mainDishesList = this.allDishesList.filter((dish) => dish.category === '主菜類')
+        this.sideDishesList = this.allDishesList.filter((dish) => dish.category === '配菜類')
 
         if (this.searchedList.length) {
-          this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel);
+          this.searchedList = this.searchedList.sort((a, b) => b.healthLevel - a.healthLevel)
         }
       }
-      this.isLoading = false;
+      this.isLoading = false
     },
-    async getSelectedDishes() {
+    async getSelectedDishes () {
       if (this.memberData.id) {
         try {
-          const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds?_expand=dish`);
-          this.selectedList = res.data.message;
+          const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds?_expand=dish`)
+          this.selectedList = res.data.message
         } catch (error) {
-          this.errorProcess();
+          this.errorProcess()
         }
       } else {
-        let selectedList = JSON.parse(localStorage.getItem("selectedList"));
-        this.selectedList = selectedList ? selectedList : [];
+        const selectedList = JSON.parse(localStorage.getItem('selectedList'))
+        this.selectedList = selectedList || []
       }
     },
-    async addToSelected(dish) {
-      await this.getSelectedDishes();
-      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
-      const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
+    async addToSelected (dish) {
+      await this.getSelectedDishes()
+      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id)
+      const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id)
       if (selectedTemp) {
         if (this.memberData.id) {
           try {
-            await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { isChecked: true });
+            await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { isChecked: true })
           } catch (error) {
-            this.errorProcess();
+            this.errorProcess()
           }
         } else {
-          this.selectedList[selectedTempIndex].isChecked = true;
-          localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+          this.selectedList[selectedTempIndex].isChecked = true
+          localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
         }
       } else {
         const data = {
@@ -489,99 +486,99 @@ export default {
         }
         if (this.memberData.id) {
           try {
-            await this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds/`, data);
+            await this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds/`, data)
           } catch (error) {
-            this.errorProcess();
+            this.errorProcess()
           }
         } else {
-          this.selectedList.push(data);
-          localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+          this.selectedList.push(data)
+          localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
         }
       }
     },
-    async updatePreferenceLevel(dish) {
+    async updatePreferenceLevel (dish) {
       // this.isLoading = true;
-      dish.isLoading = true;
-      await this.getSelectedDishes();
+      dish.isLoading = true
+      await this.getSelectedDishes()
 
-      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
-      const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
+      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id)
+      const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id)
       if (this.memberData.id) {
         try {
-          await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { preferenceLevel: +dish.preferenceLevel });
+          await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { preferenceLevel: +dish.preferenceLevel })
         } catch (error) {
-          this.errorProcess();
+          this.errorProcess()
         }
       } else {
-        this.selectedList[selectedTempIndex].preferenceLevel = +dish.preferenceLevel;
-        localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+        this.selectedList[selectedTempIndex].preferenceLevel = +dish.preferenceLevel
+        localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
       }
 
-      await this.getAllDishesList();
-      dish.isLoading = false;
+      await this.getAllDishesList()
+      dish.isLoading = false
       // this.isLoading = false;
     },
-    async uncheckFromSelected(dish) {
-      await this.getSelectedDishes();
+    async uncheckFromSelected (dish) {
+      await this.getSelectedDishes()
 
-      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id);
-      const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id);
+      const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id)
+      const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id)
       if (selectedTemp) {
         if (+dish.preferenceLevel === 1) {
           if (this.memberData.id) {
             try {
-              await this.axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`);
+              await this.axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`)
             } catch (error) {
-              this.errorProcess();
+              this.errorProcess()
             }
           } else {
-            this.selectedList.splice(selectedTempIndex, 1);
-            localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+            this.selectedList.splice(selectedTempIndex, 1)
+            localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
           }
         } else {
           if (this.memberData.id) {
             try {
-              await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { isChecked: false });
+              await this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/selecteds/${selectedTemp.id}`, { isChecked: false })
             } catch (error) {
-              this.errorProcess();
+              this.errorProcess()
             }
           } else {
-            this.selectedList[selectedTempIndex].isChecked = false;
-            localStorage.setItem("selectedList", JSON.stringify(this.selectedList));
+            this.selectedList[selectedTempIndex].isChecked = false
+            localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
           }
         }
       } else {
-        this.errorProcess();
+        this.errorProcess()
       }
     },
-    async updateSelected(dish) {
+    async updateSelected (dish) {
       // this.isLoading = true;
-      dish.isLoading = true;
-      dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish);
-      await this.getAllDishesList();
-      dish.isLoading = false;
+      dish.isLoading = true
+      dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish)
+      await this.getAllDishesList()
+      dish.isLoading = false
       // this.isLoading = false;
     },
-    errorProcess() {
+    errorProcess () {
       toast.error('發生了某些錯誤，將重新整理頁面。', {
-        autoClose: this.errorDelay,
+        autoClose: this.errorDelay
       })
-      setTimeout(() => { location.reload() }, this.errorDelay);
+      setTimeout(() => { location.reload() }, this.errorDelay)
     },
-    async init() {
-      this.isLoading = true;
-      await this.getUser();
-      this.getMode();
-      await this.getAllDishesList();
-      this.bentoModal = new modal(document.querySelector("#bentoModal"));
-      this.isLoading = false;
+    async init () {
+      this.isLoading = true
+      await this.getUser()
+      this.getMode()
+      await this.getAllDishesList()
+      this.bentoModal = new Modal(document.querySelector('#bentoModal'))
+      this.isLoading = false
     },
     ...mapActions(memberStore, ['getUser'])
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   }
-};
+}
 </script>
 
 <style scoped>

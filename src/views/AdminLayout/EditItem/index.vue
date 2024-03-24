@@ -15,7 +15,7 @@
         </RouterLink>
       </button>
       </div>
-      
+
     </div>
     <VForm class="row" v-slot="{ errors }" @submit="editItem" >
     <div class="p-2 p-lg-3 col-md-6">
@@ -48,9 +48,9 @@
             <option value="2.5">2.5</option>
             <option value="3">3</option>
             <option value="3.5">3.5</option>
-            <option value="4">4</option>  
+            <option value="4">4</option>
             <option value="4.5">4.5</option>
-            <option value="5">5</option>   
+            <option value="5">5</option>
           </VField>
             <ErrorMessage name="healthLevel" class="invalid-feedback"/>
             <label for="healthLevel">健康分數*</label>
@@ -60,21 +60,21 @@
         <h5>營養比例(份)</h5>
         <div class="form-floating mb-4">
           <VField as="select" id="starchPortion" placeholder="請選擇澱粉比例" name="starchPortion" class="form-select" :class="{ 'is-invalid': errors['starchPortion'] }" rules="required" v-model="item.starchPortion">
-            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>  
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>
           </VField>
             <ErrorMessage name="starchPortion" class="invalid-feedback"/>
             <label for="starchPortion">澱粉比例*</label>
         </div>
         <div class="form-floating mb-4">
           <VField as="select" id="proteinPortion" placeholder="請選擇蛋白質比例" name="proteinPortion" class="form-select" :class="{ 'is-invalid': errors['proteinPortion'] }" rules="required" v-model="item.proteinPortion">
-            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>  
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>
           </VField>
             <ErrorMessage name="proteinPortion" class="invalid-feedback"/>
             <label for="proteinPortion">蛋白質比例*</label>
         </div>
         <div class="form-floating mb-4">
           <VField as="select" id="vegetablePortion" placeholder="請選擇蔬菜比例" name="vegetablePortion" class="form-select" :class="{ 'is-invalid': errors['vegetablePortion'] }" rules="required" v-model="item.vegetablePortion">
-            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option> 
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>
           </VField>
             <ErrorMessage name="vegetablePortion" class="invalid-feedback"/>
             <label for="vegetablePortion">蔬菜比例*</label>
@@ -100,7 +100,7 @@
               <img v-if="tempImg2 !==''" class="img" :src="tempImg2" alt="image">
               <button v-if="tempImg2 !== ''" type="button" @click="addImage2" class="mt-2 btn btn-outline-brand-blue btn-sm">新增此圖片至圖片列表</button>
           </div>
-        </div> 
+        </div>
       </div>
       <div>
         <div class="mb-3">
@@ -123,43 +123,42 @@
       <div class="d-flex gap-2 mt-3 btn-container">
         <button type="submit" class="btn btn-brand-blue btn-md mb-4">確認</button>
       </div>
-      
+
     </div>
-        
+
     </VForm>
   </div>
 </template>
 
 <script>
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import axios from 'axios'
 import memberStore from '@/stores/memberData'
 import { mapActions } from 'pinia'
-import { DeleteFilled } from "@element-plus/icons-vue";
-import { Select as ElSelect } from "@element-plus/icons-vue";
+import { DeleteFilled, Select as ElSelect } from '@element-plus/icons-vue'
 
 import { items } from '@/utils/variables'
 export default {
-  data() {
+  data () {
     return {
-      portionOptions:[0,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3,3.25,3.5,3.75,4,4.25,4.5,4.75,5],
+      portionOptions: [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5, 4.75, 5],
       items,
       item: {
         title: '',
         engTitle: '',
-        category:'',
-        healthLevel:'',
+        category: '',
+        healthLevel: '',
         starchPortion: '',
         proteinPortion: '',
         vegetablePortion: '',
         imgUrl: '',
-        images:[],
+        images: [],
         noBgImg: ''
       },
-      tempImg1:'',
-      tempImg2:'',
-      errorMsg:'',
+      tempImg1: '',
+      tempImg2: '',
+      errorMsg: '',
       isLoading: false
     }
   },
@@ -168,93 +167,93 @@ export default {
     ElSelect
   },
   methods: {
-    uploadImg() {
-          // 取出 Token
-        const form = document.querySelector('#upload-image');
-        const imageInput = document.querySelector("#file-input");
-        const formData = new FormData(form);
+    uploadImg () {
+      // 取出 Token
+      const form = document.querySelector('#upload-image')
+      const imageInput = document.querySelector('#file-input')
+      const formData = new FormData(form)
 
-        if (imageInput.value) {
-            this.isLoading = true
-            const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
-            axios.defaults.headers.common.Authorization = token;
-            axios.post(`${import.meta.env.VITE_API}/api/${import.meta.env.VITE_PATH}/admin/upload`, formData)
-                .then((res) => {
-                    this.tempImg1 = res.data.imageUrl;
-                    imageInput.value = '';
-                    axios.defaults.headers.common.Authorization = null;
-                })
-                .catch(err => {
-                    alert(err.data.message);
-                    axios.defaults.headers.common.Authorization = null;
-                }).finally(()=>{this.isLoading = false})
-        } else {
-            alert("請先選擇欲上傳之圖片。");
-            axios.defaults.headers.common.Authorization = null;
-        }
+      if (imageInput.value) {
+        this.isLoading = true
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
+        axios.defaults.headers.common.Authorization = token
+        axios.post(`${import.meta.env.VITE_API}/api/${import.meta.env.VITE_PATH}/admin/upload`, formData)
+          .then((res) => {
+            this.tempImg1 = res.data.imageUrl
+            imageInput.value = ''
+            axios.defaults.headers.common.Authorization = null
+          })
+          .catch(err => {
+            alert(err.data.message)
+            axios.defaults.headers.common.Authorization = null
+          }).finally(() => { this.isLoading = false })
+      } else {
+        alert('請先選擇欲上傳之圖片。')
+        axios.defaults.headers.common.Authorization = null
+      }
     },
-    async editItem(){
-      if(this.item.imgUrl === ''){
+    async editItem () {
+      if (this.item.imgUrl === '') {
         this.errorMsg = '主圖為必填'
         return
       }
       this.isLoading = true
-      try{
-        await axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${this.item.id}`,this.item)
-        toast.success("成功編輯菜色");
+      try {
+        await axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${this.item.id}`, this.item)
+        toast.success('成功編輯菜色')
         // toast.success(res.data.message);
-      }catch(err){
-        toast.error(err.data.message);
+      } catch (err) {
+        toast.error(err.data.message)
       }
       this.isLoading = false
     },
-    addImage1(){
+    addImage1 () {
       this.item.images.push(this.tempImg1)
       this.tempImg1 = ''
     },
-    addImage2(){
+    addImage2 () {
       this.item.images.push(this.tempImg2)
       this.tempImg2 = ''
     },
-    chooseMainImg(img){
+    chooseMainImg (img) {
       this.item.imgUrl = img
     },
-    deleteImg(index, img){
-      if(img === this.item.imgUrl){
+    deleteImg (index, img) {
+      if (img === this.item.imgUrl) {
         toast.error('不能刪除當前主圖，若欲刪除請先置換主圖')
         return
       }
-      this.item.images.splice(index,1)
+      this.item.images.splice(index, 1)
     },
-    async getItem(id){
+    async getItem (id) {
       this.isLoading = true
-      try{
-      const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
-      console.log(res.data.message)
-      this.item = res.data.message
-      }catch(err){
-      toast.error('查無此菜色');
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
+        console.log(res.data.message)
+        this.item = res.data.message
+      } catch (err) {
+        toast.error('查無此菜色')
       }
-    this.isLoading = false
+      this.isLoading = false
     },
-    ...mapActions(memberStore, ['checkIsAdmin','getUser'])
+    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
   },
-  watch:{
-    'item.imgUrl':function(){
+  watch: {
+    'item.imgUrl': function () {
       this.errorMsg = ''
-    },
-  },
-  async mounted() {
-    document.title = "菜色編輯";
-    await this.getUser()
-    if(!this.checkIsAdmin()) {
-      toast.error('非管理者無法執行')
-      this.$router.push(`/`);
     }
-    
+  },
+  async mounted () {
+    document.title = '菜色編輯'
+    await this.getUser()
+    if (!this.checkIsAdmin()) {
+      toast.error('非管理者無法執行')
+      this.$router.push('/')
+    }
+
     const id = this.$route.params.id
     await this.getItem(id)
-  },
+  }
 }
 </script>
 

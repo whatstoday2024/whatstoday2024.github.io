@@ -29,59 +29,58 @@
 import axios from 'axios'
 
 import memberStore from '@/stores/memberData'
-import { mapActions } from 'pinia'
-import { mapState } from 'pinia'
+import { mapActions, mapState } from 'pinia'
 
 export default {
-  data(){
-    return { 
+  data () {
+    return {
       user: {
         email: '',
-        password: '',
+        password: ''
       },
-      errorMsg:'',
+      errorMsg: '',
       isLoading: false
     }
   },
-  watch:{
-    'user.email': function(){
+  watch: {
+    'user.email': function () {
       this.errorMsg = ''
     },
-    'user.password': function(){
+    'user.password': function () {
       this.errorMsg = ''
-    },
+    }
   },
-  computed:{
+  computed: {
     ...mapState(memberStore, ['memberData'])
   },
-  methods:{
-    login(){
-      document.title = "後台登入";
+  methods: {
+    login () {
+      document.title = '後台登入'
       this.isLoading = true
-      axios.post(`${import.meta.env.VITE_API}/admin/signin`, { username:this.user.email,password:this.user.password })
+      axios.post(`${import.meta.env.VITE_API}/admin/signin`, { username: this.user.email, password: this.user.password })
         .then((res) => {
           const token = res.data.token
           const exp = res.data.expired
           document.cookie = `token=${token}`
           document.cookie = `expDate=${exp}`
 
-        axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
-          .then((res) => {    
-            const { accessToken, user } = res.data
-            document.cookie = `whatstoday=${accessToken}`
-            document.cookie = `whatstodayMember=${user.id}`
-            this.setMemberData(user)
-            this.$router.push(`/admin/dashboard`);
-          }).catch(() => {
-            this.errorMsg = '登入失敗'
-        })
-      }).catch((error) => {
-        this.errorMsg = error.response.data.message
-    }).finally(()=> { this.isLoading = false })
+          axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
+            .then((res) => {
+              const { accessToken, user } = res.data
+              document.cookie = `whatstoday=${accessToken}`
+              document.cookie = `whatstodayMember=${user.id}`
+              this.setMemberData(user)
+              this.$router.push('/admin/dashboard')
+            }).catch(() => {
+              this.errorMsg = '登入失敗'
+            })
+        }).catch((error) => {
+          this.errorMsg = error.response.data.message
+        }).finally(() => { this.isLoading = false })
     },
     ...mapActions(memberStore, ['setMemberData'])
   },
-  async mounted() {
+  async mounted () {
   }
 
 }

@@ -4,7 +4,7 @@ import Layout from '@/views/Layout'
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',
-  scrollBehavior() {
+  scrollBehavior () {
     return { top: 0, left: 0 }
   },
   routes: [
@@ -28,7 +28,7 @@ const router = createRouter({
           children: [
             { path: 'profile', name: 'Profile', component: () => import('@/views/Member/ProfileView') },
             { path: 'freeDays', name: 'FreeDays', component: () => import('@/views/Member/FreeDaysView') },
-            { path: 'bento-diary', name: 'BentoDiaryView', component: () => import('@/views/Member/BentoDiaryView') },
+            { path: 'bento-diary', name: 'BentoDiaryView', component: () => import('@/views/Member/BentoDiaryView') }
           ]
         },
         {
@@ -40,16 +40,15 @@ const router = createRouter({
             { path: 'login', name: 'AdminLogin', component: () => import('@/views/AdminLayout/AdminLogin') },
             { path: 'admin-items', name: 'AdminItems', component: () => import('@/views/AdminLayout/AdminItems') },
             { path: 'add-item', name: 'AddItem', component: () => import('@/views/AdminLayout/AddItem') },
-            { path: 'edit-item/:id', name: 'EditItem', component: () => import('@/views/AdminLayout/EditItem') },
+            { path: 'edit-item/:id', name: 'EditItem', component: () => import('@/views/AdminLayout/EditItem') }
           ]
-        },
-
+        }
       ]
     },
     {
       path: '/:catchAll(.*)',
       name: '404',
-      component: () => import("@/views/ErrorView")
+      component: () => import('@/views/ErrorView')
     }
   ]
 })

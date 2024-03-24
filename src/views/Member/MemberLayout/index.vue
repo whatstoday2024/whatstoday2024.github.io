@@ -6,11 +6,11 @@
 
 <script>
 import { mapActions, mapState } from 'pinia'
-import { toast } from 'vue3-toastify';
+import { toast } from 'vue3-toastify'
 import memberStore from '@/stores/memberData'
 
 export default {
-  data() {
+  data () {
     return {
       isRouterAlive: false,
       isLoading: false
@@ -20,32 +20,32 @@ export default {
     ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    hasCheckLogin(){
+    hasCheckLogin () {
       this.checkStatus()
     }
   },
   methods: {
-    checkStatus(){
-      if(this.hasCheckLogin){
-        if(!this.memberData.email){
+    checkStatus () {
+      if (this.hasCheckLogin) {
+        if (!this.memberData.email) {
           this.redirect()
-        }else{
+        } else {
           this.isRouterAlive = true
         }
         this.isLoading = false
       }
     },
-    redirect(){
+    redirect () {
       this.isLoading = false
       const delay = 1000
       toast.error('請先登入', {
-        autoClose: delay,
+        autoClose: delay
       })
       setTimeout(() => {
-        this.$router.replace({name: 'Login'})
+        this.$router.replace({ name: 'Login' })
       }, delay)
     },
-    async updateProfile({ status, message }){
+    async updateProfile ({ status, message }) {
       this.isRouterAlive = false
       toast[status](message)
       await this.getUser()
@@ -53,11 +53,11 @@ export default {
     },
     ...mapActions(memberStore, ['getUser'])
   },
-  mounted(){
+  mounted () {
     this.isLoading = true
     this.checkStatus()
   }
-};
+}
 </script>
 
 <style lang="scss" scoped></style>

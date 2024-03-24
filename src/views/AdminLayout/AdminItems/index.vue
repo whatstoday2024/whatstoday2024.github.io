@@ -16,12 +16,12 @@
         <button class="btn btn-outline-primary me-2">
         <RouterLink class="navbar-brand search" to="/admin/dashboard">
             <span class="d-none d-md-block">Dashboard</span>
-            <span class="d-block d-md-none"><Grid style="width: 15px; height: 15px;"/></span> 
+            <span class="d-block d-md-none"><Grid style="width: 15px; height: 15px;"/></span>
         </RouterLink>
         </button>
         <button class="btn btn-outline-brand-blue">
         <RouterLink class="navbar-brand search" to="/admin/add-item">
-          <span class="d-none d-md-block">新增菜色</span> 
+          <span class="d-none d-md-block">新增菜色</span>
           <span class="d-block d-md-none "><Plus style="width: 12px; height: 12px;"/></span>
         </RouterLink>
         </button>
@@ -34,10 +34,10 @@
           <th scope="col">中文名稱</th>
           <th scope="col">英文名稱</th>
           <th scope="col">分類</th>
-          <th scope="col">健康分數</th>   
-          <th scope="col">澱粉 / 蛋白質 / 蔬菜</th>   
-          <th scope="col"></th>   
-          <th scope="col"></th>    
+          <th scope="col">健康分數</th>
+          <th scope="col">澱粉 / 蛋白質 / 蔬菜</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -65,7 +65,7 @@
               <button @click="goToItem(item.id)" type="button" class="btn d-lg-none">
                 <Edit style="width: 20px; height: 20px ;color:#144bb8;"/>
               </button>
-              
+
             </td>
             <td>
               <button @click="showDeleteItemModal(item.id)" type="button" class="btn btn-outline-danger d-none d-lg-block">
@@ -89,9 +89,9 @@
 </template>
 
 <script>
-import { DeleteFilled, Edit, Search,Plus,Grid } from "@element-plus/icons-vue";
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
+import { DeleteFilled, Edit, Search, Plus, Grid } from '@element-plus/icons-vue'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import StarRating from 'vue-star-rating'
 import DeleteItemModal from '@/views/AdminLayout/DeleteItemModal'
 import axios from 'axios'
@@ -101,16 +101,16 @@ import { mapActions } from 'pinia'
 import Pagination from '@/components/Pagination'
 
 export default {
-  data() {
+  data () {
     return {
-      items:[],
+      items: [],
       item: {},
-      currentPage:'',
-      totalPages:'',
+      currentPage: '',
+      totalPages: '',
       isLoading: false,
-      searchInput:'',
-      searchUrl:'',
-      totalSearchUrl:''
+      searchInput: '',
+      searchUrl: '',
+      totalSearchUrl: ''
     }
   },
   components: {
@@ -124,57 +124,57 @@ export default {
     Grid
   },
   methods: {
-    goToItem(id){
-      this.$router.push(`/admin/edit-item/${id}`);
+    goToItem (id) {
+      this.$router.push(`/admin/edit-item/${id}`)
     },
-    showDeleteItemModal(id){
-      const item = this.items.find(it=>it.id === id)
+    showDeleteItemModal (id) {
+      const item = this.items.find(it => it.id === id)
       this.item = item
-      this.$refs.deleteItemModal.openModal();
+      this.$refs.deleteItemModal.openModal()
     },
-    async deleteItem(id){
-      try{
+    async deleteItem (id) {
+      try {
         await axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
-        toast.success(`成功刪除`)
+        toast.success('成功刪除')
         await this.getItems()
-      }catch(err){
+      } catch (err) {
         toast.error(err.data.message)
       }
     },
-    async getItems(toPage = 1){
+    async getItems (toPage = 1) {
       this.currentPage = toPage
       this.isLoading = true
 
       this.totalSearchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes`
-      this.searchUrl =`${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`
+      this.searchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes?_page=${toPage}`
 
-      if(this.searchInput){
+      if (this.searchInput) {
         this.totalSearchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes?q=${this.searchInput}`
-          this.searchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes?q=${this.searchInput}&_page=${toPage}`
-        }
+        this.searchUrl = `${import.meta.env.VITE_APP_SERVER_URL}/dishes?q=${this.searchInput}&_page=${toPage}`
+      }
 
-      try{
+      try {
         const resTotal = await axios.get(this.totalSearchUrl)
         const res = await axios.get(`${this.searchUrl}`)
-        if(!res.data.message.length) throw new Error('查無菜色')
-        this.totalPages = Math.ceil(resTotal.data.message.length / 10) 
+        if (!res.data.message.length) throw new Error('查無菜色')
+        this.totalPages = Math.ceil(resTotal.data.message.length / 10)
         this.items = res.data.message
-      }catch(error){
-        toast.error('查無菜色') 
+      } catch (error) {
+        toast.error('查無菜色')
       }
       this.isLoading = false
     },
-    ...mapActions(memberStore, ['checkIsAdmin','getUser'])
+    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
   },
-  async mounted() {
-    document.title = "菜色列表";
+  async mounted () {
+    document.title = '菜色列表'
     await this.getUser()
-    if(!this.checkIsAdmin()) {
+    if (!this.checkIsAdmin()) {
       toast.error('非管理者無法執行')
-      this.$router.push(`/`);
+      this.$router.push('/')
     }
     await this.getItems()
-  },
+  }
 }
 </script>
 

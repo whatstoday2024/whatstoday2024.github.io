@@ -29,20 +29,18 @@
 
 <script>
 import axios from 'axios'
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 import memberStore from '@/stores/memberData'
 import { mapState, mapActions } from 'pinia'
-import { Plus } from "@element-plus/icons-vue";
-
-
+import { Plus } from '@element-plus/icons-vue'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
-      total:'',
-      members:''
+      total: '',
+      members: ''
     }
   },
   components: {
@@ -52,35 +50,35 @@ export default {
     ...mapState(memberStore, ['checkIsAdmin'])
   },
   methods: {
-    async getItemsQty(){
+    async getItemsQty () {
       const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
       this.total = res.data.message.length
     },
-    async getMembers(){
+    async getMembers () {
       const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/users`)
       this.members = res.data.message.length - 1
     },
-    goToAddPage(){
-      this.$router.push("/admin/add-item");
+    goToAddPage () {
+      this.$router.push('/admin/add-item')
     },
-    goToAllItems(){
-      this.$router.push({name: 'AdminItems'})
+    goToAllItems () {
+      this.$router.push({ name: 'AdminItems' })
     },
-    ...mapActions(memberStore, ['checkIsAdmin','getUser'])
+    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
   },
-  async mounted() {
-    document.title = "後台管理";
+  async mounted () {
+    document.title = '後台管理'
     this.isLoading = true
     await this.getUser()
-    if(!this.checkIsAdmin()) {
+    if (!this.checkIsAdmin()) {
       toast.error('非管理者無法執行')
-      this.$router.push(`/`);
+      this.$router.push('/')
     }
     await this.getItemsQty()
     await this.getMembers()
 
     this.isLoading = false
-  },
+  }
 }
 </script>
 

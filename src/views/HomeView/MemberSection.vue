@@ -5,7 +5,7 @@
     <div class="row">
       <div
         class="col-6 col-lg-3 g-5 d-flex flex-column align-items-center"
-        v-for="(option, index) in memberOptions"
+        v-for="option in memberOptions"
         :key="option.id"
       >
         <div
@@ -38,10 +38,9 @@
 <script>
 import { memberOptions } from '@/utils/variables'
 import tableImg from '@/assets/img/table.png'
-import { ArrowRightBold } from '@element-plus/icons-vue'
 
 export default {
-  data() {
+  data () {
     return {
       memberOptions,
       tableImg,
@@ -49,11 +48,8 @@ export default {
       obj: { transform: 'translateY(-120px)' }
     }
   },
-  components: {
-    ArrowRightBold
-  },
   methods: {
-    showDetail(id) {
+    showDetail (id) {
       this.isShow = id
     }
   }
