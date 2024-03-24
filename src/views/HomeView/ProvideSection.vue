@@ -5,7 +5,7 @@
       <div class="col-12 col-lg-7">
         <div class="card-left bg-primary-light">
           <!-- <div class="row"> -->
-          <div class="row mb-2" v-for="(item, index) in provideOptions" :key="item.id">
+          <div class="row mb-2" v-for="item in provideOptions" :key="item.id">
             <div class="col-2"><img :src="item.icon" alt="icon" /></div>
             <div class="col-10">
               <h3 class="fw-bold">{{ item.title }}</h3>
@@ -31,21 +31,15 @@
 </template>
 
 <script>
-import eatingImg from '@/assets/img/sloution_person.png'
+import eatingImg from '@/assets/img/solution_person.png'
 import { provideOptions } from '@/utils/variables'
-import axios from 'axios'
-import { CaretLeft, CaretRight } from '@element-plus/icons-vue'
 
 export default {
-  data() {
+  data () {
     return {
       eatingImg,
       provideOptions
     }
-  },
-  components: {
-    CaretRight,
-    CaretLeft
   },
   computed: {
     classObject: () => {}
@@ -63,7 +57,7 @@ export default {
   height: 90%;
   padding: 4rem;
 
-  background-image: url('@/assets/img/sloution_bottom.png');
+  background-image: url('@/assets/img/solution_bottom.png');
   background-repeat: no-repeat;
   background-position: 100% 100%;
   background-size: 65%;

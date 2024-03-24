@@ -1,15 +1,15 @@
 <script>
 
 export default {
-  data() {
+  data () {
     return {
-    };
+    }
   },
   computed: {
   },
   methods: {
-  },
-};
+  }
+}
 </script>
 
 <template>

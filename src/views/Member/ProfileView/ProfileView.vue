@@ -64,10 +64,10 @@
 import { mapState } from 'pinia'
 import memberStore from '@/stores/memberData'
 
-document.title = "會員中心";
+document.title = '會員中心'
 
 export default {
-  data() {
+  data () {
     return {
       dinnerCount: 0,
       renameInvalid: false,
@@ -81,7 +81,7 @@ export default {
   },
   emits: ['updateProfile'],
   computed: {
-    user(){
+    user () {
       if (this.memberData.email) {
         const { email, nickname } = this.memberData
         return {
@@ -94,49 +94,49 @@ export default {
     ...mapState(memberStore, ['memberData'])
   },
   methods: {
-    getProfile() {
+    getProfile () {
       this.isLoading = true
       this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records?userId=${this.memberData.id}`, {
-          headers: {
-            'authorization': this.$cookie.getMemberToken()
-          }
-        }).then((res) => {
-          const count = res.data.message.length
-          if(count){
-            this.dinnerCount = count
-          }
-          this.isLoading = false
-        }).catch(() => {
-          this.isLoading = false
-        })
+        headers: {
+          authorization: this.$cookie.getMemberToken()
+        }
+      }).then((res) => {
+        const count = res.data.message.length
+        if (count) {
+          this.dinnerCount = count
+        }
+        this.isLoading = false
+      }).catch(() => {
+        this.isLoading = false
+      })
     },
-    editProfile() {
+    editProfile () {
       if (this.user.nickname === this.memberData.nickname) {
         this.renameInvalid = true
         return
       }
       this.isLoading = true
       this.axios.patch(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}`, {
-          'nickname': this.user.nickname
-        }, {
-          headers: {
-            'authorization': this.$cookie.getMemberToken()
-          }
-        }).then(() => {
-          this.$emit('updateProfile', {
-            status: 'success',
-            message: '會員名稱修改成功'
-          })
-          this.isLoading = false
-        }).catch(() => {
-          this.$emit('updateProfile', {
-            status: 'error',
-            message: '會員名稱修改失敗'
-          })
-          this.isLoading = false
+        nickname: this.user.nickname
+      }, {
+        headers: {
+          authorization: this.$cookie.getMemberToken()
+        }
+      }).then(() => {
+        this.$emit('updateProfile', {
+          status: 'success',
+          message: '會員名稱修改成功'
         })
+        this.isLoading = false
+      }).catch(() => {
+        this.$emit('updateProfile', {
+          status: 'error',
+          message: '會員名稱修改失敗'
+        })
+        this.isLoading = false
+      })
     },
-    async changePassword() {
+    async changePassword () {
       this.isLoading = true
       const isValid = await this.checkPassword()
       if (isValid) {
@@ -144,7 +144,7 @@ export default {
           password: this.password.new
         }, {
           headers: {
-            'authorization': this.$cookie.getMemberToken()
+            authorization: this.$cookie.getMemberToken()
           }
         }).then(() => {
           this.$emit('updateProfile', {
@@ -166,7 +166,7 @@ export default {
         this.isLoading = false
       }
     },
-    checkPassword() {
+    checkPassword () {
       const user = {
         email: this.user.email,
         password: this.password.old
@@ -181,7 +181,7 @@ export default {
       })
     }
   },
-  mounted() {
+  mounted () {
     this.getProfile()
   }
 }

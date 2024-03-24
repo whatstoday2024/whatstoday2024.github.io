@@ -12,7 +12,7 @@
       left: 50%;
       margin-left: -150px;
       width: 300px ;
-    }  
+    }
     .card {
       margin-top: 30px;
       padding-top: 30px;
@@ -22,7 +22,7 @@
         transform: translate(0, -1.5rem);
       }
     }
-    
+
     @media screen and (max-width: 990px) {
       /* 小於等於 767px 寬度時的樣式 */
       h2{
@@ -78,7 +78,7 @@
                 <p>
                   今天想來點不一樣的選擇<br>
                   卻忘了您昨天吃了什麼？<br>
-                  生活就夠操心動腦了，哪還有時間來記錄                  
+                  生活就夠操心動腦了，哪還有時間來記錄
                 </p>
               </div>
             </div>

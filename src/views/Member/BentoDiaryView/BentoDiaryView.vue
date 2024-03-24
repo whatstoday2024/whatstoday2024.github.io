@@ -19,27 +19,27 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import rrulePlugin from '@fullcalendar/rrule'
-import FreeDaysData from '../FreeDaysData'
+import FreeDaysData from '../FreeDaysData/FreeDaysData.vue'
 import { mapState, mapActions } from 'pinia'
 import memberStore from '@/stores/memberData'
-import BentoComponent from '@/views/MenuView/BentoComponent.vue';
-import modal from "bootstrap/js/dist/modal";
-import { toast } from 'vue3-toastify';
+import BentoComponent from '@/views/MenuView/BentoComponent.vue'
+import Modal from 'bootstrap/js/dist/modal'
+import { toast } from 'vue3-toastify'
 
-document.title = "飲食紀錄";
+document.title = '飲食紀錄'
 
 export default {
   components: { FullCalendar, BentoComponent },
-  data() {
+  data () {
     return {
       isLoading: false,
       calendarWrap: null,
       windowWidth: window.innerWidth,
       calendarOptions: {
         plugins: [dayGridPlugin, interactionPlugin, rrulePlugin],
-        locale: "zh-tw",
+        locale: 'zh-tw',
         initialView: 'dayGridMonth',
-        buttonText: { today: "今天" },
+        buttonText: { today: '今天' },
         headerToolbar: {
           start: 'today',
           center: 'prev,title,next',
@@ -55,10 +55,10 @@ export default {
         },
         fixedWeekCount: false,
         showNonCurrentDates: false,
-        height: "auto",
+        height: 'auto',
         events: [],
         eventClick: this.eventClick,
-        eventClassNames: this.eventClassNames,
+        eventClassNames: this.eventClassNames
       },
       freeDays: {},
       fullCalendarDOM: null,
@@ -67,8 +67,8 @@ export default {
         stapleCourse: {},
         mainCourse: {},
         sideDishes: [],
-        date: "",
-        mealType: "",
+        date: '',
+        mealType: '',
         starchTotalPortion: 0,
         proteinTotalPortion: 0,
         vegetableTotalPortion: 0
@@ -81,7 +81,7 @@ export default {
   emits: ['updateProfile'],
   mixins: [FreeDaysData],
   watch: {
-    freeDays(value) {
+    freeDays (value) {
       if (value.weekly) {
         this.initFreeDaysRule()
       }
@@ -91,36 +91,36 @@ export default {
     ...mapState(memberStore, ['memberData'])
   },
   methods: {
-    deleteFromCalendar() {
-      this.isLoading = true;
-      this.fullCalendarDOM.getEventById(this.bentoTemp.idTemp).remove();
-      this.isLoading = false;
+    deleteFromCalendar () {
+      this.isLoading = true
+      this.fullCalendarDOM.getEventById(this.bentoTemp.idTemp).remove()
+      this.isLoading = false
     },
-    eventClick(info) {
+    eventClick (info) {
       // if (info.event.title.startsWith("午餐") || info.event.title.startsWith("晚餐")) {
       if (/^(午餐|晚餐)/.test(info.event.title)) {
-        this.bentoTemp = info.event._def.extendedProps;
-        this.bentoModal.show();
+        this.bentoTemp = info.event._def.extendedProps
+        this.bentoModal.show()
       }
     },
-    eventClassNames(info) {
-      if (info.event.title.startsWith("午餐")) {
-        return ['lunch-bento', "bg-brand-blue"]
-      } else if (info.event.title.startsWith("晚餐")) {
-        return ['dinner-bento', "bg-brand-red"]
+    eventClassNames (info) {
+      if (info.event.title.startsWith('午餐')) {
+        return ['lunch-bento', 'bg-brand-blue']
+      } else if (info.event.title.startsWith('晚餐')) {
+        return ['dinner-bento', 'bg-brand-red']
       }
     },
-    resizeCalendar() {
+    resizeCalendar () {
       if (window.innerWidth >= 992) {
-        this.calendarWrap.classList.add("col-md-10");
+        this.calendarWrap.classList.add('col-md-10')
       } else {
-        this.calendarWrap.classList.remove("col-md-10");
+        this.calendarWrap.classList.remove('col-md-10')
       }
     },
-    initFreeDaysRule() {
+    initFreeDaysRule () {
       // 設定所有週期放縱日的起始時間
-      const dtstart_init = ['2024', '01', '01']
-      const dtstart = dtstart_init.join('-')
+      const dtstartInit = ['2024', '01', '01']
+      const dtstart = dtstartInit.join('-')
 
       // 設定每週的放縱日事件
       if (this.freeDays.weekly.length) {
@@ -128,7 +128,7 @@ export default {
           rrule: {
             freq: 'weekly',
             dtstart,
-            byweekday: this.freeDays.weekly,
+            byweekday: this.freeDays.weekly
           }
         })
       }
@@ -139,7 +139,7 @@ export default {
           rrule: {
             freq: 'monthly',
             dtstart,
-            bymonthday: this.freeDays.monthly,
+            bymonthday: this.freeDays.monthly
           }
         })
       }
@@ -150,7 +150,7 @@ export default {
         this.renderFreeDays({
           rrule: {
             freq: 'yearly',
-            dtstart: `${dtstart_init[0]}-${month}-${day}`
+            dtstart: `${dtstartInit[0]}-${month}-${day}`
           }
         })
       })
@@ -163,26 +163,26 @@ export default {
         })
       })
     },
-    renderFreeDays(rules) {
+    renderFreeDays (rules) {
       const settings = {
-        title: ' free day',  // 前方留空白，讓放縱日事件維持在最上方
+        title: ' free day', // 前方留空白，讓放縱日事件維持在最上方
         display: 'list-item',
-        color: '#d89e21',
+        color: '#d89e21'
       }
       this.fullCalendarDOM.addEvent({
         ...settings,
         ...rules
       })
     },
-    async getBentoRecords() {
+    async getBentoRecords () {
       try {
-        const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`);
-        this.bentoRecords = res.data.message;
+        const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`)
+        this.bentoRecords = res.data.message
       } catch (error) {
         toast.error('發生了某些錯誤，將重新整理頁面。', {
-          autoClose: this.errorDelay,
+          autoClose: this.errorDelay
         })
-        setTimeout(() => { location.reload() }, this.errorDelay);
+        setTimeout(() => { location.reload() }, this.errorDelay)
       }
 
       this.bentoRecords.forEach((record) => {
@@ -196,25 +196,25 @@ export default {
     },
     ...mapActions(memberStore, ['getUser'])
   },
-  async mounted() {
-    this.calendarWrap = document.querySelector(".calendar-wrap");
-    this.resizeCalendar();
-    window.addEventListener("resize", this.resizeCalendar);
+  async mounted () {
+    this.calendarWrap = document.querySelector('.calendar-wrap')
+    this.resizeCalendar()
+    window.addEventListener('resize', this.resizeCalendar)
 
-    const nextBtn = document.querySelector(".fc-next-button");
-    nextBtn.click();
-    const todayBtn = document.querySelector(".fc-today-button");
-    todayBtn.click();
+    const nextBtn = document.querySelector('.fc-next-button')
+    nextBtn.click()
+    const todayBtn = document.querySelector('.fc-today-button')
+    todayBtn.click()
 
     // api 取得放縱日資料
-    this.getFreeDaysData();
-    this.fullCalendarDOM = this.$refs.FullCalendar.calendar;
+    this.getFreeDaysData()
+    this.fullCalendarDOM = this.$refs.FullCalendar.calendar
 
     // api 取得便當紀錄
-    await this.getUser();
-    await this.getBentoRecords();
+    await this.getUser()
+    await this.getBentoRecords()
 
-    this.bentoModal = new modal(document.querySelector('#bentoModal'));
+    this.bentoModal = new Modal(document.querySelector('#bentoModal'))
   }
 }
 </script>
@@ -257,7 +257,6 @@ export default {
     gap: 0.2rem; */
 }
 
-
 /* headerToolbar */
 /* 調整title與bts的水平置中 */
 .fc .fc-toolbar-chunk div {
@@ -290,7 +289,6 @@ export default {
     padding-left: 6px;
   }
 }
-
 
 /* 事件 */
 /* 將事件的文字置中與增加padding以增加事件高度 */

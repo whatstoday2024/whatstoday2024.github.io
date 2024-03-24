@@ -15,7 +15,7 @@
         </RouterLink>
       </button>
       </div>
-      
+
     </div>
     <VForm class="row" v-slot="{ errors }" @submit="addItem" >
     <div class="p-2 p-lg-3 col-md-6">
@@ -47,10 +47,10 @@
             <option value="2">2</option>
             <option value="2.5">2.5</option>
             <option value="3">3</option>
-            <option value="3.5">3.5</option>  
-            <option value="4">4</option>  
+            <option value="3.5">3.5</option>
+            <option value="4">4</option>
             <option value="4.5">4.5</option>
-            <option value="5">5</option>   
+            <option value="5">5</option>
           </VField>
             <ErrorMessage name="healthLevel" class="invalid-feedback"/>
             <label for="healthLevel">健康分數*</label>
@@ -60,21 +60,21 @@
         <h5>營養比例(份)</h5>
         <div class="form-floating mb-4">
           <VField as="select" id="starchPortion" placeholder="請選擇澱粉比例" name="starchPortion" class="form-select" :class="{ 'is-invalid': errors['starchPortion'] }" rules="required" v-model="item.starchPortion">
-            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>     
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>
           </VField>
             <ErrorMessage name="starchPortion" class="invalid-feedback"/>
             <label for="starchPortion">澱粉比例*</label>
         </div>
         <div class="form-floating mb-4">
           <VField as="select" id="proteinPortion" placeholder="請選擇蛋白質比例" name="proteinPortion" class="form-select" :class="{ 'is-invalid': errors['proteinPortion'] }" rules="required" v-model="item.proteinPortion">
-            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>   
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>
           </VField>
             <ErrorMessage name="proteinPortion" class="invalid-feedback"/>
             <label for="proteinPortion">蛋白質比例*</label>
         </div>
         <div class="form-floating mb-4">
           <VField as="select" id="vegetablePortion" placeholder="請選擇蔬菜比例" name="vegetablePortion" class="form-select" :class="{ 'is-invalid': errors['vegetablePortion'] }" rules="required" v-model="item.vegetablePortion">
-            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>  
+            <option v-for="item in portionOptions" :value="item" :key="item">{{item}}</option>
           </VField>
             <ErrorMessage name="vegetablePortion" class="invalid-feedback"/>
             <label for="vegetablePortion">蔬菜比例*</label>
@@ -100,7 +100,7 @@
               <img v-if="tempImg2 !==''" class="img" :src="tempImg2" alt="image">
               <button v-if="tempImg2 !== ''" type="button" @click="addImage2" class="mt-2 btn btn-outline-brand-blue btn-sm">新增此圖片至圖片列表</button>
           </div>
-        </div> 
+        </div>
       </div>
       <div>
         <div class="mb-3">
@@ -124,44 +124,41 @@
         <button type="submit" class="btn btn-brand-blue btn-md mb-4">確認</button>
         <button type="button" @click="reset" class="btn btn-outline-grey66 btn-md mb-4">重置</button>
       </div>
-      
+
     </div>
-        
+
     </VForm>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import { toast } from 'vue3-toastify';
-import { DeleteFilled } from "@element-plus/icons-vue";
-import { Select as ElSelect } from "@element-plus/icons-vue";
+import { toast } from 'vue3-toastify'
+import { DeleteFilled, Select as ElSelect } from '@element-plus/icons-vue'
 
 import memberStore from '@/stores/memberData'
 import { mapActions } from 'pinia'
 
-
-
 export default {
-  data() {
+  data () {
     return {
-      portionOptions:[0,0.25,0.5,0.75,1,1.25,1.5,1.75,2,2.25,2.5,2.75,3,3.25,3.5,3.75,4,4.25,4.5,4.75,5],
+      portionOptions: [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5, 4.75, 5],
       item: {
         title: '',
         engTitle: '',
-        category:'',
-        healthLevel:'',
+        category: '',
+        healthLevel: '',
         starchPortion: '',
         proteinPortion: '',
         vegetablePortion: '',
         imgUrl: '',
-        images:[],
-        noBgImg: '',
-      
+        images: [],
+        noBgImg: ''
+
       },
-      tempImg1:'',
-      tempImg2:'',
-      errorMsg:'',
+      tempImg1: '',
+      tempImg2: '',
+      errorMsg: '',
       isLoading: false
     }
   },
@@ -170,89 +167,91 @@ export default {
     ElSelect
   },
   methods: {
-    uploadImg() {
-        const form = document.querySelector('#upload-image');
-        const imageInput = document.querySelector("#file-input");
-        const formData = new FormData(form);
-        if (imageInput.value) {
-          this.isLoading = true
-            // 取出 Token
-            const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1');
-            axios.defaults.headers.common.Authorization = token;
-            axios.post(`${import.meta.env.VITE_API}/api/${import.meta.env.VITE_PATH}/admin/upload`, formData)
-                .then((res) => {
-                    this.tempImg1 = res.data.imageUrl;
-                    imageInput.value = '';
-                    axios.defaults.headers.common.Authorization = null;
-                })
-                .catch(err => {
-                    toast.error(err.data.message);
-                    axios.defaults.headers.common.Authorization = null;
-                }).finally(()=>{this.isLoading = false})
-        } else {
-            alert("請先選擇欲上傳之圖片。");
-        }
+    uploadImg () {
+      const form = document.querySelector('#upload-image')
+      const imageInput = document.querySelector('#file-input')
+      const formData = new FormData(form)
+      if (imageInput.value) {
+        this.isLoading = true
+        // 取出 Token
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/, '$1')
+        axios.defaults.headers.common.Authorization = token
+        axios.post(`${import.meta.env.VITE_API}/api/${import.meta.env.VITE_PATH}/admin/upload`, formData)
+          .then((res) => {
+            this.tempImg1 = res.data.imageUrl
+            imageInput.value = ''
+            axios.defaults.headers.common.Authorization = null
+          })
+          .catch(err => {
+            toast.error(err.data.message)
+            axios.defaults.headers.common.Authorization = null
+          }).finally(() => { this.isLoading = false })
+      } else {
+        alert('請先選擇欲上傳之圖片。')
+      }
     },
-    async addItem(){
-      if(this.item.imgUrl === ''){
+    async addItem () {
+      if (this.item.imgUrl === '') {
         this.errorMsg = '主圖為必填'
         return
       }
       this.isLoading = true
-      try{
-        const res = await axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`,this.item)
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`, this.item)
         toast.success(`成功新增 ${res.data.message.title}`)
-        this.$router.push(`/admin/admin-items`);
-      }catch(err){
+        this.$router.push('/admin/admin-items')
+      } catch (err) {
         toast.error(err.data.message)
       }
       this.isLoading = false
     },
-    reset(){
-      this.item = {title: '',
+    reset () {
+      this.item = {
+        title: '',
         engTitle: '',
-        category:'',
-        healthLevel:'',
+        category: '',
+        healthLevel: '',
         starchPortion: '',
         proteinPortion: '',
         vegetablePortion: '',
         imgUrl: '',
-        images:[],
-        noBgImg: ''}
+        images: [],
+        noBgImg: ''
+      }
     },
-    addImage1(){
+    addImage1 () {
       this.item.images.push(this.tempImg1)
       this.tempImg1 = ''
     },
-    addImage2(){
+    addImage2 () {
       this.item.images.push(this.tempImg2)
       this.tempImg2 = ''
     },
-    chooseMainImg(img){
+    chooseMainImg (img) {
       this.item.imgUrl = img
     },
-    deleteImg(index, img){
-      if(img === this.item.imgUrl){
+    deleteImg (index, img) {
+      if (img === this.item.imgUrl) {
         toast.error('不能刪除當前主圖，若欲刪除請先置換主圖')
         return
       }
-      this.item.images.splice(index,1)
+      this.item.images.splice(index, 1)
     },
-    ...mapActions(memberStore, ['checkIsAdmin','getUser'])
+    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
   },
-  watch:{
-    'item.imgUrl':function(){
+  watch: {
+    'item.imgUrl': function () {
       this.errorMsg = ''
-    },
-  },
-  async mounted() {
-    document.title = "新增菜色";
-    await this.getUser()
-    if(!this.checkIsAdmin()) {
-      toast.error('非管理者無法執行')
-      this.$router.push(`/`);
     }
   },
+  async mounted () {
+    document.title = '新增菜色'
+    await this.getUser()
+    if (!this.checkIsAdmin()) {
+      toast.error('非管理者無法執行')
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 

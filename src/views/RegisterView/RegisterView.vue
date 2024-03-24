@@ -51,12 +51,12 @@
 </template>
 
 <script>
-import { toast } from 'vue3-toastify';
+import { toast } from 'vue3-toastify'
 
-document.title = "開始探索";
+document.title = '開始探索'
 
 export default {
-  data() {
+  data () {
     return {
       user: {
         nickname: '',
@@ -69,7 +69,7 @@ export default {
     }
   },
   methods: {
-    register(){
+    register () {
       this.isLoading = true
       this.registerError = ''
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/register`, this.user)
@@ -77,13 +77,13 @@ export default {
           this.isLoading = false
           const delay = 1000
           toast.success('註冊成功！前往登入', {
-            autoClose: delay,
+            autoClose: delay
           })
           setTimeout(() => {
-            this.$router.push({name: 'Login'})
+            this.$router.push({ name: 'Login' })
           }, delay)
         }).catch(e => {
-          if(e.response?.data === 'Email already exists'){
+          if (e.response?.data === 'Email already exists') {
             this.registerError = `${this.user.email} 用戶已存在`
           } else {
             this.registerError = '註冊失敗'

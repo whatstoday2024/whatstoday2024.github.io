@@ -13,20 +13,19 @@
 
 <script>
 
-
 export default {
-  props: ["totalPages", "currentPage"],
+  props: ['totalPages', 'currentPage'],
 
-  setup(props, { emit }) {
+  setup (props, { emit }) {
     const goToPage = (toPage) => {
-      emit("goToPage", toPage);
-    };
+      emit('goToPage', toPage)
+    }
 
-    return { goToPage };
+    return { goToPage }
   },
-  data() {
+  data () {
     return {
-    
+
     }
   },
   methods: {

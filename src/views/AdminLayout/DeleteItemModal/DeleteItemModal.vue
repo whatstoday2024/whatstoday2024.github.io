@@ -25,35 +25,35 @@
 
 <script>
 import Modal from 'bootstrap/js/dist/modal'
-import { Warning } from "@element-plus/icons-vue";
+import { Warning } from '@element-plus/icons-vue'
 export default {
   props: {
     item: {
       type: Object,
-      default() {
-        return {};
-      },
-    },
+      default () {
+        return {}
+      }
+    }
   },
-  data() {
+  data () {
     return {
-      modal: '',
-    };
+      modal: ''
+    }
   },
   components: {
     Warning
   },
-  mounted() {
-    this.modal = new Modal(this.$refs.modalRef);
+  mounted () {
+    this.modal = new Modal(this.$refs.modalRef)
   },
   methods: {
-    openModal() {
-      this.modal.show();
+    openModal () {
+      this.modal.show()
     },
-    hideModal() {
-      this.modal.hide();
-    },
-  },
+    hideModal () {
+      this.modal.hide()
+    }
+  }
 }
 </script>
 

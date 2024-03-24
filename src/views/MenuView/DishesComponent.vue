@@ -139,17 +139,17 @@
 
 <script>
 export default {
-    props: ['dishesList', 'mode', 'modalName', "updateSelected", "updatePreferenceLevel"],
-    data() {
-        return {
-            dishInfo: {},
-        };
-    },
-    methods: {
-    },
-    mounted() {
+  props: ['dishesList', 'mode', 'modalName', 'updateSelected', 'updatePreferenceLevel'],
+  data () {
+    return {
+      dishInfo: {}
     }
-};
+  },
+  methods: {
+  },
+  mounted () {
+  }
+}
 </script>
 
 <style scoped>
