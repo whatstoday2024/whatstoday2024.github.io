@@ -9,8 +9,8 @@
 <script>
 import memberStore from '@/stores/memberData'
 import { mapActions } from 'pinia'
-import HeaderComponent from '@/components/HeaderComponent/HeaderComponent.vue'
-import FooterComponent from '@/components/FooterComponent/FooterComponent.vue'
+import HeaderComponent from '@/components/HeaderComponent'
+import FooterComponent from '@/components/FooterComponent'
 
 export default {
   components: { HeaderComponent, FooterComponent },

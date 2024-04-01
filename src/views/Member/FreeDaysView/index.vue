@@ -122,8 +122,8 @@
 
 <script>
 import { toast } from 'vue3-toastify'
-import DeleteModal from '../DeleteModal/DeleteModal.vue'
-import FreeDaysData from '../FreeDaysData/FreeDaysData.vue'
+import DeleteModal from '../DeleteModal'
+import FreeDaysData from '../FreeDaysData'
 
 document.title = '放縱一下'
 
