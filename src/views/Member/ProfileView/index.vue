@@ -62,7 +62,7 @@
 
 <script>
 import { mapState } from 'pinia'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 
 document.title = '會員中心'
 
@@ -91,7 +91,7 @@ export default {
         return {}
       }
     },
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
     getProfile () {

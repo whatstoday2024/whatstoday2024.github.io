@@ -1,11 +1,11 @@
 <script>
 import { toast } from 'vue3-toastify'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapState } from 'pinia'
 
 export default {
   computed: {
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
     getFreeDaysData () {
@@ -20,6 +20,7 @@ export default {
           }
         }).catch(e => {
           toast.error(e.data?.message || e)
+          this.isLoading = false
         })
     },
     initFreeDaysData () {
@@ -40,6 +41,7 @@ export default {
           this.isLoading = false
         }).catch(e => {
           toast.error(e.data?.message || e)
+          this.isLoading = false
         })
     }
   }
