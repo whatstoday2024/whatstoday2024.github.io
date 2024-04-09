@@ -1,8 +1,8 @@
 <template>
   <div style="min-height: 100vh;" class="d-flex flex-column relative over">
-    <HeaderComponent></HeaderComponent>
-    <RouterView></RouterView>
-    <FooterComponent></FooterComponent>
+    <HeaderComponent />
+    <RouterView />
+    <FooterComponent />
   </div>
 </template>
 

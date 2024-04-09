@@ -64,9 +64,10 @@ export default {
               autoClose: delay
             })
             this.$router.push({ name: 'IssueForm' })
+            this.$refs.form.resetForm()
           })
       } catch (error) {
-        console.log({ error })
+        alert('發生錯誤，請稍後再試')
       }
     }
   }
