@@ -2,21 +2,21 @@
     <section class="section row my-0">
       <div class="col-md-4 p-0 order-md-1 order-2">
         <div class="rounded-4 hero-section position-relative hero_topl">
-          <div style="position: absolute; left: 10px; bottom: 10px;">
+          <div style="position: absolute; left: 4px; bottom: 8px;">
             # 健康美味
           </div>
         </div>
       </div>
       <div class="col-md-4 p-0 px-0 px-md-2 order-md-2 order-3">
         <div class="rounded-4 hero-section position-relative hero_topr">
-          <div style="position: absolute; left: 10px; bottom: 10px;">
+          <div style="position: absolute; left: 4px; bottom: 8px;">
             # 快速便利
           </div>
         </div>
       </div>
       <div class="col-md-4 p-0 order-md-3 order-4">
         <div class="rounded-4 hero-section position-relative hero_topm">
-          <div style="position: absolute; left: 10px; bottom: 10px;">
+          <div style="position: absolute; left: 4px; bottom: 8px;">
             # 多樣選擇
           </div>
         </div>
@@ -35,7 +35,7 @@
               一鍵搞定您的困擾！
             </p>
             <router-link to="/menu" class="btn btn-outline-primary rounded-pill">
-              <div class="d-flex align-items-center py-2 px-3">立即開始 <i class="bi bi-chevron-right"></i></div>
+              <div class="d-flex align-items-center py-2 px-3">立即開始 <i class="bi bi-chevron-right" style="margin-left: 4px;"></i></div>
             </router-link>
           </div>
         </div>
