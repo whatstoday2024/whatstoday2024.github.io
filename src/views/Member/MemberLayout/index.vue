@@ -1,13 +1,13 @@
 <template>
   <loadingVue :active="isLoading" />
-  <RouterView @update-profile="updateProfile" v-if="isRouterAlive"/>
+  <RouterView @update-profile="updateProfile" v-if="isRouterAlive" />
   <div class="flex-fill" v-else></div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'pinia'
 import { toast } from 'vue3-toastify'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 
 export default {
   data () {
@@ -17,7 +17,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
+    ...mapState(memberData, ['memberData', 'hasCheckLogin'])
   },
   watch: {
     hasCheckLogin () {
@@ -51,7 +51,7 @@ export default {
       await this.getUser()
       this.isRouterAlive = true
     },
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberData, ['getUser'])
   },
   mounted () {
     this.isLoading = true

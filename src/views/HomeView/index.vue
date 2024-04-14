@@ -1,12 +1,11 @@
 <template>
   <section class="relative">
-    <HeroSection></HeroSection>
-    <WhatSection></WhatSection>
-    <ProvideSection></ProvideSection>
-    <MemberSection></MemberSection>
-    <QAsection></QAsection>
-    <HomeArrow></HomeArrow>
-
+    <HeroSection />
+    <WhatSection />
+    <ProvideSection />
+    <MemberSection />
+    <QAsection />
+    <HomeArrow />
   </section>
 </template>
 
@@ -16,7 +15,7 @@ import MemberSection from './MemberSection.vue'
 import ProvideSection from './ProvideSection.vue'
 import QAsection from './QAsection.vue'
 import WhatSection from './WhatSection.vue'
-import HomeArrow from '@/components/HomeArrow/HomeArrow.vue'
+import HomeArrow from '@/components/HomeArrow'
 
 export default {
   components: { HeroSection, WhatSection, QAsection, MemberSection, ProvideSection, HomeArrow }

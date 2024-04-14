@@ -6,7 +6,7 @@
         <div class="accordion" id="myAccordion">
           <div v-for="(item, index) in items" :key="index" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + index">
-              <button class="accordion-button fw-bold" type="button" :class="{ 'collapsed': activeItem !== index }"
+              <button type="button" class="accordion-button fw-bold" :class="{ 'collapsed': activeItem !== index }"
                 @click="toggleAccordion(index)">Q. {{ item.title }} </button>
             </h2>
             <div :id="'collapse' + index" class="accordion-collapse collapse" :class="{ 'show': activeItem === index }"
@@ -52,7 +52,7 @@ export default {
   background-size: contain;
 }
 
-.accordion{
+.accordion {
   width: 77%;
 
   @include respond(lg) {
@@ -60,7 +60,8 @@ export default {
   }
 
 }
-.accordion-item{
+
+.accordion-item {
   width: 100%;
 }
 </style>

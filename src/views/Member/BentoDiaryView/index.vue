@@ -10,8 +10,7 @@
   </div>
 
   <!-- 便當相關 Modal -->
-  <BentoComponent :bento-temp="bentoTemp" :member-data="memberData" :delete-from-calendar="deleteFromCalendar">
-  </BentoComponent>
+  <BentoComponent :bento-temp="bentoTemp" :member-data="memberData" :delete-from-calendar="deleteFromCalendar" />
 </template>
 
 <script>
@@ -19,9 +18,9 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import rrulePlugin from '@fullcalendar/rrule'
-import FreeDaysData from '../FreeDaysData/FreeDaysData.vue'
+import FreeDaysData from '../FreeDaysData'
 import { mapState, mapActions } from 'pinia'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import BentoComponent from '@/views/MenuView/BentoComponent.vue'
 import Modal from 'bootstrap/js/dist/modal'
 import { toast } from 'vue3-toastify'
@@ -88,7 +87,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
     deleteFromCalendar () {
@@ -194,7 +193,7 @@ export default {
         })
       })
     },
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberData, ['getUser'])
   },
   async mounted () {
     this.calendarWrap = document.querySelector('.calendar-wrap')

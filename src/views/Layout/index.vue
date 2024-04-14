@@ -1,16 +1,16 @@
 <template>
   <div style="min-height: 100vh;" class="d-flex flex-column relative over">
-    <HeaderComponent></HeaderComponent>
-    <RouterView></RouterView>
-    <FooterComponent></FooterComponent>
+    <HeaderComponent />
+    <RouterView />
+    <FooterComponent />
   </div>
 </template>
 
 <script>
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapActions } from 'pinia'
-import HeaderComponent from '@/components/HeaderComponent/HeaderComponent.vue'
-import FooterComponent from '@/components/FooterComponent/FooterComponent.vue'
+import HeaderComponent from '@/components/HeaderComponent'
+import FooterComponent from '@/components/FooterComponent'
 
 export default {
   components: { HeaderComponent, FooterComponent },
@@ -21,7 +21,7 @@ export default {
   computed: {
   },
   methods: {
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberData, ['getUser'])
   },
   async mounted () {
     await this.getUser()
@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.over{
+.over {
   overflow-x: hidden;
 }
 </style>

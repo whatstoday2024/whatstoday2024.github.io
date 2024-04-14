@@ -3,7 +3,7 @@
     <div class="modal-dialog h-100 d-flex align-items-center my-0">
       <div class="modal-content">
         <div class="modal-body text-center">
-          <Warning class="my-3" style="width: 150px; height: 150px ;color:#fde4b4;"/>
+          <Warning class="my-3" style="width: 150px; height: 150px ;color:#fde4b4;" />
           <h5 class="lh-base mb-1"><span class="d-block d-sm-inline">確定要移除</span>{{ `「 ${message} 」的放縱日嗎？` }}</h5>
           <p class="mb-0 text-muted">移除後不能復原，請務必確認！</p>
         </div>

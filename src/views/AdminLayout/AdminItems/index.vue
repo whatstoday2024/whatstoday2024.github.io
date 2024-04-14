@@ -6,26 +6,30 @@
       <div>
         <form class="search-input input-group" @submit.prevent="getItems">
           <input type="text" class="form-control" placeholder="搜尋菜色" aria-label="Search"
-                aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput">
-          <button class="btn btn-outline-primary search" type="button" id="button-addon2" @click="getItems">
-              <Search style="width: 18px; height: 18px;" class=""/>
+            aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput">
+          <button type="button" class="btn btn-outline-primary search" id="button-addon2" @click="getItems">
+            <Search style="width: 18px; height: 18px;" class="" />
           </button>
         </form>
       </div>
       <div>
-        <button class="btn btn-outline-primary me-2">
-        <RouterLink class="navbar-brand search" to="/admin/dashboard">
+        <button type="button" class="btn btn-outline-primary me-2">
+          <RouterLink class="navbar-brand search" to="/admin/dashboard">
             <span class="d-none d-md-block">Dashboard</span>
-            <span class="d-block d-md-none"><Grid style="width: 15px; height: 15px;"/></span>
-        </RouterLink>
+            <span class="d-block d-md-none">
+              <Grid style="width: 15px; height: 15px;" />
+            </span>
+          </RouterLink>
         </button>
-        <button class="btn btn-outline-brand-blue">
-        <RouterLink class="navbar-brand search" to="/admin/add-item">
-          <span class="d-none d-md-block">新增菜色</span>
-          <span class="d-block d-md-none "><Plus style="width: 12px; height: 12px;"/></span>
-        </RouterLink>
+        <button type="button" class="btn btn-outline-brand-blue">
+          <RouterLink class="navbar-brand search" to="/admin/add-item">
+            <span class="d-none d-md-block">新增菜色</span>
+            <span class="d-block d-md-none ">
+              <Plus style="width: 12px; height: 12px;" />
+            </span>
+          </RouterLink>
         </button>
-    </div>
+      </div>
 
     </div>
     <table class="table align-middle">
@@ -43,48 +47,38 @@
       <tbody>
         <tr v-for="item in items" :key="item.id">
           <th scope="row">{{ item.title }}</th>
-            <td>{{ item.engTitle }}</td>
-            <td>{{ item.category }}</td>
-            <td class="d-none d-md-block star">
-              <star-rating
-                :inline="true"
-                :star-size="25"
-                :read-only="true"
-                :rating="+item.healthLevel"
-                :round-start-rating="false"
-                :show-rating="false"
-                />
-            </td>
-            <td class="d-md-none">{{ item.healthLevel }}</td>
+          <td>{{ item.engTitle }}</td>
+          <td>{{ item.category }}</td>
+          <td class="d-none d-md-block star">
+            <star-rating :inline="true" :star-size="25" :read-only="true" :rating="+item.healthLevel"
+              :round-start-rating="false" :show-rating="false" />
+          </td>
+          <td class="d-md-none">{{ item.healthLevel }}</td>
 
-            <td>{{ item.starchPortion }} / {{ item.proteinPortion }} / {{ item.vegetablePortion }}</td>
-            <td>
-              <button @click="goToItem(item.id)" type="button" class="btn btn-brand-blue d-none d-lg-block">
-                  編輯
-              </button>
-              <button @click="goToItem(item.id)" type="button" class="btn d-lg-none">
-                <Edit style="width: 20px; height: 20px ;color:#144bb8;"/>
-              </button>
+          <td>{{ item.starchPortion }} / {{ item.proteinPortion }} / {{ item.vegetablePortion }}</td>
+          <td>
+            <button @click="goToItem(item.id)" type="button" class="btn btn-brand-blue d-none d-lg-block">
+              編輯
+            </button>
+            <button @click="goToItem(item.id)" type="button" class="btn d-lg-none">
+              <Edit style="width: 20px; height: 20px ;color:#144bb8;" />
+            </button>
 
-            </td>
-            <td>
-              <button @click="showDeleteItemModal(item.id)" type="button" class="btn btn-outline-danger d-none d-lg-block">
-                  刪除
-              </button>
-              <button @click="showDeleteItemModal(item.id)" type="button" class="btn d-lg-none">
-                  <DeleteFilled style="width: 20px; height: 20px ;color:#dc3545;"/>
-              </button>
-            </td>
+          </td>
+          <td>
+            <button @click="showDeleteItemModal(item.id)" type="button"
+              class="btn btn-outline-danger d-none d-lg-block">
+              刪除
+            </button>
+            <button @click="showDeleteItemModal(item.id)" type="button" class="btn d-lg-none">
+              <DeleteFilled style="width: 20px; height: 20px ;color:#dc3545;" />
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
-    <Pagination
-            v-show="totalPages > 1"
-            :currentPage="currentPage"
-            :totalPages="totalPages"
-            @goToPage="getItems"
-    ></Pagination>
-    <DeleteItemModal ref="deleteItemModal" :item="item" @deleteItem="deleteItem"/>
+    <Pagination v-show="totalPages > 1" :currentPage="currentPage" :totalPages="totalPages" @goToPage="getItems" />
+    <DeleteItemModal ref="deleteItemModal" :item="item" @deleteItem="deleteItem" />
   </section>
 </template>
 
@@ -93,12 +87,12 @@ import { DeleteFilled, Edit, Search, Plus, Grid } from '@element-plus/icons-vue'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 import StarRating from 'vue-star-rating'
-import DeleteItemModal from '@/views/AdminLayout/DeleteItemModal/DeleteItemModal.vue'
+import DeleteItemModal from '@/views/AdminLayout/DeleteItemModal'
 import axios from 'axios'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapActions } from 'pinia'
 
-import Pagination from '@/components/Pagination/PaginationComponents.vue'
+import Pagination from '@/components/Pagination'
 
 export default {
   data () {
@@ -164,7 +158,7 @@ export default {
       }
       this.isLoading = false
     },
-    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
+    ...mapActions(memberData, ['checkIsAdmin', 'getUser'])
   },
   async mounted () {
     document.title = '菜色列表'
@@ -179,7 +173,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.star{
+.star {
   // margin-top: 0.5rem;
   // padding-bottom: 1.2rem;
 
@@ -187,8 +181,8 @@ export default {
   padding-bottom: 2rem;
 }
 
-.search{
-display: grid;
-place-items: center
+.search {
+  display: grid;
+  place-items: center
 }
 </style>

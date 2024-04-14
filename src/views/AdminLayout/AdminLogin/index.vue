@@ -8,13 +8,15 @@
             <h1 class="h2 mb-3 text-center">後台登入(僅供管理者)</h1>
             <h4 v-if="errorMsg" class="text-center text-danger">{{ errorMsg }}</h4>
             <div class="form-floating mb-4">
-              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
-              <ErrorMessage name="信箱" class="invalid-feedback"/>
+              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control"
+                :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
+              <ErrorMessage name="信箱" class="invalid-feedback" />
               <label for="email">請輸入電子信箱</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control" :class="{ 'is-invalid': errors['密碼'] }" rules="required" v-model="user.password" />
-              <ErrorMessage name="密碼" class="invalid-feedback"/>
+              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control"
+                :class="{ 'is-invalid': errors['密碼'] }" rules="required" v-model="user.password" />
+              <ErrorMessage name="密碼" class="invalid-feedback" />
               <label for="password">請輸入密碼</label>
             </div>
             <button type="submit" class="btn btn-brand-blue btn-lg rounded-pill mb-4">登入</button>
@@ -27,7 +29,8 @@
 
 <script>
 import axios from 'axios'
-import memberStore from '@/stores/memberData'
+
+import memberData from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 
 export default {
@@ -50,7 +53,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
     login () {
@@ -77,7 +80,7 @@ export default {
           this.errorMsg = error.response.data.message
         }).finally(() => { this.isLoading = false })
     },
-    ...mapActions(memberStore, ['setMemberData'])
+    ...mapActions(memberData, ['setMemberData'])
   },
   async mounted () {
   }

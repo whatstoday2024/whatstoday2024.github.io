@@ -19,8 +19,10 @@
             </div>
             <VForm v-slot="{ errors }" @submit="editProfile">
               <div class="form-floating mb-4">
-                <VField type="text" id="username" placeholder="暱稱" name="暱稱" class="form-control" :class="{ 'is-invalid': errors['暱稱'] || renameInvalid }" rules="required" v-model="user.nickname" @input="renameInvalid = false" />
-                <ErrorMessage name="暱稱" class="invalid-feedback" style="font-size: 0.875rem;"/>
+                <VField type="text" id="username" placeholder="暱稱" name="暱稱" class="form-control"
+                  :class="{ 'is-invalid': errors['暱稱'] || renameInvalid }" rules="required" v-model="user.nickname"
+                  @input="renameInvalid = false" />
+                <ErrorMessage name="暱稱" class="invalid-feedback" style="font-size: 0.875rem;" />
                 <p class="text-danger mb-0 mt-2" style="font-size: 0.875rem;" v-if="renameInvalid">新名稱與舊名稱相同</p>
                 <label for="username">暱稱</label>
               </div>
@@ -35,18 +37,22 @@
             <h5 class="mb-4 fs-4">修改密碼</h5>
             <VForm v-slot="{ errors }" @submit="changePassword">
               <div class="form-floating mb-4">
-                <VField type="password" id="oldPassword" placeholder="請輸入舊密碼" name="舊密碼" class="form-control" :class="{ 'is-invalid': errors['舊密碼'] }" rules="required" v-model="password.old" />
-                <ErrorMessage name="舊密碼" class="invalid-feedback"/>
+                <VField type="password" id="oldPassword" placeholder="請輸入舊密碼" name="舊密碼" class="form-control"
+                  :class="{ 'is-invalid': errors['舊密碼'] }" rules="required" v-model="password.old" />
+                <ErrorMessage name="舊密碼" class="invalid-feedback" />
                 <label for="oldPassword">請輸入舊密碼</label>
               </div>
               <div class="form-floating mb-4">
-                <VField type="password" id="newPassword" placeholder="請輸入新密碼" name="新密碼" class="form-control" :class="{ 'is-invalid': errors['新密碼'] }" rules="min:4|is_not:@舊密碼" v-model="password.new" />
-                <ErrorMessage name="新密碼" class="invalid-feedback"/>
+                <VField type="password" id="newPassword" placeholder="請輸入新密碼" name="新密碼" class="form-control"
+                  :class="{ 'is-invalid': errors['新密碼'] }" rules="min:4|is_not:@舊密碼" v-model="password.new" />
+                <ErrorMessage name="新密碼" class="invalid-feedback" />
                 <label for="newPassword">請輸入新密碼</label>
               </div>
               <div class="form-floating mb-4">
-                <VField type="password" id="newPasswordDoubleCheck" placeholder="再次確認新密碼" name="確認新密碼" class="form-control" :class="{ 'is-invalid': errors['確認新密碼'] }" rules="required|confirmed:@新密碼" v-model="password.doubleCheck" />
-                <ErrorMessage name="確認新密碼" class="invalid-feedback"/>
+                <VField type="password" id="newPasswordDoubleCheck" placeholder="再次確認新密碼" name="確認新密碼"
+                  class="form-control" :class="{ 'is-invalid': errors['確認新密碼'] }" rules="required|confirmed:@新密碼"
+                  v-model="password.doubleCheck" />
+                <ErrorMessage name="確認新密碼" class="invalid-feedback" />
                 <label for="newPasswordDoubleCheck">再次確認新密碼</label>
               </div>
               <div class="text-end">
@@ -62,7 +68,7 @@
 
 <script>
 import { mapState } from 'pinia'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 
 document.title = '會員中心'
 
@@ -91,7 +97,7 @@ export default {
         return {}
       }
     },
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
     getProfile () {

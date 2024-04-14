@@ -10,12 +10,13 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <Warning style="width: 150px; height: 150px ;color:#fde4b4;"/>
+          <Warning style="width: 150px; height: 150px ;color:#fde4b4;" />
           <h3>確定要刪除"{{ item.title }}"嗎?</h3>
           <h4 class="opacity-50">刪除後將無法復原，請務必確認!</h4>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="$emit('deleteItem', item.id)">確定刪除</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+            @click="$emit('deleteItem', item.id)">確定刪除</button>
           <button type="button" class="btn btn-grey66" data-bs-dismiss="modal">取消</button>
         </div>
       </div>

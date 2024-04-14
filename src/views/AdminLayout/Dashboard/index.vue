@@ -19,7 +19,7 @@
         <div @click="goToAddPage" class="col-lg-6 box">
           <div class="border border-primary rounded-4 p-5 h-100 text-center">
             <h5 class="mb-4 fs-4">新增菜色</h5>
-            <Plus style="width: 100px; height: 100px ;cursor: pointer;"/>
+            <Plus style="width: 100px; height: 100px ;cursor: pointer;" />
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
 import axios from 'axios'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapState, mapActions } from 'pinia'
 import { Plus } from '@element-plus/icons-vue'
 
@@ -47,7 +47,7 @@ export default {
     Plus
   },
   computed: {
-    ...mapState(memberStore, ['checkIsAdmin'])
+    ...mapState(memberData, ['checkIsAdmin'])
   },
   methods: {
     async getItemsQty () {
@@ -64,7 +64,7 @@ export default {
     goToAllItems () {
       this.$router.push({ name: 'AdminItems' })
     },
-    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
+    ...mapActions(memberData, ['checkIsAdmin', 'getUser'])
   },
   async mounted () {
     document.title = '後台管理'
@@ -83,15 +83,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box{
+.box {
   transition: all 0.5s;
 
-  &:hover{
+  &:hover {
     cursor: pointer;
     transform: translateY(-3px)
   }
 
-  &:active{
+  &:active {
     transform: translateY(5px)
   }
 }
