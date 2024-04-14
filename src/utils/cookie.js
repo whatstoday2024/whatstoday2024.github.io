@@ -19,8 +19,8 @@ export function getMemberId () {
   return getCookie(memberIdKey)
 }
 
-export function setMemberToken (toekn) {
-  document.cookie = `${memberTokenKey}=${toekn}`
+export function setMemberToken (token) {
+  document.cookie = `${memberTokenKey}=${token}`
 }
 
 export function setMemberId (idKey) {

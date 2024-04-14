@@ -3,10 +3,10 @@
   <div class="container">
     <div class="title">
       <h2 class="text-center my-3">帶您探索菜色的無限可能</h2>
-      <div class="site-induction-btn btn p-0 d-flex">
+      <!-- <div class="site-induction-btn btn p-0 d-flex">
         <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹" data-bs-toggle="modal"
            data-bs-target="#siteIntroModal"></i>
-      </div>
+      </div> -->
     </div>
     <div class="mode-btns text-center mb-3">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -59,8 +59,7 @@
                  class="text-danger">*請至少選擇一樣</small>
           <hr>
           <DishesComponent :dishes-list="stapleList" :mode="mode" modal-name="stapleModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
         <div class="dishes mb-4" v-if="(filter === '全部' || filter === '配菜類') && search === ''">
           <h3 class="d-inline mx-2">配菜類</h3>
@@ -68,8 +67,7 @@
                  class="text-danger">*請至少選擇三樣</small>
           <hr>
           <DishesComponent :dishes-list="sideDishesList" :mode="mode" modal-name="sideDishesModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
         <div class="entree mb-4" v-if="(filter === '全部' || filter === '主菜類') && search === ''">
           <h3 class="d-inline mx-2">主菜類</h3>
@@ -77,15 +75,13 @@
                  class="text-danger">*請至少選擇一樣</small>
           <hr>
           <DishesComponent :dishes-list="mainDishesList" :mode="mode" modal-name="mainDishesModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
         <div class="entree mb-4" v-if="search !== ''">
           <h3 class="mx-2">搜尋結果</h3>
           <hr>
           <DishesComponent :dishes-list="searchedList" :mode="mode" modal-name="searchedDishesModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
       </div>
     </div>
@@ -142,7 +138,7 @@
   </div>
 
   <!-- 便當相關 Modal -->
-  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData"></BentoComponent>
+  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData" />
 
 </template>
 
@@ -581,7 +577,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
 /* tool ----------------------------- */
@@ -613,24 +609,36 @@ export default {
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
 }
 
 /* aside ----------------------------- */
 .aside {
   position: fixed;
-  right: 1rem;
-  bottom: 20vh;
-  z-index: 10;
+  right: 1.5rem;
+  bottom: 2rem;
+  z-index: 999;
+  transition: all 0.5s;
+  color: $primary;
+
+  &:hover {
+      transform: translateY(-2px);
+  }
+  &:active {
+      transform: translateY(2px);
+  }
 }
 
+/*
 .aside-link {
-  color: rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
   transition-duration: .3s;
 }
 
 .aside-link:hover {
-  color: rgba(0, 0, 0, 0.5);
+  opacity: 0.7;
 }
+*/
 
 .aside-link-generator {
   /* font-size: 4vw; */
@@ -646,6 +654,7 @@ export default {
   position: absolute;
   right: 0;
   top: 7%;
+  display: none;
 }
 
 .site-induction-btn:active {
