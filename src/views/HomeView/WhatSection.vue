@@ -12,9 +12,9 @@
               <div class="card-body p-5 text-center">
                 <h4 class="text-primary">想不出來要吃什麼</h4>
                 <p>
-                    您總是挑選時猶豫不決嗎？<br>
-                    每次想了很久遲遲沒有下手？<br>
-                    明明不挑食，但最後總是吃相同料理 😰
+                  您總是挑選時猶豫不決嗎？<br>
+                  每次想了很久遲遲沒有下手？<br>
+                  明明不挑食，但最後總是吃相同料理 😰
                 </p>
               </div>
             </div>
@@ -59,39 +59,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .what{
-    h2{
-      padding-bottom: 7rem;
-    }
-    .what_margin{
-      padding-top: 5rem;
-    }
-    .card-img-top {
-      position: absolute;
-      top: -248px;
-      left: 50%;
-      margin-left: -150px;
-      width: 300px ;
-    }
-    .card {
-      margin-top: 30px;
-      padding-top: 30px;
-      transform: translate(0, 0);
-      transition: transform 1.2s ease; // Increase transition duration to 0.5s
-      &:hover {
-        transform: translate(0, -1.5rem);
-      }
-    }
+.what {
+  h2 {
+    padding-bottom: 7rem;
+  }
 
-    @media screen and (max-width: 990px) {
-      /* 小於等於 767px 寬度時的樣式 */
-      h2{
-        padding-bottom: 0rem;
-      }
-      .what_margin {
-        padding-top: 20rem;
-        margin-bottom: 0rem;
-      }
+  .what_margin {
+    padding-top: 5rem;
+  }
+
+  .card-img-top {
+    position: absolute;
+    top: -248px;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+  }
+
+  .card {
+    margin-top: 30px;
+    padding-top: 30px;
+    transform: translate(0, 0);
+    transition: transform 1.2s ease; // Increase transition duration to 0.5s
+
+    &:hover {
+      transform: translate(0, -1.5rem);
     }
   }
+
+  @media screen and (max-width: 990px) {
+
+    /* 小於等於 767px 寬度時的樣式 */
+    h2 {
+      padding-bottom: 0rem;
+    }
+
+    .what_margin {
+      padding-top: 20rem;
+      margin-bottom: 0rem;
+    }
+  }
+}
 </style>

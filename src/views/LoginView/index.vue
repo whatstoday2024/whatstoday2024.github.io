@@ -18,17 +18,20 @@
               登入失敗！請確認帳號與密碼是否正確。
             </div>
             <div class="form-floating mb-4">
-              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
-              <ErrorMessage name="信箱" class="invalid-feedback"/>
+              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control"
+                :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
+              <ErrorMessage name="信箱" class="invalid-feedback" />
               <label for="email">請輸入電子信箱</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control" :class="{ 'is-invalid': errors['密碼'] }" rules="required" v-model="user.password" />
-              <ErrorMessage name="密碼" class="invalid-feedback"/>
+              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control"
+                :class="{ 'is-invalid': errors['密碼'] }" rules="required" v-model="user.password" />
+              <ErrorMessage name="密碼" class="invalid-feedback" />
               <label for="password">請輸入密碼</label>
             </div>
             <div class="d-flex">
-              <button type="button" class="btn btn-outline-primary btn-lg rounded-pill w-50 me-2" @click="$router.push({name: 'Register'})">還不是會員？前往註冊</button>
+              <button type="button" class="btn btn-outline-primary btn-lg rounded-pill w-50 me-2"
+                @click="$router.push({ name: 'Register' })">還不是會員？前往註冊</button>
               <button type="submit" class="btn btn-primary btn-lg rounded-pill w-50 ms-2">登入</button>
             </div>
           </VForm>
@@ -46,7 +49,7 @@ import { toast } from 'vue3-toastify'
 document.title = '馬上登入'
 
 export default {
-  data () {
+  data() {
     return {
       user: {
         email: '',
@@ -57,7 +60,7 @@ export default {
     }
   },
   methods: {
-    login () {
+    login() {
       this.isLoading = true
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
         .then((res) => {

@@ -13,11 +13,11 @@
             </div>
           </div>
           <div class="text-start mt-4">
-            <router-link to="/menu" class="btn btn-lg btn-brand-blue text-white rounded-pill">
+            <RouterLink to="/menu" class="btn btn-lg btn-brand-blue text-white rounded-pill">
               <div class="d-flex align-items-center py-2 px-3">
                 立即開始 <i class="bi bi-chevron-right"></i>
               </div>
-            </router-link>
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -35,14 +35,14 @@ import eatingImg from '@/assets/img/solution_person.png'
 import { provideOptions } from '@/utils/variables'
 
 export default {
-  data () {
+  data() {
     return {
       eatingImg,
       provideOptions
     }
   },
   computed: {
-    classObject: () => {}
+    classObject: () => { }
   }
 }
 </script>

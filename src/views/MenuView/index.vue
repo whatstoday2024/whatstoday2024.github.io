@@ -5,15 +5,15 @@
       <h2 class="text-center my-3">帶您探索菜色的無限可能</h2>
       <div class="site-induction-btn btn p-0 d-flex">
         <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹" data-bs-toggle="modal"
-           data-bs-target="#siteIntroModal"></i>
+          data-bs-target="#siteIntroModal"></i>
       </div>
     </div>
     <div class="mode-btns text-center mb-3">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
         <button type="button" class="default-mode btn btn-outline-primary px-4 py-2"
-                :class="{ active: mode === 'default' }" @click="setMode('default')">預設模式</button>
+          :class="{ active: mode === 'default' }" @click="setMode('default')">預設模式</button>
         <button type="button" class="customization-mode btn btn-outline-primary px-4 py-2"
-                :class="{ active: mode === 'customization' }" @click="setMode('customization')">自選模式</button>
+          :class="{ active: mode === 'customization' }" @click="setMode('customization')">自選模式</button>
       </div>
     </div>
     <div class="filter-sort-search-container mb-2 d-flex justify-content-between">
@@ -28,24 +28,24 @@
       </div>
       <div class="sort-search-container d-flex justify-content-between gap-2">
         <div class="sort-dropdown dropdown">
-          <button class="btn btn-outline-primary" type="button" id="SortByWhatFactorDropdownMenuButton"
-                  data-bs-toggle="dropdown" aria-expanded="false">
+          <button type="button" class="btn btn-outline-primary" id="SortByWhatFactorDropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
             <strong>三</strong>
           </button>
           <ul class="dropdown-menu" aria-labelledby="SortByWhatFactorDropdownMenuButton">
             <li><a class="dropdown-item" :class="{ active: sortBy === 'default' }" href="javascript:;"
-                 @click="sortBy = 'default'">依 預設 排序</a></li>
+                @click="sortBy = 'default'">依 預設 排序</a></li>
             <li><a class="dropdown-item" :class="{ active: sortBy === 'preferenceLevel' }" href=" javascript:;"
-                 @click="sortBy = 'preferenceLevel'">依 喜好程度 排序</a></li>
+                @click="sortBy = 'preferenceLevel'">依 喜好程度 排序</a></li>
             <li><a class="dropdown-item" :class="{ active: sortBy === 'healthLevel' }" href="javascript:;"
-                 @click="sortBy = 'healthLevel'">依 健康分數 排序</a></li>
+                @click="sortBy = 'healthLevel'">依 健康分數 排序</a></li>
           </ul>
         </div>
         <form class="search-input input-group" @submit.prevent="getSearchedDishes">
           <input type="text" class="form-control" placeholder="搜尋菜色" aria-label="Search"
-                 aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput"
-                 @blur="searchPretest">
-          <button class="btn btn-outline-primary" type="button" id="button-addon2" @click="getSearchedDishes">
+            aria-describedby="Input Box For Searching Dishes" size="10" v-model.trim="searchInput"
+            @blur="searchPretest">
+          <button type="button" class="btn btn-outline-primary" id="button-addon2" @click="getSearchedDishes">
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
         </form>
@@ -56,42 +56,38 @@
         <div class="staple mb-4" v-if="(filter === '全部' || filter === '主食類') && search === ''">
           <h3 class="d-inline mx-2">主食類</h3>
           <small v-if="stapleList.filter((dish) => dish.isChecked === true).length < 1"
-                 class="text-danger">*請至少選擇一樣</small>
+            class="text-danger">*請至少選擇一樣</small>
           <hr>
           <DishesComponent :dishes-list="stapleList" :mode="mode" modal-name="stapleModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+            :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
         <div class="dishes mb-4" v-if="(filter === '全部' || filter === '配菜類') && search === ''">
           <h3 class="d-inline mx-2">配菜類</h3>
           <small v-if="sideDishesList.filter((dish) => dish.isChecked === true).length < 3"
-                 class="text-danger">*請至少選擇三樣</small>
+            class="text-danger">*請至少選擇三樣</small>
           <hr>
           <DishesComponent :dishes-list="sideDishesList" :mode="mode" modal-name="sideDishesModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+            :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
         <div class="entree mb-4" v-if="(filter === '全部' || filter === '主菜類') && search === ''">
           <h3 class="d-inline mx-2">主菜類</h3>
           <small v-if="mainDishesList.filter((dish) => dish.isChecked === true).length < 1"
-                 class="text-danger">*請至少選擇一樣</small>
+            class="text-danger">*請至少選擇一樣</small>
           <hr>
           <DishesComponent :dishes-list="mainDishesList" :mode="mode" modal-name="mainDishesModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+            :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
         <div class="entree mb-4" v-if="search !== ''">
           <h3 class="mx-2">搜尋結果</h3>
           <hr>
           <DishesComponent :dishes-list="searchedList" :mode="mode" modal-name="searchedDishesModal"
-                           :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel">
-          </DishesComponent>
+            :update-selected="updateSelected" :update-preference-level="updatePreferenceLevel" />
         </div>
       </div>
     </div>
     <div id="bentoGenerator" class="bento-generator text-center">
       <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3"
-              @click="bentoPretest">生成便當</button>
+        @click="bentoPretest">生成便當</button>
     </div>
     <aside class="aside">
       <div class="aside-head">
@@ -128,12 +124,12 @@
           </div>
 
           <button v-if="introIndex !== 7" type="button" class="btn next-btn"><i
-               class="bi bi-chevron-right"></i></button>
+              class="bi bi-chevron-right"></i></button>
         </div>
         <div class="modal-footer">
           <div class="no-show-again d-flex gap-2 mx-auto">
             <input type="checkbox" id="no-show-again" name="no-show-again"
-                   class="form-check-input no-show-again-checkout">
+              class="form-check-input no-show-again-checkout">
             <label for="no-show-again">不再顯示</label>
           </div>
         </div>
@@ -142,14 +138,14 @@
   </div>
 
   <!-- 便當相關 Modal -->
-  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData"></BentoComponent>
+  <BentoComponent :bento-temp="bentoTemp" :generate-bento="generateBento" :member-data="memberData" />
 
 </template>
 
 <script>
 import DishesComponent from './DishesComponent.vue'
 import BentoComponent from './BentoComponent.vue'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapState, mapActions } from 'pinia'
 import Modal from 'bootstrap/js/dist/modal'
 import { toast } from 'vue3-toastify'
@@ -160,7 +156,7 @@ document.title = '來點菜單'
 
 export default {
   components: { DishesComponent, BentoComponent },
-  data () {
+  data() {
     return {
       isLoading: false,
       introIndex: 1,
@@ -191,18 +187,18 @@ export default {
     }
   },
   computed: {
-    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
+    ...mapState(memberData, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    sortBy () {
+    sortBy() {
       this.getSortedDishes()
     },
-    filter () {
+    filter() {
       this.getSearchedDishes()
     }
   },
   methods: {
-    drawOneDish (dishesList) {
+    drawOneDish(dishesList) {
       const totalWeight = this.mode === 'default'
         ? dishesList.reduce((acc, cur) => acc + cur.healthLevel, 0)
         : dishesList.reduce((acc, cur) => acc + cur.healthLevel + +cur.preferenceLevel, 0)
@@ -225,7 +221,7 @@ export default {
       this.bentoTemp.vegetableTotalPortion += dishesList[answerIndex].vegetablePortion
       return dishesList[answerIndex]
     },
-    drawThreeDishes (dishesList) {
+    drawThreeDishes(dishesList) {
       const answers = []
       const tempDishesList = [...dishesList]
 
@@ -258,10 +254,10 @@ export default {
 
       return answers
     },
-    bentoPretest () {
+    bentoPretest() {
       this.bentoTemp.sideDishes?.length === 0 ? this.generateBento() : this.bentoModal.show()
     },
-    async generateBento () {
+    async generateBento() {
       console.clear()
       this.isLoading = true
       await this.getAllDishesList()
@@ -308,10 +304,10 @@ export default {
       this.bentoModal.show()
       this.isLoading = false
     },
-    moveToGeneratorBentoBtn () {
+    moveToGeneratorBentoBtn() {
       document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' })
     },
-    getMode () {
+    getMode() {
       if (this.memberData.id) {
         this.mode = this.memberData.mode !== undefined ? this.memberData.mode : 'default'
       } else {
@@ -319,7 +315,7 @@ export default {
         this.mode = mode || 'default'
       }
     },
-    async setMode (mode) {
+    async setMode(mode) {
       this.isLoading = true
       this.mode = mode
       if (this.memberData.id) {
@@ -333,7 +329,7 @@ export default {
       }
       this.isLoading = false
     },
-    async getAllDishesList () {
+    async getAllDishesList() {
       try {
         await this.getSelectedDishes()
         const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
@@ -345,7 +341,6 @@ export default {
             return { ...dish, isChecked: false, preferenceLevel: 1 }
           }
         })
-        // console.log(this.allDishesList)
 
         this.stapleList = this.allDishesList.filter((dish) => dish.category === '主食類')
         this.mainDishesList = this.allDishesList.filter((dish) => dish.category === '主菜類')
@@ -354,13 +349,13 @@ export default {
         this.errorProcess()
       }
     },
-    searchPretest () {
+    searchPretest() {
       if (this.search === this.searchInput) {
         return
       }
       this.getSearchedDishes()
     },
-    async getSearchedDishes () {
+    async getSearchedDishes() {
       this.isLoading = true
       this.searchedList = []
       this.search = this.searchInput
@@ -397,9 +392,8 @@ export default {
 
       this.isLoading = false
     },
-    async getSortedDishes () {
+    async getSortedDishes() {
       this.isLoading = true
-      // await this.getAllDishesList();
 
       if (this.sortBy === 'default') {
         if (this.searchedList.length) {
@@ -407,7 +401,7 @@ export default {
         }
       } else if (this.sortBy === 'preferenceLevel') {
         this.allDishesList = [...this.allDishesList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-          ...this.allDishesList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+        ...this.allDishesList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
 
         this.stapleList = this.allDishesList.filter((dish) => dish.category === '主食類')
         this.mainDishesList = this.allDishesList.filter((dish) => dish.category === '主菜類')
@@ -415,12 +409,12 @@ export default {
 
         if (this.searchedList.length) {
           this.searchedList = [...this.searchedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-            ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+          ...this.searchedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
         }
 
         if (this.selectedList.length) {
           this.selectedList = [...this.selectedList.filter((dish) => dish.isChecked === true).sort((a, b) => b.preferenceLevel - a.preferenceLevel),
-            ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
+          ...this.selectedList.filter((dish) => dish.isChecked === false).sort((a, b) => b.preferenceLevel - a.preferenceLevel)]
 
           if (!this.memberData.id) {
             localStorage.setItem('selectedList', JSON.stringify(this.selectedList))
@@ -450,7 +444,7 @@ export default {
       }
       this.isLoading = false
     },
-    async getSelectedDishes () {
+    async getSelectedDishes() {
       if (this.memberData.id) {
         try {
           const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/selecteds?_expand=dish`)
@@ -463,7 +457,7 @@ export default {
         this.selectedList = selectedList || []
       }
     },
-    async addToSelected (dish) {
+    async addToSelected(dish) {
       await this.getSelectedDishes()
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id)
       const selectedTempIndex = this.selectedList.findIndex(item => item.dishId === dish.id)
@@ -496,8 +490,7 @@ export default {
         }
       }
     },
-    async updatePreferenceLevel (dish) {
-      // this.isLoading = true;
+    async updatePreferenceLevel(dish) {
       dish.isLoading = true
       await this.getSelectedDishes()
 
@@ -516,9 +509,8 @@ export default {
 
       await this.getAllDishesList()
       dish.isLoading = false
-      // this.isLoading = false;
     },
-    async uncheckFromSelected (dish) {
+    async uncheckFromSelected(dish) {
       await this.getSelectedDishes()
 
       const selectedTemp = this.selectedList.find((item) => item.dishId === dish.id)
@@ -551,21 +543,19 @@ export default {
         this.errorProcess()
       }
     },
-    async updateSelected (dish) {
-      // this.isLoading = true;
+    async updateSelected(dish) {
       dish.isLoading = true
       dish.isChecked === true ? await this.addToSelected(dish) : await this.uncheckFromSelected(dish)
       await this.getAllDishesList()
       dish.isLoading = false
-      // this.isLoading = false;
     },
-    errorProcess () {
+    errorProcess() {
       toast.error('發生了某些錯誤，將重新整理頁面。', {
         autoClose: this.errorDelay
       })
       setTimeout(() => { location.reload() }, this.errorDelay)
     },
-    async init () {
+    async init() {
       this.isLoading = true
       await this.getUser()
       this.getMode()
@@ -573,9 +563,9 @@ export default {
       this.bentoModal = new Modal(document.querySelector('#bentoModal'))
       this.isLoading = false
     },
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberData, ['getUser'])
   },
-  mounted () {
+  mounted() {
     this.init()
   }
 }

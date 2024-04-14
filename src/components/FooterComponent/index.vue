@@ -18,12 +18,12 @@
           <img :src="icon" alt="footer icon">
         </div>
         <div class="d-flex gap-3">
-          <router-link to="/issue" class="link">
+          <RouterLink to="/issue" class="link">
             <h6>問題回報</h6>
-          </router-link>
-          <router-link to="/admin/login" class="link">
+          </RouterLink>
+          <RouterLink to="/admin/login" class="link">
             <h6>後台管理</h6>
-          </router-link>
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@ import logo from '@/assets/img/logo_small.png'
 import icon from '@/assets/img/logo_icon.png'
 
 export default {
-  data () {
+  data() {
     return {
       logo,
       icon
@@ -49,11 +49,12 @@ export default {
 .logo {
   width: 11rem;
 }
-.icon{
+
+.icon {
   width: 7rem;
 }
 
-h6{
+h6 {
   font-size: 0.7rem;
 }
 

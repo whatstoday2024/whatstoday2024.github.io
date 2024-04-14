@@ -4,7 +4,7 @@ import Layout from '@/views/Layout'
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',
-  scrollBehavior () {
+  scrollBehavior() {
     return { top: 0, left: 0 }
   },
   routes: [

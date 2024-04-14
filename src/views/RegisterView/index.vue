@@ -20,27 +20,33 @@
               {{ registerError }}
             </div>
             <div class="form-floating mb-4">
-              <VField type="text" id="name" placeholder="請輸入暱稱" name="暱稱" class="form-control" :class="{ 'is-invalid': errors['暱稱'] }" rules="required" v-model="user.nickname" />
-              <ErrorMessage name="暱稱" class="invalid-feedback"/>
+              <VField type="text" id="name" placeholder="請輸入暱稱" name="暱稱" class="form-control"
+                :class="{ 'is-invalid': errors['暱稱'] }" rules="required" v-model="user.nickname" />
+              <ErrorMessage name="暱稱" class="invalid-feedback" />
               <label for="name">請輸入暱稱</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
-              <ErrorMessage name="信箱" class="invalid-feedback"/>
+              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control"
+                :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
+              <ErrorMessage name="信箱" class="invalid-feedback" />
               <label for="email">請輸入電子信箱</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control" :class="{ 'is-invalid': errors['密碼'] }" rules="min:4" v-model="user.password" />
-              <ErrorMessage name="密碼" class="invalid-feedback"/>
+              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control"
+                :class="{ 'is-invalid': errors['密碼'] }" rules="min:4" v-model="user.password" />
+              <ErrorMessage name="密碼" class="invalid-feedback" />
               <label for="password">請輸入密碼</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="password" id="passwordDoubleCheck" placeholder="再次確認密碼" name="再次確認密碼" class="form-control" :class="{ 'is-invalid': errors['再次確認密碼'] }" rules="required|confirmed:@密碼" v-model="passwordDoubleCheck" />
-              <ErrorMessage name="再次確認密碼" class="invalid-feedback"/>
+              <VField type="password" id="passwordDoubleCheck" placeholder="再次確認密碼" name="再次確認密碼" class="form-control"
+                :class="{ 'is-invalid': errors['再次確認密碼'] }" rules="required|confirmed:@密碼"
+                v-model="passwordDoubleCheck" />
+              <ErrorMessage name="再次確認密碼" class="invalid-feedback" />
               <label for="passwordDoubleCheck">再次確認密碼</label>
             </div>
             <div class="d-flex">
-              <button type="button" class="btn btn-outline-primary btn-lg rounded-pill w-50 me-2" @click="$router.push({name: 'Login'})">已有會員，前往登入</button>
+              <button type="button" class="btn btn-outline-primary btn-lg rounded-pill w-50 me-2"
+                @click="$router.push({ name: 'Login' })">已有會員，前往登入</button>
               <button type="submit" class="btn btn-primary btn-lg rounded-pill w-50 ms-2">註冊</button>
             </div>
           </VForm>
@@ -56,7 +62,7 @@ import { toast } from 'vue3-toastify'
 document.title = '開始探索'
 
 export default {
-  data () {
+  data() {
     return {
       user: {
         nickname: '',
@@ -69,7 +75,7 @@ export default {
     }
   },
   methods: {
-    register () {
+    register() {
       this.isLoading = true
       this.registerError = ''
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/register`, this.user)
