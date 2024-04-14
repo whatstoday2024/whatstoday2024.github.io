@@ -3,10 +3,10 @@
   <div class="container">
     <div class="title">
       <h2 class="text-center my-3">帶您探索菜色的無限可能</h2>
-      <!-- <div class="site-induction-btn btn p-0 d-flex">
+      <div class="site-induction-btn btn p-0 d-flex">
         <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹" data-bs-toggle="modal"
-           data-bs-target="#siteIntroModal"></i>
-      </div> -->
+          data-bs-target="#siteIntroModal"></i>
+      </div>
     </div>
     <div class="mode-btns text-center mb-3">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -89,12 +89,17 @@
       <button type="button" class="btn btn-outline-primary bento-generator-btn mb-4 px-4 py-3"
         @click="bentoPretest">生成便當</button>
     </div>
-    <aside class="aside">
-      <div class="aside-head">
+    <aside class="aside" :class="{ isBottom: isBottom }" @click="scroll">
+        <span class="d-flex justify-content-center" >
+          <SortDown  style="width: 40px; height: 40px;" />
+        </span>
+        <p v-if="!isBottom" class="text-center">Button</p>
+        <p v-if="isBottom" class="isBottom">Top</p>
+      <!-- <div class="aside-head">
         <a href="javascript:;" class="aside-link aside-link-generator" @click="moveToGeneratorBentoBtn">
           <i class="fa-solid fa-angles-down"></i>
         </a>
-      </div>
+      </div> -->
     </aside>
   </div>
 
@@ -145,6 +150,7 @@
 <script>
 import DishesComponent from './DishesComponent.vue'
 import BentoComponent from './BentoComponent.vue'
+import { SortDown } from '@element-plus/icons-vue'
 import memberData from '@/stores/memberData'
 import { mapState, mapActions } from 'pinia'
 import Modal from 'bootstrap/js/dist/modal'
@@ -155,10 +161,11 @@ console.clear()
 document.title = '來點菜單'
 
 export default {
-  components: { DishesComponent, BentoComponent },
+  components: { DishesComponent, BentoComponent, SortDown },
   data () {
     return {
       isLoading: false,
+      isBottom: false,
       introIndex: 1,
       mode: 'default',
       filter: '全部',
@@ -303,6 +310,17 @@ export default {
       })
       this.bentoModal.show()
       this.isLoading = false
+    },
+    scroll () {
+      if (!this.isBottom) {
+        this.moveToGeneratorBentoBtn()
+      } else {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        })
+      }
     },
     moveToGeneratorBentoBtn () {
       document.querySelector('#bentoGenerator').scrollIntoView({ behavior: 'smooth' })
@@ -567,6 +585,14 @@ export default {
   },
   mounted () {
     this.init()
+
+    window.addEventListener('scroll', () => {
+      if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 5) {
+        this.isBottom = true
+      } else {
+        this.isBottom = false
+      }
+    })
   }
 }
 </script>
@@ -609,17 +635,28 @@ export default {
 /* aside ----------------------------- */
 .aside {
   position: fixed;
-  right: 1.5rem;
-  bottom: 2rem;
   z-index: 999;
+  bottom: 1rem;
+  right: 1.5rem;
   transition: all 0.5s;
   color: $primary;
+  scroll-behavior: smooth;
 
   &:hover {
-      transform: translateY(-2px);
+    transform: translateY(-2px);
   }
+
   &:active {
-      transform: translateY(2px);
+    transform: translateY(2px);
+  }
+}
+
+.isBottom {
+  bottom: 2.5rem;
+  transform: rotate(180deg);
+
+  &:hover {
+    transform: rotate(180deg) translateY(2px);
   }
 }
 

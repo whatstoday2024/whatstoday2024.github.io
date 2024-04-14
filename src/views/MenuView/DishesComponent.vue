@@ -12,14 +12,14 @@
             <h5 class="card-title text-center">{{ dish.title }}</h5>
             <small class="card-eng-title mb-3 d-block text-center">{{ dish.engTitle }}</small>
             <div class="input-group mx-auto">
-              <div class="input-group-text" :class="{ 'bg-primary-mid': dish.isLoading === true }">
+              <div class="input-group-text" :class="{ 'bg-primary-mid': dish.isLoading === true }" title="加入抽取範圍">
                 <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input"
                   v-model="dish.isChecked" @change="updateSelected(dish)"
                   :disabled="mode === 'default' || dish.isLoading === true">
               </div>
               <select class="form-select" :class="{ 'bg-primary-light': dish.isLoading === true }"
                 aria-label="Default select example" v-model="dish.preferenceLevel" @change="updatePreferenceLevel(dish)"
-                :disabled="!dish.isChecked || mode === 'default' || dish.isLoading === true">
+                :disabled="!dish.isChecked || mode === 'default' || dish.isLoading === true" title="菜色喜好程度">
                 <option value="1" selected>1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
