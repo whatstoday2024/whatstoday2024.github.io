@@ -1,13 +1,10 @@
 <template>
   <div class="pagination">
-    <div class='page-item' :class="{'active': page === currentPage}" v-for="(page,index) in totalPages" :key="index">
-          <button  class="page-link"
-                  :key="index"
-                  @click="goToPage(page)"
-                  >
-              {{ page }}
-          </button>
-      </div>
+    <div class='page-item' :class="{ 'active': page === currentPage }" v-for="(page, index) in totalPages" :key="index">
+      <button type="button" class="page-link" :key="index" @click="goToPage(page)">
+        {{ page }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -16,14 +13,14 @@
 export default {
   props: ['totalPages', 'currentPage'],
 
-  setup (props, { emit }) {
+  setup(props, { emit }) {
     const goToPage = (toPage) => {
       emit('goToPage', toPage)
     }
 
     return { goToPage }
   },
-  data () {
+  data() {
     return {
 
     }
@@ -34,7 +31,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.pagination{
+.pagination {
   margin-top: 2rem;
   display: flex;
   justify-content: center;

@@ -19,7 +19,7 @@
         <div @click="goToAddPage" class="col-lg-6 box">
           <div class="border border-primary rounded-4 p-5 h-100 text-center">
             <h5 class="mb-4 fs-4">新增菜色</h5>
-            <Plus style="width: 100px; height: 100px ;cursor: pointer;"/>
+            <Plus style="width: 100px; height: 100px ;cursor: pointer;" />
           </div>
         </div>
       </div>
@@ -31,12 +31,12 @@
 import axios from 'axios'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapState, mapActions } from 'pinia'
 import { Plus } from '@element-plus/icons-vue'
 
 export default {
-  data () {
+  data() {
     return {
       isLoading: false,
       total: '',
@@ -47,26 +47,26 @@ export default {
     Plus
   },
   computed: {
-    ...mapState(memberStore, ['checkIsAdmin'])
+    ...mapState(memberData, ['checkIsAdmin'])
   },
   methods: {
-    async getItemsQty () {
+    async getItemsQty() {
       const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
       this.total = res.data.message.length
     },
-    async getMembers () {
+    async getMembers() {
       const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/users`)
       this.members = res.data.message.length - 1
     },
-    goToAddPage () {
+    goToAddPage() {
       this.$router.push('/admin/add-item')
     },
-    goToAllItems () {
+    goToAllItems() {
       this.$router.push({ name: 'AdminItems' })
     },
-    ...mapActions(memberStore, ['checkIsAdmin', 'getUser'])
+    ...mapActions(memberData, ['checkIsAdmin', 'getUser'])
   },
-  async mounted () {
+  async mounted() {
     document.title = '後台管理'
     this.isLoading = true
     await this.getUser()
@@ -83,15 +83,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box{
+.box {
   transition: all 0.5s;
 
-  &:hover{
+  &:hover {
     cursor: pointer;
     transform: translateY(-3px)
   }
 
-  &:active{
+  &:active {
     transform: translateY(5px)
   }
 }

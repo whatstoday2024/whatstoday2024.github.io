@@ -10,8 +10,7 @@
   </div>
 
   <!-- 便當相關 Modal -->
-  <BentoComponent :bento-temp="bentoTemp" :member-data="memberData" :delete-from-calendar="deleteFromCalendar">
-  </BentoComponent>
+  <BentoComponent :bento-temp="bentoTemp" :member-data="memberData" :delete-from-calendar="deleteFromCalendar" />
 </template>
 
 <script>
@@ -21,7 +20,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import rrulePlugin from '@fullcalendar/rrule'
 import FreeDaysData from '../FreeDaysData'
 import { mapState, mapActions } from 'pinia'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import BentoComponent from '@/views/MenuView/BentoComponent.vue'
 import Modal from 'bootstrap/js/dist/modal'
 import { toast } from 'vue3-toastify'
@@ -30,7 +29,7 @@ document.title = '飲食紀錄'
 
 export default {
   components: { FullCalendar, BentoComponent },
-  data () {
+  data() {
     return {
       isLoading: false,
       calendarWrap: null,
@@ -81,43 +80,43 @@ export default {
   emits: ['updateProfile'],
   mixins: [FreeDaysData],
   watch: {
-    freeDays (value) {
+    freeDays(value) {
       if (value.weekly) {
         this.initFreeDaysRule()
       }
     }
   },
   computed: {
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
-    deleteFromCalendar () {
+    deleteFromCalendar() {
       this.isLoading = true
       this.fullCalendarDOM.getEventById(this.bentoTemp.idTemp).remove()
       this.isLoading = false
     },
-    eventClick (info) {
+    eventClick(info) {
       // if (info.event.title.startsWith("午餐") || info.event.title.startsWith("晚餐")) {
       if (/^(午餐|晚餐)/.test(info.event.title)) {
         this.bentoTemp = info.event._def.extendedProps
         this.bentoModal.show()
       }
     },
-    eventClassNames (info) {
+    eventClassNames(info) {
       if (info.event.title.startsWith('午餐')) {
         return ['lunch-bento', 'bg-brand-blue']
       } else if (info.event.title.startsWith('晚餐')) {
         return ['dinner-bento', 'bg-brand-red']
       }
     },
-    resizeCalendar () {
+    resizeCalendar() {
       if (window.innerWidth >= 992) {
         this.calendarWrap.classList.add('col-md-10')
       } else {
         this.calendarWrap.classList.remove('col-md-10')
       }
     },
-    initFreeDaysRule () {
+    initFreeDaysRule() {
       // 設定所有週期放縱日的起始時間
       const dtstartInit = ['2024', '01', '01']
       const dtstart = dtstartInit.join('-')
@@ -163,7 +162,7 @@ export default {
         })
       })
     },
-    renderFreeDays (rules) {
+    renderFreeDays(rules) {
       const settings = {
         title: ' free day', // 前方留空白，讓放縱日事件維持在最上方
         display: 'list-item',
@@ -174,7 +173,7 @@ export default {
         ...rules
       })
     },
-    async getBentoRecords () {
+    async getBentoRecords() {
       try {
         const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`)
         this.bentoRecords = res.data.message
@@ -194,9 +193,9 @@ export default {
         })
       })
     },
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberData, ['getUser'])
   },
-  async mounted () {
+  async mounted() {
     this.calendarWrap = document.querySelector('.calendar-wrap')
     this.resizeCalendar()
     window.addEventListener('resize', this.resizeCalendar)

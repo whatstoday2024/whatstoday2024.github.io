@@ -1,14 +1,14 @@
 <script>
 import { toast } from 'vue3-toastify'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapState } from 'pinia'
 
 export default {
   computed: {
-    ...mapState(memberStore, ['memberData'])
+    ...mapState(memberData, ['memberData'])
   },
   methods: {
-    getFreeDaysData () {
+    getFreeDaysData() {
       this.isLoading = true
       this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/freeDays?userId=${this.memberData.id}`)
         .then(res => {
@@ -20,9 +20,10 @@ export default {
           }
         }).catch(e => {
           toast.error(e.data?.message || e)
+          this.isLoading = false
         })
     },
-    initFreeDaysData () {
+    initFreeDaysData() {
       const data = {
         weekly: [],
         monthly: [],
@@ -40,6 +41,7 @@ export default {
           this.isLoading = false
         }).catch(e => {
           toast.error(e.data?.message || e)
+          this.isLoading = false
         })
     }
   }

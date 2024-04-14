@@ -1,31 +1,31 @@
 <template>
   <loadingVue :active="isLoading" />
-  <RouterView @update-profile="updateProfile" v-if="isRouterAlive"/>
+  <RouterView @update-profile="updateProfile" v-if="isRouterAlive" />
   <div class="flex-fill" v-else></div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'pinia'
 import { toast } from 'vue3-toastify'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 
 export default {
-  data () {
+  data() {
     return {
       isRouterAlive: false,
       isLoading: false
     }
   },
   computed: {
-    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
+    ...mapState(memberData, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    hasCheckLogin () {
+    hasCheckLogin() {
       this.checkStatus()
     }
   },
   methods: {
-    checkStatus () {
+    checkStatus() {
       if (this.hasCheckLogin) {
         if (!this.memberData.email) {
           this.redirect()
@@ -35,7 +35,7 @@ export default {
         this.isLoading = false
       }
     },
-    redirect () {
+    redirect() {
       this.isLoading = false
       const delay = 1000
       toast.error('請先登入', {
@@ -45,15 +45,15 @@ export default {
         this.$router.replace({ name: 'Login' })
       }, delay)
     },
-    async updateProfile ({ status, message }) {
+    async updateProfile({ status, message }) {
       this.isRouterAlive = false
       toast[status](message)
       await this.getUser()
       this.isRouterAlive = true
     },
-    ...mapActions(memberStore, ['getUser'])
+    ...mapActions(memberData, ['getUser'])
   },
-  mounted () {
+  mounted() {
     this.isLoading = true
     this.checkStatus()
   }

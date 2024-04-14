@@ -3,16 +3,9 @@
   <section class="member-section table-img">
     <!-- <div class="d-flex justify-content-around "> -->
     <div class="row">
-      <div
-        class="col-6 col-lg-3 g-5 d-flex flex-column align-items-center"
-        v-for="option in memberOptions"
-        :key="option.id"
-      >
-        <div
-          class="option-item relative"
-          :style="isShow === option.id ? obj : ''"
-          @click="showDetail(option.id)"
-        >
+      <div class="col-6 col-lg-3 g-5 d-flex flex-column align-items-center" v-for="option in memberOptions"
+        :key="option.id">
+        <div class="option-item relative" :style="isShow === option.id ? obj : ''" @click="showDetail(option.id)">
           <div class="d-flex flex-column gap-1 align-items-center">
             <img :src="option.icon" alt="icon" class="icon" />
             <h5 class="fw-bold">{{ option.title }}</h5>
@@ -26,11 +19,11 @@
       </div>
     </div>
     <div class="text-center mt-5">
-      <router-link to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
+      <RouterLink to="/register" class="btn btn-lg btn-brand-blue text-white rounded-pill">
         <div class="d-flex align-items-center py-2 px-3">
           成為會員 <i class="bi bi-chevron-right"></i>
         </div>
-      </router-link>
+      </RouterLink>
     </div>
   </section>
 </template>
@@ -40,7 +33,7 @@ import { memberOptions } from '@/utils/variables'
 import tableImg from '@/assets/img/table.png'
 
 export default {
-  data () {
+  data() {
     return {
       memberOptions,
       tableImg,
@@ -49,7 +42,7 @@ export default {
     }
   },
   methods: {
-    showDetail (id) {
+    showDetail(id) {
       this.isShow = id
     }
   }
@@ -81,13 +74,13 @@ export default {
   background-repeat: no-repeat;
   background-position: 0% 30%;
 
-  @include respond(lg) {
-  }
+  @include respond(lg) {}
 
   @include respond(md) {
     background-position: 0% 20%;
   }
 }
+
 .title {
   max-width: 95rem;
   // margin: 6rem 2rem;
@@ -144,6 +137,7 @@ export default {
     width: 12.5rem;
     height: 12.5rem;
   }
+
   h6 {
     font-size: 0.8rem;
     transform: translateY(3.125rem);

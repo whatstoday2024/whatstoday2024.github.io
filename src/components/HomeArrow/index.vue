@@ -1,15 +1,17 @@
 <template>
-    <div class="home-arrow" :class="{ isBottom: isBottom }" @click="scroll">
-        <span ><SortDown style="width: 40px; height: 40px;"/></span>
-        <p v-if="!isBottom" class="">scroll</p>
-        <p v-if="isBottom" class="isBottom">Top</p>
-    </div>
+  <div class="home-arrow" :class="{ isBottom: isBottom }" @click="scroll">
+    <span>
+      <SortDown style="width: 40px; height: 40px;" />
+    </span>
+    <p v-if="!isBottom" class="">scroll</p>
+    <p v-if="isBottom" class="isBottom">Top</p>
+  </div>
 </template>
 
 <script>
 import { SortDown } from '@element-plus/icons-vue'
 export default {
-  data () {
+  data() {
     return {
       isBottom: false
     }
@@ -18,7 +20,7 @@ export default {
     SortDown
   },
   methods: {
-    scroll () {
+    scroll() {
       if (!this.isBottom) {
         const distanceToScroll = 500 // 單位是像素
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
@@ -36,10 +38,10 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     window.addEventListener('scroll', () => {
       if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 5) {
-      // if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
+        // if (window.scrollY + window.screen.height >= document.body.scrollHeight) {
         this.isBottom = true
       } else {
         this.isBottom = false
@@ -50,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home-arrow{
+.home-arrow {
   position: fixed;
   z-index: 999;
   bottom: 1rem;
@@ -59,23 +61,22 @@ export default {
   color: $primary;
 
   &:hover {
-      cursor: pointer;
-      transform: translateY(-2px)
-    }
+    cursor: pointer;
+    transform: translateY(-2px)
+  }
 
   &:active {
-      cursor: pointer;
-      transform: translateY(2px)
-    }
-}
-
-.isBottom{
-
-  transform: rotate(180deg);
-
-  &:hover{
-    transform: rotate(180deg) translateY(2px)
+    cursor: pointer;
+    transform: translateY(2px)
   }
 }
 
+.isBottom {
+
+  transform: rotate(180deg);
+
+  &:hover {
+    transform: rotate(180deg) translateY(2px)
+  }
+}
 </style>

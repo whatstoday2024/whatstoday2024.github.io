@@ -6,18 +6,18 @@
           <RouterLink class="navbar-brand" to="/">
             <img class="logo" height="50" alt="login" />
           </RouterLink>
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2"
-                  aria-controls="offcanvasNavbar2" aria-label="Toggle navigation">
+          <button type="button" class="navbar-toggler"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar2"
+            aria-controls="offcanvasNavbar2" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasNavbar2"
-               aria-labelledby="offcanvasNavbar2Label">
+            aria-labelledby="offcanvasNavbar2Label">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvasNavbar2Label"></h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div
-                 class="offcanvas-body d-flex flex-column flex-md-row justify-content-between justify-content-md-end my-5 my-md-0">
+              class="offcanvas-body d-flex flex-column flex-md-row justify-content-between justify-content-md-end my-5 my-md-0">
               <ul class="navbar-nav align-items-center me-md-3" data-bs-dismiss="offcanvas">
                 <li class="nav-item text-center">
                   <RouterLink to="/menu" class="m-2">立即開始</RouterLink>
@@ -31,11 +31,11 @@
                 <li v-if="isLogin" class="nav-item mx-2 d-none d-md-block">
                   <div class="dropdown">
                     <a href="#" class="dropdown-toggle" id="dropdownNavLink" data-bs-toggle="dropdown"
-                       aria-expanded="false">
+                      aria-expanded="false">
                       <svg width="40" height="40">
                         <circle cx="20" cy="20" r="20" fill="#144bb8" />
                         <text x="20" y="22" text-anchor="middle" alignment-baseline="middle" font-size="24"
-                              fill="white">
+                          fill="white">
                           {{ nicknameOne }}
                         </text>
                       </svg>
@@ -65,7 +65,7 @@
                   </li>
                 </ul>
                 <RouterLink v-if="!isLogin" to="/login" class="btn btn-brand-blue rounded-pill"
-                            style="padding: 12px 12px 12px 16px">
+                  style="padding: 12px 12px 12px 16px">
                   登入 / 註冊
                   <i class="bi bi-chevron-right"></i>
                 </RouterLink>
@@ -80,18 +80,18 @@
 
 <script>
 import { toast } from 'vue3-toastify'
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  data () {
+  data() {
     return {
       isLogin: false,
       nicknameOne: ''
     }
   },
   methods: {
-    checkStatus () {
+    checkStatus() {
       if (this?.memberData.email) {
         this.nicknameOne = this?.memberData.nickname.charAt(0)
         this.isLogin = true
@@ -100,7 +100,7 @@ export default {
         this.isLogin = false
       }
     },
-    logout () {
+    logout() {
       this.$cookie.setMemberToken('')
       this.$cookie.setMemberId('')
 
@@ -114,17 +114,17 @@ export default {
         this.$router.push({ name: 'HomeView' })
       }, delay)
     },
-    ...mapActions(memberStore, ['getUser', 'logoutClear'])
+    ...mapActions(memberData, ['getUser', 'logoutClear'])
   },
   computed: {
-    ...mapState(memberStore, ['memberData', 'hasCheckLogin'])
+    ...mapState(memberData, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    hasCheckLogin () {
+    hasCheckLogin() {
       this.checkStatus()
     }
   },
-  created () {
+  created() {
     this.checkStatus()
   }
 }

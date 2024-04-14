@@ -13,24 +13,27 @@
         </div>
         <div class="col-lg-6">
           <VForm class="card border-primary rounded-4 p-4 p-lg-5" v-slot="{ errors }" @submit="login">
-            <h1 class="h2 mb-3 text-center">登入會員</h1>
-            <div class="text-center">
-              <button type="button" class="btn btn-outline-primary mb-4 rounded-pill px-3" @click="$router.push({name: 'Register'})">還不是會員？前往註冊</button>
-            </div>
+            <h1 class="h2 mb-4 text-center">登入會員</h1>
             <div class="alert alert-danger mb-4" v-if="loginError">
               登入失敗！請確認帳號與密碼是否正確。
             </div>
             <div class="form-floating mb-4">
-              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control" :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
-              <ErrorMessage name="信箱" class="invalid-feedback"/>
+              <VField type="email" id="email" placeholder="請輸入電子信箱" name="信箱" class="form-control"
+                :class="{ 'is-invalid': errors['信箱'] }" rules="email|required" v-model="user.email" />
+              <ErrorMessage name="信箱" class="invalid-feedback" />
               <label for="email">請輸入電子信箱</label>
             </div>
             <div class="form-floating mb-4">
-              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control" :class="{ 'is-invalid': errors['密碼'] }" rules="required" v-model="user.password" />
-              <ErrorMessage name="密碼" class="invalid-feedback"/>
+              <VField type="password" id="password" placeholder="請輸入密碼" name="密碼" class="form-control"
+                :class="{ 'is-invalid': errors['密碼'] }" rules="required" v-model="user.password" />
+              <ErrorMessage name="密碼" class="invalid-feedback" />
               <label for="password">請輸入密碼</label>
             </div>
-            <button type="submit" class="btn btn-primary btn-lg rounded-pill">登入</button>
+            <div class="d-flex">
+              <button type="button" class="btn btn-outline-primary btn-lg rounded-pill w-50 me-2"
+                @click="$router.push({ name: 'Register' })">還不是會員？前往註冊</button>
+              <button type="submit" class="btn btn-primary btn-lg rounded-pill w-50 ms-2">登入</button>
+            </div>
           </VForm>
         </div>
       </div>
@@ -39,14 +42,14 @@
 </template>
 
 <script>
-import memberStore from '@/stores/memberData'
+import memberData from '@/stores/memberData'
 import { mapActions } from 'pinia'
 import { toast } from 'vue3-toastify'
 
 document.title = '馬上登入'
 
 export default {
-  data () {
+  data() {
     return {
       user: {
         email: '',
@@ -57,7 +60,7 @@ export default {
     }
   },
   methods: {
-    login () {
+    login() {
       this.isLoading = true
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
         .then((res) => {
@@ -87,7 +90,7 @@ export default {
           this.isLoading = false
         })
     },
-    ...mapActions(memberStore, ['setMemberData'])
+    ...mapActions(memberData, ['setMemberData'])
   }
 }
 </script>

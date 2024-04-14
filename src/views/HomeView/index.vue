@@ -1,12 +1,11 @@
 <template>
   <section class="relative">
-    <HeroSection></HeroSection>
-    <WhatSection></WhatSection>
-    <ProvideSection></ProvideSection>
-    <MemberSection></MemberSection>
-    <QAsection></QAsection>
-    <HomeArrow></HomeArrow>
-
+    <HeroSection />
+    <WhatSection />
+    <ProvideSection />
+    <MemberSection />
+    <QAsection />
+    <HomeArrow />
   </section>
 </template>
 
