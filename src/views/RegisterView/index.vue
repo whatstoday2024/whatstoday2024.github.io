@@ -62,7 +62,7 @@ import { toast } from 'vue3-toastify'
 document.title = '開始探索'
 
 export default {
-  data() {
+  data () {
     return {
       user: {
         nickname: '',
@@ -75,7 +75,7 @@ export default {
     }
   },
   methods: {
-    register() {
+    register () {
       this.isLoading = true
       this.registerError = ''
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/register`, this.user)

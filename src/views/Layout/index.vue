@@ -14,7 +14,7 @@ import FooterComponent from '@/components/FooterComponent'
 
 export default {
   components: { HeaderComponent, FooterComponent },
-  data() {
+  data () {
     return {
     }
   },
@@ -23,7 +23,7 @@ export default {
   methods: {
     ...mapActions(memberData, ['getUser'])
   },
-  async mounted() {
+  async mounted () {
     await this.getUser()
   }
 }

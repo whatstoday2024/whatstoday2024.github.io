@@ -160,7 +160,7 @@ import memberData from '@/stores/memberData'
 import { mapActions } from 'pinia'
 
 export default {
-  data() {
+  data () {
     return {
       portionOptions: [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5, 4.75, 5],
       item: {
@@ -187,7 +187,7 @@ export default {
     ElSelect
   },
   methods: {
-    uploadImg() {
+    uploadImg () {
       const form = document.querySelector('#upload-image')
       const imageInput = document.querySelector('#file-input')
       const formData = new FormData(form)
@@ -210,7 +210,7 @@ export default {
         alert('請先選擇欲上傳之圖片。')
       }
     },
-    async addItem() {
+    async addItem () {
       if (this.item.imgUrl === '') {
         this.errorMsg = '主圖為必填'
         return
@@ -225,7 +225,7 @@ export default {
       }
       this.isLoading = false
     },
-    reset() {
+    reset () {
       this.item = {
         title: '',
         engTitle: '',
@@ -239,18 +239,18 @@ export default {
         noBgImg: ''
       }
     },
-    addImage1() {
+    addImage1 () {
       this.item.images.push(this.tempImg1)
       this.tempImg1 = ''
     },
-    addImage2() {
+    addImage2 () {
       this.item.images.push(this.tempImg2)
       this.tempImg2 = ''
     },
-    chooseMainImg(img) {
+    chooseMainImg (img) {
       this.item.imgUrl = img
     },
-    deleteImg(index, img) {
+    deleteImg (index, img) {
       if (img === this.item.imgUrl) {
         toast.error('不能刪除當前主圖，若欲刪除請先置換主圖')
         return
@@ -264,7 +264,7 @@ export default {
       this.errorMsg = ''
     }
   },
-  async mounted() {
+  async mounted () {
     document.title = '新增菜色'
     await this.getUser()
     if (!this.checkIsAdmin()) {

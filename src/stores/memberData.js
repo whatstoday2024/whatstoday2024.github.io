@@ -8,10 +8,10 @@ export default defineStore('memberData', {
     hasCheckLogin: false
   }),
   actions: {
-    setMemberData(data) {
+    setMemberData (data) {
       this.memberData = data
     },
-    async getUser() {
+    async getUser () {
       this.hasCheckLogin = false
       const token = $cookie.getMemberToken()
       const id = $cookie.getMemberId()
@@ -30,11 +30,11 @@ export default defineStore('memberData', {
         this.hasCheckLogin = true
       }
     },
-    logoutClear() {
+    logoutClear () {
       this.setMemberData({})
       this.hasCheckLogin = false
     },
-    checkIsAdmin() {
+    checkIsAdmin () {
       if (!this.memberData?.isAdmin) {
         return false
       } else {

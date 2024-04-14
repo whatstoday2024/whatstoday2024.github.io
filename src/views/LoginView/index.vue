@@ -49,7 +49,7 @@ import { toast } from 'vue3-toastify'
 document.title = '馬上登入'
 
 export default {
-  data() {
+  data () {
     return {
       user: {
         email: '',
@@ -60,7 +60,7 @@ export default {
     }
   },
   methods: {
-    login() {
+    login () {
       this.isLoading = true
       this.axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/login`, this.user)
         .then((res) => {

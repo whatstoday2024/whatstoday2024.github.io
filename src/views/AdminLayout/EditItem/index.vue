@@ -160,7 +160,7 @@ import { DeleteFilled, Select as ElSelect } from '@element-plus/icons-vue'
 
 import { items } from '@/utils/variables'
 export default {
-  data() {
+  data () {
     return {
       portionOptions: [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5, 4.75, 5],
       items,
@@ -187,7 +187,7 @@ export default {
     ElSelect
   },
   methods: {
-    uploadImg() {
+    uploadImg () {
       // 取出 Token
       const form = document.querySelector('#upload-image')
       const imageInput = document.querySelector('#file-input')
@@ -212,7 +212,7 @@ export default {
         axios.defaults.headers.common.Authorization = null
       }
     },
-    async editItem() {
+    async editItem () {
       if (this.item.imgUrl === '') {
         this.errorMsg = '主圖為必填'
         return
@@ -227,25 +227,25 @@ export default {
       }
       this.isLoading = false
     },
-    addImage1() {
+    addImage1 () {
       this.item.images.push(this.tempImg1)
       this.tempImg1 = ''
     },
-    addImage2() {
+    addImage2 () {
       this.item.images.push(this.tempImg2)
       this.tempImg2 = ''
     },
-    chooseMainImg(img) {
+    chooseMainImg (img) {
       this.item.imgUrl = img
     },
-    deleteImg(index, img) {
+    deleteImg (index, img) {
       if (img === this.item.imgUrl) {
         toast.error('不能刪除當前主圖，若欲刪除請先置換主圖')
         return
       }
       this.item.images.splice(index, 1)
     },
-    async getItem(id) {
+    async getItem (id) {
       this.isLoading = true
       try {
         const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
@@ -263,7 +263,7 @@ export default {
       this.errorMsg = ''
     }
   },
-  async mounted() {
+  async mounted () {
     document.title = '菜色編輯'
     await this.getUser()
     if (!this.checkIsAdmin()) {

@@ -136,14 +136,14 @@
 <script>
 export default {
   props: ['dishesList', 'mode', 'modalName', 'updateSelected', 'updatePreferenceLevel'],
-  data() {
+  data () {
     return {
       dishInfo: {}
     }
   },
   methods: {
   },
-  mounted() {
+  mounted () {
   }
 }
 </script>

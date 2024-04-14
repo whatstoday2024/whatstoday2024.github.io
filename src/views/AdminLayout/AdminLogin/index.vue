@@ -34,7 +34,7 @@ import memberData from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  data() {
+  data () {
     return {
       user: {
         email: '',
@@ -56,7 +56,7 @@ export default {
     ...mapState(memberData, ['memberData'])
   },
   methods: {
-    login() {
+    login () {
       document.title = '後台登入'
       this.isLoading = true
       axios.post(`${import.meta.env.VITE_API}/admin/signin`, { username: this.user.email, password: this.user.password })
@@ -82,7 +82,7 @@ export default {
     },
     ...mapActions(memberData, ['setMemberData'])
   },
-  async mounted() {
+  async mounted () {
   }
 
 }

@@ -183,7 +183,7 @@ import { toast } from 'vue3-toastify'
 
 export default {
   props: ['bentoTemp', 'generateBento', 'memberData', 'deleteFromCalendar'],
-  data() {
+  data () {
     return {
       path: '',
       bentoModal: null,
@@ -198,7 +198,7 @@ export default {
     }
   },
   methods: {
-    async getBentoRecords() {
+    async getBentoRecords () {
       try {
         const res = await this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/users/${this.memberData.id}/records/`)
         this.bentoRecords = res.data.message
@@ -206,7 +206,7 @@ export default {
         this.errorProcess()
       }
     },
-    async saveToDiary() {
+    async saveToDiary () {
       await this.getBentoRecords()
       const data = {
         ...this.bentoTemp,
@@ -238,7 +238,7 @@ export default {
       }
       this.saveToBentoDiaryModal.hide()
     },
-    async deleteRecord() {
+    async deleteRecord () {
       try {
         await this.axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/600/records/${this.bentoTemp.idTemp}`)
         toast.success('便當紀錄刪除成功！', {
@@ -251,23 +251,23 @@ export default {
       }
       this.confirmDeleteRecordModal.hide()
     },
-    errorProcess() {
+    errorProcess () {
       toast.error('發生了某些錯誤，將重新整理頁面。', {
         autoClose: this.errorDelay
       })
       setTimeout(() => { location.reload() }, this.errorDelay)
     },
-    openModal(modal) {
+    openModal (modal) {
       this.hideModal()
       modal.show()
     },
-    hideModal() {
+    hideModal () {
       this.bentoModal.hide()
       this.saveToBentoDiaryModal.hide()
       this.confirmRegenerateModal.hide()
       this.confirmDeleteRecordModal.hide()
     },
-    init() {
+    init () {
       this.path = this.$route.path
       this.bentoModal = new Modal(document.querySelector('#bentoModal'))
       this.saveToBentoDiaryModal = new Modal(document.querySelector('#saveToBentoDiaryModal'))
@@ -275,7 +275,7 @@ export default {
       this.confirmDeleteRecordModal = new Modal(document.querySelector('#confirmDeleteRecordModal'))
     }
   },
-  mounted() {
+  mounted () {
     this.init()
   }
 }

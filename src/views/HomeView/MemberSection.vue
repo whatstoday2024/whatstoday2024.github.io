@@ -33,7 +33,7 @@ import { memberOptions } from '@/utils/variables'
 import tableImg from '@/assets/img/table.png'
 
 export default {
-  data() {
+  data () {
     return {
       memberOptions,
       tableImg,
@@ -42,7 +42,7 @@ export default {
     }
   },
   methods: {
-    showDetail(id) {
+    showDetail (id) {
       this.isShow = id
     }
   }

@@ -11,7 +11,7 @@
 <script>
 import { SortDown } from '@element-plus/icons-vue'
 export default {
-  data() {
+  data () {
     return {
       isBottom: false
     }
@@ -20,7 +20,7 @@ export default {
     SortDown
   },
   methods: {
-    scroll() {
+    scroll () {
       if (!this.isBottom) {
         const distanceToScroll = 500 // 單位是像素
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
@@ -38,7 +38,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     window.addEventListener('scroll', () => {
       if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 5) {
         // if (window.scrollY + window.screen.height >= document.body.scrollHeight) {

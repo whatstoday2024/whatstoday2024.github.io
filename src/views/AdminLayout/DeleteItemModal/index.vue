@@ -31,12 +31,12 @@ export default {
   props: {
     item: {
       type: Object,
-      default() {
+      default () {
         return {}
       }
     }
   },
-  data() {
+  data () {
     return {
       modal: ''
     }
@@ -44,14 +44,14 @@ export default {
   components: {
     Warning
   },
-  mounted() {
+  mounted () {
     this.modal = new Modal(this.$refs.modalRef)
   },
   methods: {
-    openModal() {
+    openModal () {
       this.modal.show()
     },
-    hideModal() {
+    hideModal () {
       this.modal.hide()
     }
   }

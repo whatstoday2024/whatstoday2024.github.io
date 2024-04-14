@@ -35,7 +35,7 @@ import eatingImg from '@/assets/img/solution_person.png'
 import { provideOptions } from '@/utils/variables'
 
 export default {
-  data() {
+  data () {
     return {
       eatingImg,
       provideOptions

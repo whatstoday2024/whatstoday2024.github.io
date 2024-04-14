@@ -73,7 +73,7 @@ import memberData from '@/stores/memberData'
 document.title = '會員中心'
 
 export default {
-  data() {
+  data () {
     return {
       dinnerCount: 0,
       renameInvalid: false,
@@ -87,7 +87,7 @@ export default {
   },
   emits: ['updateProfile'],
   computed: {
-    user() {
+    user () {
       if (this.memberData.email) {
         const { email, nickname } = this.memberData
         return {
@@ -100,7 +100,7 @@ export default {
     ...mapState(memberData, ['memberData'])
   },
   methods: {
-    getProfile() {
+    getProfile () {
       this.isLoading = true
       this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/600/records?userId=${this.memberData.id}`, {
         headers: {
@@ -116,7 +116,7 @@ export default {
         this.isLoading = false
       })
     },
-    editProfile() {
+    editProfile () {
       if (this.user.nickname === this.memberData.nickname) {
         this.renameInvalid = true
         return
@@ -142,7 +142,7 @@ export default {
         this.isLoading = false
       })
     },
-    async changePassword() {
+    async changePassword () {
       this.isLoading = true
       const isValid = await this.checkPassword()
       if (isValid) {
@@ -172,7 +172,7 @@ export default {
         this.isLoading = false
       }
     },
-    checkPassword() {
+    checkPassword () {
       const user = {
         email: this.user.email,
         password: this.password.old
@@ -187,7 +187,7 @@ export default {
       })
     }
   },
-  mounted() {
+  mounted () {
     this.getProfile()
   }
 }

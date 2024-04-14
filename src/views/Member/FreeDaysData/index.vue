@@ -8,7 +8,7 @@ export default {
     ...mapState(memberData, ['memberData'])
   },
   methods: {
-    getFreeDaysData() {
+    getFreeDaysData () {
       this.isLoading = true
       this.axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/freeDays?userId=${this.memberData.id}`)
         .then(res => {
@@ -23,7 +23,7 @@ export default {
           this.isLoading = false
         })
     },
-    initFreeDaysData() {
+    initFreeDaysData () {
       const data = {
         weekly: [],
         monthly: [],

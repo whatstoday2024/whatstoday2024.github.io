@@ -36,7 +36,7 @@ import { mapState, mapActions } from 'pinia'
 import { Plus } from '@element-plus/icons-vue'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       total: '',
@@ -50,23 +50,23 @@ export default {
     ...mapState(memberData, ['checkIsAdmin'])
   },
   methods: {
-    async getItemsQty() {
+    async getItemsQty () {
       const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/dishes`)
       this.total = res.data.message.length
     },
-    async getMembers() {
+    async getMembers () {
       const res = await axios.get(`${import.meta.env.VITE_APP_SERVER_URL}/users`)
       this.members = res.data.message.length - 1
     },
-    goToAddPage() {
+    goToAddPage () {
       this.$router.push('/admin/add-item')
     },
-    goToAllItems() {
+    goToAllItems () {
       this.$router.push({ name: 'AdminItems' })
     },
     ...mapActions(memberData, ['checkIsAdmin', 'getUser'])
   },
-  async mounted() {
+  async mounted () {
     document.title = '後台管理'
     this.isLoading = true
     await this.getUser()

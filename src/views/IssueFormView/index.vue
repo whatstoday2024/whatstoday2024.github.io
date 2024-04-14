@@ -48,7 +48,7 @@ import emailjs from '@emailjs/browser'
 import { toast } from 'vue3-toastify'
 
 export default {
-  data() {
+  data () {
     return {
       issue: {
         type: '問題回報',
@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    sendEmail() {
+    sendEmail () {
       try {
         emailjs.send('service_wrg9fdg', 'template_u74y2ir', this.issue, 'cU7MJETmO9Fcn--g1')
           .then(() => {

@@ -84,14 +84,14 @@ import memberData from '@/stores/memberData'
 import { mapActions, mapState } from 'pinia'
 
 export default {
-  data() {
+  data () {
     return {
       isLogin: false,
       nicknameOne: ''
     }
   },
   methods: {
-    checkStatus() {
+    checkStatus () {
       if (this?.memberData.email) {
         this.nicknameOne = this?.memberData.nickname.charAt(0)
         this.isLogin = true
@@ -100,7 +100,7 @@ export default {
         this.isLogin = false
       }
     },
-    logout() {
+    logout () {
       this.$cookie.setMemberToken('')
       this.$cookie.setMemberId('')
 
@@ -120,11 +120,11 @@ export default {
     ...mapState(memberData, ['memberData', 'hasCheckLogin'])
   },
   watch: {
-    hasCheckLogin() {
+    hasCheckLogin () {
       this.checkStatus()
     }
   },
-  created() {
+  created () {
     this.checkStatus()
   }
 }

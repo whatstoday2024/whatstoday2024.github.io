@@ -137,7 +137,7 @@ import FreeDaysData from '../FreeDaysData'
 document.title = '放縱一下'
 
 export default {
-  data() {
+  data () {
     return {
       isLoading: false,
       isSpecificDay: false,
@@ -172,7 +172,7 @@ export default {
   },
   mixins: [FreeDaysData],
   methods: {
-    updateFreeDaysData(key) {
+    updateFreeDaysData (key) {
       this.isLoading = true
       const data = {}
       data[key] = this.freeDays[key]
@@ -189,14 +189,14 @@ export default {
           this.isLoading = false
         })
     },
-    setTemplateDay(month) {
+    setTemplateDay (month) {
       this.select.yearly.day = ''
       this.template.day = new Date(2024, month, 0).getDate()
     },
-    setStringFormat(number) {
+    setStringFormat (number) {
       return number < 10 ? `0${number}` : number
     },
-    addWeekly(day) {
+    addWeekly (day) {
       const index = this.freeDays.weekly.indexOf(day)
       if (index < 0) {
         this.freeDays.weekly.push(day)
@@ -207,7 +207,7 @@ export default {
       }
       this.select.weekly = ''
     },
-    addMonthly(day) {
+    addMonthly (day) {
       const index = this.freeDays.monthly.indexOf(day)
       if (index < 0) {
         this.freeDays.monthly.push(day)
@@ -218,7 +218,7 @@ export default {
       }
       this.select.monthly = ''
     },
-    addYearly({ month, day }) {
+    addYearly ({ month, day }) {
       const date = `${this.setStringFormat(month)}/${this.setStringFormat(day)}`
       const index = this.freeDays.yearly.indexOf(date)
       if (index < 0) {
@@ -231,7 +231,7 @@ export default {
       this.select.yearly.month = ''
       this.select.yearly.day = ''
     },
-    addSpecificDay(date) {
+    addSpecificDay (date) {
       date = date.replaceAll('-', '/')
       const index = this.freeDays.specific.indexOf(date)
       if (index < 0) {
@@ -243,12 +243,12 @@ export default {
       }
       this.select.specific = ''
     },
-    showWarningToast(msg) {
+    showWarningToast (msg) {
       toast.warn(`「${msg}」放縱日已設定過`, {
         autoClose: 3000
       })
     },
-    removeConfirm(mode, day) {
+    removeConfirm (mode, day) {
       this.deleteTemp = {
         mode,
         day
@@ -276,7 +276,7 @@ export default {
       }
       this.$refs.DeleteModal.show(message)
     },
-    removeFreeDays() {
+    removeFreeDays () {
       const { mode, day } = this.deleteTemp
       const index = this.freeDays[mode].indexOf(day)
       if (index > -1) {
@@ -285,7 +285,7 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.getFreeDaysData()
   }
 }

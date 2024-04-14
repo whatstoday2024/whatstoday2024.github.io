@@ -13,14 +13,14 @@
 export default {
   props: ['totalPages', 'currentPage'],
 
-  setup(props, { emit }) {
+  setup (props, { emit }) {
     const goToPage = (toPage) => {
       emit('goToPage', toPage)
     }
 
     return { goToPage }
   },
-  data() {
+  data () {
     return {
 
     }

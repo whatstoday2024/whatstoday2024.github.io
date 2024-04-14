@@ -95,7 +95,7 @@ import { mapActions } from 'pinia'
 import Pagination from '@/components/Pagination'
 
 export default {
-  data() {
+  data () {
     return {
       items: [],
       item: {},
@@ -118,15 +118,15 @@ export default {
     Grid
   },
   methods: {
-    goToItem(id) {
+    goToItem (id) {
       this.$router.push(`/admin/edit-item/${id}`)
     },
-    showDeleteItemModal(id) {
+    showDeleteItemModal (id) {
       const item = this.items.find(it => it.id === id)
       this.item = item
       this.$refs.deleteItemModal.openModal()
     },
-    async deleteItem(id) {
+    async deleteItem (id) {
       try {
         await axios.delete(`${import.meta.env.VITE_APP_SERVER_URL}/dishes/${id}`)
         toast.success('成功刪除')
@@ -135,7 +135,7 @@ export default {
         toast.error(err.data.message)
       }
     },
-    async getItems(toPage = 1) {
+    async getItems (toPage = 1) {
       this.currentPage = toPage
       this.isLoading = true
 
@@ -160,7 +160,7 @@ export default {
     },
     ...mapActions(memberData, ['checkIsAdmin', 'getUser'])
   },
-  async mounted() {
+  async mounted () {
     document.title = '菜色列表'
     await this.getUser()
     if (!this.checkIsAdmin()) {
