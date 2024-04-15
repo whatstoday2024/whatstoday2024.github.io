@@ -1,1 +1,0 @@
-import{_ as o,y as t,o as c,r as n}from"./index-JGpVG-b7.js";const r={};function s(_,a){const e=n("RouterView");return c(),t(e)}const d=o(r,[["render",s],["__scopeId","data-v-1eb170a0"]]);export{d as default};
