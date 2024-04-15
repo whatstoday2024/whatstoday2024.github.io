@@ -1,12 +1,14 @@
 <template>
   <loadingVue :active="isLoading" />
   <div class="container">
-    <div class="title">
-      <h2 class="text-center my-3">帶您探索菜色的無限可能</h2>
-      <div class="site-induction-btn btn p-0 d-flex">
-        <i class="fa-solid fa-circle-info text-secondary fs-2" title="網站介紹" data-bs-toggle="modal"
-          data-bs-target="#siteIntroModal"></i>
-      </div>
+    <div class="title text-center">
+      <h2 class="my-3 d-inline-block w-auto position-relative">
+        帶您探索菜色的無限可能
+        <button type="button" class="site-induction-btn btn p-0">
+          <h2><i class="fa-solid fa-circle-info text-secondary" title="網站介紹" data-bs-toggle="modal"
+            data-bs-target="#siteIntroModal"></i></h2>
+        </button>
+      </h2>
     </div>
     <div class="mode-btns text-center mb-3">
       <div class="btn-group" role="group" aria-label="Basic outlined example">
@@ -609,6 +611,30 @@ export default {
   color: white;
 }
 
+/* site-induction-btn ----------------------------- */
+// .title h2 {
+//   position: relative;
+// }
+
+.site-induction-btn {
+  position: absolute;
+  right: -3rem;
+  top: 0;
+}
+
+.site-induction-btn:active {
+  border-color: transparent;
+}
+
+.site-induction-btn i {
+  opacity: 0.5;
+}
+
+.site-induction-btn i:hover {
+  opacity: 1;
+  transition-duration: .3s;
+}
+
 /* mode-btn ----------------------------- */
 .default-mode {
   border-right-color: white;
@@ -630,75 +656,6 @@ export default {
   left: 0;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: .25rem;
-}
-
-/* aside ----------------------------- */
-.aside {
-  position: fixed;
-  z-index: 999;
-  bottom: 1rem;
-  right: 1.5rem;
-  transition: all 0.5s;
-  color: $primary;
-  scroll-behavior: smooth;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(2px);
-  }
-}
-
-.isBottom {
-  bottom: 2.5rem;
-  transform: rotate(180deg);
-
-  &:hover {
-    transform: rotate(180deg) translateY(2px);
-  }
-}
-
-/*
-.aside-link {
-  opacity: 0.5;
-  transition-duration: .3s;
-}
-
-.aside-link:hover {
-  opacity: 0.7;
-}
-*/
-
-.aside-link-generator {
-  /* font-size: 4vw; */
-  font-size: 40px;
-}
-
-/* site-induction-btn ----------------------------- */
-.title {
-  position: relative;
-}
-
-.site-induction-btn {
-  position: absolute;
-  right: 0;
-  top: 7%;
-  display: none;
-}
-
-.site-induction-btn:active {
-  border-color: transparent;
-}
-
-.site-induction-btn i {
-  opacity: 0.5;
-}
-
-.site-induction-btn i:hover {
-  opacity: 1;
-  transition-duration: .3s;
 }
 
 /* bento-generator-btn ----------------------------- */
@@ -728,5 +685,34 @@ export default {
   top: 10%;
   right: -20%;
   transform: translateX(32%) translateY(-20%);
+}
+
+/* aside ----------------------------- */
+.aside {
+  position: fixed;
+  z-index: 999;
+  bottom: 1rem;
+  right: 1.5rem;
+  transition: all 0.5s;
+  color: $primary;
+  scroll-behavior: smooth;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+}
+
+.isBottom {
+  bottom: 2.5rem;
+  transform: rotate(180deg);
+
+  &:hover {
+    transform: rotate(180deg) translateY(2px);
+  }
 }
 </style>
