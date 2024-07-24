@@ -1,6 +1,6 @@
 # 2023 Vue 冬季班專題 - 今天吃什麼？
 
-![Alt text](https://whatstoday2024.github.io/assets/img/about.png)
+![Alt text](https://raw.githubusercontent.com/whatstoday2024/whatstoday2024.github.io/main/src/assets/img/about.png)
 
 自助餐是許多人日常生活中常見的用餐選擇，但面對琳瑯滿目的菜色，很多人不知道如何兼顧美味與健康。
 
